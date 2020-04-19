@@ -1,0 +1,82 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - Main</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript ByteCode">
+<meta name="keywords" content="DragonScript, ByteCode">
+
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+<!--
+<link rel="shortcut icon" href="pics/webicon.ico">
+<link rel=icon type"image/png" href="pics/webicon.png">
+-->
+</head>
+
+<body>
+
+<div class=stContent>
+	<div class=stTitle>
+	DragonScript - ByteCode
+	</div>
+	
+	<div class=stHeader>Introduction</div>
+	<div class=stText>
+		<span id=italic>DragonScript Syntax</span> uses bytecode internally to execute the scripts.
+		The compiler creates bytecode from the scripts alike that the script engine can execute it directly.
+		This bytecode is stored in objects of type <span id=italic>dsByteCode</span> and only the script engine classes should modify them.
+		If for some reason you definitly need to write bytecode yourself you can use this guide to find out how.
+		Please keep in mind that this bytecode is the heart of the script engine and that the smallest error can crash your application.
+		The script engine does not carry out checks on all data which usually are not modified outside to gain speed.
+		Thus make sure your bytecode is 100% correct at all times.
+	</div>
+	
+	<div class=stHeader>Content</div>
+	<div class=stText>
+		<div class=stSection><a href="sections.htm">Opcodes by Sections</a></div>
+		<div class=stText>
+			<a href="sections.htm#general">General Purpose</a><br>
+			<a href="sections.htm#constants">Constants</a><br>
+			<a href="sections.htm#objref">Object References</a><br>
+			<a href="sections.htm#unop">Unary Operators</a><br>
+			<a href="sections.htm#binop">Arithmetic Operators</a><br>
+			<a href="sections.htm#bitop">Bitwise Operators</a><br>
+			<a href="sections.htm#compop">Comparisson Operators</a><br>
+			<a href="sections.htm#postop">Post Operators</a><br>
+			<a href="sections.htm#cast">Cast/Type Operators</name><br>
+			<a href="sections.htm#var">Variables</a><br>
+			<a href="sections.htm#call">Function Calling</a><br>
+			<a href="sections.htm#jumps">Jumps</a><br>
+			<a href="sections.htm#excep">Exception Handling</a><br>
+		</div>
+		<div class=stSection><a href="number.htm">Opcodes by Numbers</a></div>
+		<div class=stText>
+			<a href="number.htm#o0">Opcodes 0 - 9</a><br>
+			<a href="number.htm#o10">Opcodes 10 - 19</a><br>
+			<a href="number.htm#o20">Opcodes 20 - 29</a><br>
+			<a href="number.htm#o30">Opcodes 30 - 39</a><br>
+			<a href="number.htm#o40">Opcodes 40 - 49</a><br>
+			<a href="number.htm#o50">Opcodes 50 - 59</a><br>
+			<a href="number.htm#o60">Opcodes 60 - 69</a><br>
+			<a href="number.htm#o70">Opcodes 70 - 76</a><br>
+		</div>
+		<div class=stSection>Usage Guide</div>
+		<div class=stText>
+		</div>
+	</div>
+	
+	<div class=stHeader>Legal Stuff</div>
+	<div class=stText>
+		DragonScript is a work done by <a href="mailto:rptd@gmx.net">Roland Plüss</a>.
+		This documentation is not finished yet and you are not allowed to copy or use this documentation in any form without my permission.
+	</div>
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

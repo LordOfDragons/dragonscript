@@ -1,0 +1,23 @@
+from glob_files import globFiles
+import os
+
+Import('globalEnv')
+
+envPackage = globalEnv.Clone()
+
+globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
+
+pathPackage = envPackage.subst('${libdir}/dragonscript/Utils')
+
+# setup the builders
+targetPackage = globalEnv.targetManager.TargetLibrary('Package Utils')
+globalEnv.targetManager.add('pak_utils', targetPackage)
+
+scripts = []
+globFiles(envPackage, 'src', '*.ds', scripts)
+
+install = []
+targetPackage.installCutDirs(envPackage, pathPackage, scripts, 1)
+targetPackage.aliasInstall(envPackage, 'pak_utils')
+
+targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)

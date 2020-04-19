@@ -1,0 +1,879 @@
+/* 
+ * DragonScript Interpreter -- DS Programming Language
+ *
+ * Copyright (C) 2015, Plüss Roland ( rptd@gmx.net )
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+requires "Introspection"
+
+pin Introspection
+
+
+/**
+ * \brief Global settings
+ */
+class GlobalSettings
+	/** \brief Class to introspect. */
+	private var Class pCurClass
+	
+	/** \brief Package to introspect. */
+	private var Package pCurPackage
+	
+	/** \brief Create global settings. */
+	public func new()
+	end
+	
+	/** \brief Class to introspect. */
+	public func Class getCurClass()
+		return pCurClass
+	end
+	
+	/** \brief Set class to introspect. */
+	public func void setCurClass( Class aclass )
+		pCurClass = aclass
+	end
+	
+	/** \brief Package to introspect. */
+	public func Package getCurPackage()
+		return pCurPackage
+	end
+	
+	/** \brief Set package to introspect. */
+	public func void setCurPackage( Package package )
+		pCurPackage = package
+	end
+end
+
+
+
+/** \brief Menu entry. */
+abstract class MenuEntry
+	/** \brief Global Settings. */
+	private var GlobalSettings pSettings
+
+	/** \brief Create menu entry. */
+	public func new( GlobalSettings settings )
+		pSettings = settings
+	end
+	
+	/** \brief Name to display for the menu item. */
+	abstract public func String getCaption()
+	
+	/** \brief Run menu item. */
+	abstract public func void run()
+	
+	/** \brief Global settings. */
+	public func GlobalSettings getGlobalSettings()
+		return pSettings
+	end
+end
+
+
+
+/** \brief Menu class spawning a new menu. */
+abstract class SubMenu extends MenuEntry
+	/** \brief List of menu entries. */
+	private var Array pMenuEntries
+	
+	/** \brief Create menu object. */
+	public func new( GlobalSettings settings ) super( settings )
+		pMenuEntries = Array.new()
+	end
+	
+	/** \brief Add menu item. */
+	func void addMenuItem( MenuEntry entry )
+		if entry == null
+			throw EInvalidParam.new()
+		end
+		pMenuEntries.add( entry )
+	end
+	
+	/** \brief Run menu item. */
+	func void run()
+		var GlobalSettings settings = this.getGlobalSettings()
+		var int entryCount = this.pMenuEntries.getCount()
+		
+		while true
+			System.print( "\n" )
+			if settings.getCurClass() == null
+				System.print( "< Root Namespace >\n" )
+				
+			else
+				System.print( "Class " + settings.getCurClass().getFullName() + "\n" )
+			end
+			
+			if settings.getCurPackage() == null
+				System.print( "< no package selected >\n" )
+				
+			else
+				System.print( "Package " + settings.getCurPackage().getName() + "\n" )
+			end
+			
+			System.print( "=== " + this.getCaption() + " ===\n" )
+			var int i
+			for i = 0 to entryCount
+				System.print( "" + ( i + 1 ) + ". " + ( this.pMenuEntries.getAt( i ) cast MenuEntry ).getCaption() + "\n" )
+			end
+			System.print( "0. Exit\n" )
+			System.print( "Make Your Selection: " )
+			
+			var int selection = System.getString().toInt()
+			if selection == 0
+				break
+				
+			elif selection <= entryCount
+				( this.pMenuEntries.getAt( selection - 1 ) cast MenuEntry ).run()
+				
+			else
+				System.print( "Please enter a number between 0 and " + entryCount + ".\n" )
+			end
+		end
+	end
+end
+
+
+
+/** \brief Select Menu. */
+class SelectMenu extends SubMenu
+	/** \brief Select class to inspect. */
+	class SelectClass extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to be display for menu item. */
+		func String getCaption()
+			return "Select Class"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			System.print( "Enter full classname of class to inspect: " )
+			var String className = System.getString()
+			
+			try
+				getGlobalSettings().setCurClass( Class.new( className ) )
+				
+			catch Exception e
+				System.print( "Class " + className + " could not be found.\n" )
+			end
+		end
+	end
+	
+	/** \brief Select base class of current class we inspect. */
+	class SelectBaseClass extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Select Base Class of Current Class"
+		end
+		
+		/** \brief * Run menu item. */
+		func void run()
+			var Class aclass = this.getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				
+			elif aclass.getBase() == null
+				System.print( "No Base Class in the current class.\n" )
+				
+			else
+				this.getGlobalSettings().setCurClass( aclass.getBase() )
+			end
+		end
+	end
+	
+	/** \brief Select parent class of current class we inspect. */
+	class SelectParentClass extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Select Parent Class of Current Class"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				
+			elif aclass.getParent() == null
+				System.print( "No Parent Class in the current class.\n" )
+				
+			else
+				this.getGlobalSettings().setCurClass( aclass.getParent() )
+			end
+		end
+	end
+	
+	/** \brief Select interface of current class we inspect. */
+	class SelectInterface extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Select Interface of Current Class"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getInterfaceCount()
+			
+			if count > 0
+				System.print( "Enter Interface index (0-" + ( count - 1 ) + "): " )
+				var int index = System.getString().toInt()
+				
+				if index < 0 or index >= count
+					System.print( "Index not inside allowed boundaries!\n" )
+					
+				else
+					this.getGlobalSettings().setCurClass( aclass.getInterface( index ) )
+				end
+				
+			else
+				System.print( "No Interfaces in the current class.\n" )
+			end
+		end
+	end
+	
+	/** \brief Select inner class of current class we inspect. */
+	class SelectInnerClass extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Select Inner Class of Current Class"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getClassCount()
+			
+			if count > 0
+				System.print( "Enter Class index (0-" + ( count - 1 ) + "): " )
+				var int index = System.getString().toInt()
+				
+				if index < 0 or index >= count
+					System.print( "Index not inside allowed boundaries!\n" )
+					
+				else
+					this.getGlobalSettings().setCurClass( aclass.getClass( index ) )
+				end
+				
+			else
+				System.print( "No Inner Classes in the current class.\n" )
+			end
+		end
+	end
+	
+	/** \brief Select package we want to inspect. */
+	class SelectPackage extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Select Package"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			System.print( "Enter name of package to inspect: " )
+			var String name = System.getString()
+			
+			try
+				this.getGlobalSettings().setCurPackage( Package.new( name ) )
+				
+			catch Exception e
+				System.print( "Package " + name + " could not be found.\n" )
+			end
+		end
+	end
+	
+	
+	
+	/** \brief Create menu entry. */
+	public func new( GlobalSettings settings ) super( settings )
+		this.addMenuItem( SelectClass.new( settings ) )
+		this.addMenuItem( SelectBaseClass.new( settings ) )
+		this.addMenuItem( SelectParentClass.new( settings ) )
+		this.addMenuItem( SelectInterface.new( settings ) )
+		this.addMenuItem( SelectInnerClass.new( settings ) )
+		this.addMenuItem( SelectPackage.new( settings ) )
+	end
+	
+	/** \brief Name to display for menu item. */
+	func String getCaption()
+		return "Select Class to inspect"
+	end
+end
+
+
+
+/** \brief Main Menu. */
+class MainMenu extends SubMenu
+	/** \brief Print the global informations about the class we observe. */
+	class PrintGeneralInfos extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print General Class Informations"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "- Classes:         " + DS.getClassCount() + "\n" )
+				System.print( "- Packages:        " + DS.getPackageCount() + "\n" )
+				
+			else
+				// class name and fullname
+				System.print( "- Class Name:      " + aclass.getName() + "\n" )
+				System.print( "- Full Classname:  " + aclass.getFullName() + "\n" )
+				
+				// class type
+				select aclass.getClassType()
+				case Class.CLASS
+					System.print( "- Class Type:      Class\n" )
+					
+				case Class.INTERFACE
+					System.print( "- Class Type:      Interface\n" )
+					
+				case Class.NAMESPACE
+					System.print( "- Class Type:      Namespace\n" )
+				end
+				
+				// type modifiers
+				System.print( "- Type Modifiers:  " + TypeModifier.new( aclass.getTypeModifiers() ) + "\n" )
+				
+				// base class and parent class
+				if aclass.getBase() == null
+					System.print( "- Base Class:      <none>\n" )
+					
+				else
+					System.print( "- Base Class:      " + aclass.getBase().getFullName() + "\n" )
+				end
+				
+				if aclass.getParent() == null
+					System.print( "- Parent Class:    <none>\n" )
+					
+				else
+					System.print( "- Parent Class:    " + aclass.getParent().getFullName() + "\n" )
+				end
+				
+				// count statistics
+				System.print( "- Interfaces:      " + aclass.getInterfaceCount() + "\n" )
+				System.print( "- Inner Classes:   " + aclass.getClassCount() + "\n" )
+				System.print( "- Variables:       " + aclass.getVariableCount() + "\n" )
+				System.print( "- Functions:       " + aclass.getFunctionCount() + "\n" )
+			end
+		end
+	end
+	
+	/** \brief Print the name of all interfaces. */
+	class PrintInterfaces extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Interfaces"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getInterfaceCount()
+			if count > 0
+				var int i
+				for i = 0 to count
+					System.print( "" + ( i + 1 ) + ") " + aclass.getInterface( i ).getName() + "\n" )
+				end
+				
+			else
+				System.print( "No Interfaces in the current class.\n" )
+			end
+		end
+	end
+	
+	/** \brief Print the name of all inner classes. */
+	class PrintInnerClasses extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Inner Classes"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				var int i, count = DS.getClassCount()
+				
+				for i = 0 to count
+					System.print( "- " + DS.getClass( i ).getName() + "\n" )
+				end
+				
+			else
+				var int count = aclass.getClassCount()
+				
+				if count > 0
+					var int i
+					for i = 0 to count
+						System.print( "" + ( i + 1 ) + ") " + aclass.getClass( i ).getName() + "\n" )
+					end
+					
+				else
+					System.print( "No Inner Classes in the current class.\n" )
+				end
+			end
+		end
+	end
+	
+	/** \brief Print the all variables in short form. */
+	class PrintVariablesShort extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Variables in short form"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getVariableCount()
+			
+			if count > 0
+				var int i
+				
+				for i = 0 to count
+					var Variable avar = aclass.getVariable( i )
+					var TypeModifier typeMod = TypeModifier.new( avar.getTypeModifiers() )
+					var String text = "" + typeMod + " " + avar.getType().getFullName() + " " + avar.getName()
+					if typeMod.isSet( TypeModifier.FIXED )
+						text = text + " = " + avar.getValue( null )
+					end
+					System.print( "" + ( i + 1 ) + ") " + text + "\n" )
+				end
+				
+			else
+				System.print( "No Variables in the current class.\n" )
+			end
+		end
+	end
+	
+	/** \brief Print informations about a variable. */
+	class PrintVariable extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print Variable"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getVariableCount()
+			if count == 0
+				System.print( "No Variables in the current class.\n" )
+				return
+			end
+			
+			System.print( "Enter Variable index (0-" + ( count - 1 ) + ") or variable name: " )
+			var String input = System.getString()
+			if input.getLength() == 0
+				return
+			end
+			
+			var Variable avar
+			
+			if input.getAt( 0 ) >= '0' and input.getAt( 0 ) <= '9'
+				var int index = input.toInt()
+				
+				if index < 0 or index >= count
+					System.print( "Index not inside allowed boundaries!\n" )
+					
+				else
+					avar = aclass.getVariable( index )
+				end
+				
+			else
+				try
+					avar = aclass.getVariable( input )
+					
+				catch Exception e
+					System.print( "No Variable with name '" + input + "' found in the current class.\n" )
+					return
+				end
+			end
+			
+			// variable name and fullname
+			System.print( "- Variable Name:   " + avar.getName() + "\n" )
+			System.print( "- Full Classname:  " + avar.getFullName() + "\n" )
+			
+			// variable type
+			System.print( "- Variable Type:   " + avar.getType().getFullName() + "\n" )
+			
+			// type modifiers
+			var TypeModifier typeMod = TypeModifier.new( avar.getTypeModifiers() )
+			System.print( "- Type Modifiers:  " + typeMod + "\n" )
+			
+			// parent class
+			System.print( "- Owner Class:     " + avar.getParent().getFullName() + "\n" )
+			
+			// constant value if having one
+			if typeMod.isSet( TypeModifier.FIXED )
+				System.print( "- Constant Value:  " + avar.getValue( null ) + "\n" )
+			end
+		end
+	end
+	
+	/** \brief Print the all functions in short form. */
+	class PrintFunctionsShort extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Functions in short form"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getFunctionCount()
+			if count == 0
+				System.print( "No Functions in the current class.\n" )
+				return
+			end
+			
+			var int i
+			for i = 0 to count
+				var Function afunc = aclass.getFunction( i )
+				
+				var String sigtext = afunc.getSignature().map( block Class each
+					return each.getFullName()
+				end ).fold( block String last, String next
+					return last + ", " + next
+				end ) cast String
+				
+				if sigtext == null
+					sigtext = ""
+				end
+				
+				System.print( "" + ( i + 1 ) + ") " + TypeModifier.new( afunc.getTypeModifiers() ) + \
+					" " + afunc.getType().getFullName() + " " + afunc.getName() + \
+					"(" + sigtext + ")\n" )
+			end
+		end
+	end
+	
+	/** \brief Print informations about a function. */
+	class PrintFunction extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print Function"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Class aclass = getGlobalSettings().getCurClass()
+			
+			if aclass == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = aclass.getFunctionCount()
+			if count == 0
+				System.print( "No Function in the current class.\n" )
+				return
+			end
+			
+			System.print( "Enter Function index (0-" + ( count - 1 ) + ") or function name: " )
+			var String input = System.getString()
+			if input.empty()
+				return
+			end
+			
+			var Function afunc
+			
+			if input.getAt( 0 ) >= '0' and input.getAt( 0 ) <= '9'
+				var int index = input.toInt()
+				
+				if index < 0 or index >= count
+					System.print( "Index not inside allowed boundaries!\n" )
+					return
+				end
+				
+				afunc = aclass.getFunction( index )
+				
+			else
+				var int i = 1
+				var Array funcSig = Array.new()
+				
+				while true
+					System.print( "Enter type of " + i + ". parameter ( empty => search ): " )
+					var String argType = System.getString()
+					if argType.empty()
+						break
+					end
+					
+					try
+						funcSig.add( Class.new( argType ) )
+						i++
+						
+					catch Exception e
+						System.print( "The given class does not exist.\n" )
+					end
+				end
+				
+				try
+					afunc = aclass.getFunction( input, funcSig )
+					
+				catch Exception e
+					System.print( "No Function with name '" + input + "' and the given signature found in the current class.\n" )
+					return
+				end
+			end
+			
+			// function name and fullname
+			System.print( "- Function Name:   " + afunc.getName() + "\n" )
+			System.print( "- Full Classname:  " + afunc.getFullName() + "\n" )
+			
+			// return type
+			System.print( "- Return Type:     " + afunc.getType().getFullName() + "\n" )
+			
+			// type modifiers
+			System.print( "- Type Modifiers:  " + TypeModifier.new( afunc.getTypeModifiers() ) + "\n" )
+			
+			// parent class
+			System.print( "- Owner Class:     " + afunc.getParent().getFullName() + "\n" )
+			
+			// signature
+			var String sigtext = afunc.getSignature().map( block Class each
+				return each.getFullName()
+			end ).fold( block String last, String next
+				return last + ", " + next
+			end ) cast String
+			
+			if sigtext == null
+				sigtext = ""
+			end
+			
+			System.print( "- Signature:       " + sigtext + "\n" )
+		end
+	end
+	
+	/** \brief Print the name of all packages in the root namespace. */
+	class PrintAllPackages extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Packages in Root Namespace"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var int i, count = DS.getPackageCount()
+			for i = 0 to count
+				System.print( "- " + DS.getPackage( i ).getName() + "\n" )
+			end
+		end
+	end
+	
+	/** \brief Print the global informations about the package we observe. */
+	class PrintGeneralPackageInfos extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print General Package Informations"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Package package = getGlobalSettings().getCurPackage()
+			
+			if package == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			System.print( "- Package Name:    " + package.getName() + "\n" )
+			System.print( "- Classes:         " + package.getClassCount() + "\n" )
+		end
+	end
+	
+	/** \brief Print the name of all classes of the package. */
+	class PrintPackageClasses extends MenuEntry
+		/** \brief Create menu entry. */
+		public func new( GlobalSettings settings ) super( settings )
+		end
+		
+		/** \brief Name to display for menu item. */
+		func String getCaption()
+			return "Print All Package Classes"
+		end
+		
+		/** \brief Run menu item. */
+		func void run()
+			var Package package = getGlobalSettings().getCurPackage()
+			
+			if package == null
+				System.print( "No Class Selected. Use 'Select Class' first to set one.\n" )
+				return
+			end
+			
+			var int count = package.getClassCount()
+			if count == 0
+				System.print( "No Classes in the current package.\n" )
+				return
+			end
+			
+			var int i
+			for i = 0 to count
+				System.print( "- " + package.getClass( i ).getFullName() + "\n" )
+			end
+		end
+	end
+	
+	
+	
+	/** \brief Create menu entry. */
+	public func new( GlobalSettings settings ) super( settings )
+		this.addMenuItem( SelectMenu.new( settings ) )
+		this.addMenuItem( PrintGeneralInfos.new( settings ) )
+		this.addMenuItem( PrintInterfaces.new( settings ) )
+		this.addMenuItem( PrintInnerClasses.new( settings ) )
+		this.addMenuItem( PrintVariablesShort.new( settings ) )
+		this.addMenuItem( PrintVariable.new( settings ) )
+		this.addMenuItem( PrintFunctionsShort.new( settings ) )
+		this.addMenuItem( PrintFunction.new( settings ) )
+		this.addMenuItem( PrintAllPackages.new( settings ) )
+		this.addMenuItem( PrintGeneralPackageInfos.new( settings ) )
+		this.addMenuItem( PrintPackageClasses.new( settings ) )
+	end
+	
+	/** \brief Name to display for menu item. */
+	func String getCaption()
+		return "Main Menu"
+	end
+end
+
+
+
+/**
+ * \brief Introspection Application.
+ * 
+ * Shows informations about Classes.
+ */
+class IntrospectionApplication extends Application
+	/** \brief Global Settings. */
+	private var GlobalSettings pSettings
+	
+	/** \brief Create application. */
+	func new()
+		this.pSettings = GlobalSettings.new()
+	end
+	
+	/** \brief Run application. */
+	func int run()
+		System.print( "=== Introspection ===\n" )
+		System.print( "===    by RPTD    ===\n\n" )
+		MainMenu.new( pSettings ).run()
+		return 0
+	end
+end

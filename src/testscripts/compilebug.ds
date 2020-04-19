@@ -1,0 +1,20 @@
+requires "Collections"
+requires "Introspection"
+requires "DSUnit"
+
+
+pin Collections
+pin DSUnit
+pin Introspection
+
+class LinkedListTest extends TestCase
+end
+
+class TestScript extends Application
+   func new()
+   end
+   
+   func int run()
+      return 0
+   end
+end

@@ -1,0 +1,74 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Inline If-Else Expression ( ? : )</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / Inline If-Else Expression ( ? : )
+</div>
+
+<div class=stContent>
+<div class=stTitle>Inline If-Else Expression ( ? : )</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The Inline If-Else Expression is a special version of the If-Else-Statement.
+It is called Inline because it is an expression not a statement and can thus be used as part of an expression.
+If the condition specified in the expression turns out to be <span id=italic>true</span> then the If-Expression-Block is executed otherwise the Else-Expression-Block.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>condtion</span> <span id=bold>?</span> <span id=italic>if-expression-block</span> <span id=bold>:</span> <span id=italic>else-statement-block</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>condition</div>
+<div class=stText>
+Is an expression beeing of type or castable to <span id=italic>bool</span>.
+</div>
+<div id=bold>if-expression-block</div>
+<div class=stText>
+This expression is evaluated in the case the condition equals <span id=italic>true</span>.
+</div>
+<div id=bold>else-expression-block</div>
+<div class=stText>
+This expression is evaluated in the case the condition equals <span id=italic>false</span>.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Inline If-Else-Expressions are usually used to replace bulky If-Else-Statements which are simple enough to be squeezed on a one-liner.
+The first statement is though the same as the second one following it.
+<table border=0><tr><td><pre class=stCode>
+// expression version
+vResult = vOp2 != 0 ? vOp1 / vOp2 : 0;
+// statement version
+if vOp2 != 0 then{
+   vResult = vOp1 / vOp2;
+}else{
+   vResult = 0;
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

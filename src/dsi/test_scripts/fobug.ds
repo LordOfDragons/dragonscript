@@ -1,0 +1,96 @@
+/* 
+ * DragonScript Interpreter -- DS Programming Language
+ *
+ * Copyright (C) 2004, Plüss Roland ( rptd@gmx.net )
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+/*
+ * BUG test script for function overloading bug (found Khan)
+ */
+ 
+/*
+ * Application class. not important thus only returns immediatly
+ */
+class TestScript extends Application
+
+	func new(): end
+	
+	func int run()
+		System.print("Do nothing... dum di dum...\n")
+		return 0
+	end
+end
+
+
+
+/*
+ * This has to be correct
+ */
+interface iA1
+	func int fA1()
+end
+
+class cA implements iA1, iA2
+	func new(): end
+	func int fA1()
+		return 0
+	end
+	func Object fA2()
+		return null
+	end
+end
+
+interface iA2
+	func Object fA2()
+end
+
+
+
+/*
+ * This is not correct because a function is not overloaded
+ */
+/*
+class cB implements iB1
+	func new(): end
+end
+
+interface iB1
+	func Object fB1()
+end
+*/
+
+
+
+/*
+ * This is not correct because the function is overloaded with
+ * the wrong return type
+ */
+/*
+class cC implements iC1
+	func new(): end
+	
+	func String fC1()
+		return "pWn3d!"
+	end
+end
+
+interface iC1
+	func Object fC1()
+end
+*/

@@ -1,0 +1,30 @@
+from SCons.Script import ARGUMENTS
+
+Import('globalEnv')
+
+params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
+params.Add(('version', 'Release version', '1.0'))
+params.Update(globalEnv)
+
+globalEnv.configReport.add('Target platform', 'target_platform')
+
+envArchive = globalEnv.Clone()
+
+files = {}
+for t in globalEnv.targetManager.targets.values():
+	try:
+		files.update(t.archive)
+	except:
+		pass
+
+targetArchive = globalEnv.targetManager.TargetArchive('DragonScript Archive')
+globalEnv.targetManager.add('archive', targetArchive)
+
+filename = 'libdscript-{}'.format(envArchive['version'])
+
+if envArchive['TARGET_PLATFORM'] == 'windows':
+	targetArchive.archiveFiles(envArchive, filename, files, targetArchive.formatZip)
+else:
+	targetArchive.archiveFiles(envArchive, filename, files, targetArchive.formatTarBz2)
+
+targetArchive.alias(envArchive, 'archive')

@@ -1,0 +1,39 @@
+from glob_files import globFiles
+import os
+
+Import('globalEnv')
+
+envPackage = globalEnv.Clone()
+
+globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
+
+pathPackage = envPackage.subst('${libdir}/dragonscript/Introspection')
+#pathPackageTests = envPackage.subst('${libdir}/dragonscript/IntrospectionTests')
+
+# setup the builders
+targetPackage = globalEnv.targetManager.TargetLibrary('Package Introspection')
+globalEnv.targetManager.add('pak_introspection', targetPackage)
+
+sources = []
+headers = []
+scripts = []
+#tests = []
+globFiles(envPackage, 'src', '*.cpp', sources)
+globFiles(envPackage, 'src', '*.h', headers)
+globFiles(envPackage, 'src', '*.ds', scripts)
+#globFiles(envPackage, 'tests', '*.ds', tests)
+
+objects = [envPackage.SharedObject(s) for s in sources]
+
+library = envPackage.SharedLibrary(target='Introspection', source=objects, SHLIBPREFIX='')
+targetPackage.build.extend(library)
+targetPackage.aliasBuild(envPackage, 'pak_introspection_build')
+
+targetPackage.installCutDirs(envPackage, pathPackage, scripts, 1)
+#targetPackage.installCutDirs(envPackage, pathPackageTests, tests, 1)
+targetPackage.install.extend(envPackage.Install(pathPackage, library[0])) # only first target in case clutter exists
+targetPackage.aliasInstall(envPackage, 'pak_introspection')
+
+targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)
+#targetPackage.archiveCutDirs(envPackage, pathPackageTests, tests, 1)
+targetPackage.archiveLibrary(envPackage, pathPackage, library[0:1])

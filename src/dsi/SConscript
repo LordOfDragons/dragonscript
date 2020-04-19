@@ -1,0 +1,41 @@
+from ternary_variable import TernaryVariable
+from glob_files import globFiles
+import os
+
+Import('globalEnv')
+
+if globalEnv['build_dsi'] == TernaryVariable.No:
+	Return()
+
+envProgram = globalEnv.Clone()
+
+if envProgram['TARGET_PLATFORM'] == 'beos':
+	envProgram.Append(LIBS = ['root', 'be'])
+elif envProgram['TARGET_PLATFORM'] == 'windows':
+	envProgram.Append(LIBS = ['kernel32'])
+
+envProgram.Append(CPPFLAGS = envProgram['SANITIZE_FLAGS'])
+envProgram.Append(LINKFLAGS = envProgram['SANITIZE_FLAGS'])
+
+globalEnv.targetManager.targets['dscript'].applyBuild(envProgram)
+envProgram.Append(LIBS = envProgram['CROSSCOMPILE_PROGRAM_LIBS'])
+
+pathBin = envProgram.subst('$execdir')
+
+# setup the builders
+targetProgram = globalEnv.targetManager.TargetProgram('DragonScript Interpreter')
+globalEnv.targetManager.add('dsi', targetProgram)
+
+sources = []
+globFiles(envProgram, '.', '*.cpp', sources)
+
+objects = [envProgram.StaticObject(s) for s in sources]
+
+program = envProgram.Program(target='dsi', source=objects)
+targetProgram.build.extend(program)
+targetProgram.aliasBuild(envProgram, 'dsi_build')
+
+targetProgram.install.extend(envProgram.Install(pathBin, program))
+targetProgram.aliasInstall(envProgram, 'dsi')
+
+targetProgram.archiveProgram(envProgram, pathBin, program)

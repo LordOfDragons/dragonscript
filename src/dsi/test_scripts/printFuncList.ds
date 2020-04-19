@@ -1,0 +1,94 @@
+/* 
+ * DragonScript Interpreter -- DS Programming Language
+ *
+ * Copyright (C) 2004, Plüss Roland ( rptd@gmx.net )
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+requires "Introspection"
+requires "Collections"
+
+pin Introspection
+
+
+
+/**
+ * Print Function List Application. Prints a short function listing
+ * of the class specified on the command line.
+ */
+class PrintFunctionList extends Application
+
+	/**
+	 * Create a new PrintFunctionList object
+	 */
+	func new()
+	end
+	
+	/**
+	 * Run Application
+	 */
+	func int run()
+		var String className
+		var Class classToList
+		var Function theFunc
+		var TypeModifier typeMod
+		var String outStr
+		var Array funcSig
+		var int i, j, count
+		// check arguments
+		if getArgumentCount() == 1
+			// try to find the class specified on the command line
+			className = getArgument(0)
+			try
+				classToList = Class.new(className)
+			catch Exception e
+				System.print("The Class " + className + " could not be found!\n")
+				return -1
+			end
+			// print function listing
+			count = classToList.getFunctionCount()
+			if count > 0
+				for i = 0 to count
+					theFunc = classToList.getFunction(i)
+					typeMod = TypeModifier.new( theFunc.getTypeModifiers() )
+					funcSig = theFunc.getSignature()
+					outStr = "" + typeMod + " " + theFunc.getType().getFullName() + \
+						" " + theFunc.getName() + "("
+					for j = 0 to funcSig.getCount()
+						if j > 0
+							outStr = outStr + ", "
+						end
+						outStr = outStr + funcSig.getAt(j)
+					end
+					System.print( outStr + ")\n")
+				end
+			else
+				System.print("No Functions in Class " + classToList + ".\n")
+			end
+		// print syntax
+		else
+			System.print("printFuncList <classname>\n")
+			System.print("\n")
+			System.print("   classname = Full Classname of the class\n")
+			System.print("               to print function list from.\n")
+			System.print("\n")
+			System.print("Written by Plüss Roland (roland@rptd.ch)\n")
+		end
+		// finished
+		return 0
+	end
+end

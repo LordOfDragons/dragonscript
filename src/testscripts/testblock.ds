@@ -1,0 +1,88 @@
+
+class TestApp extends Application
+	func new()
+	end
+	
+	func int run()
+		var Block aBlock
+		var Array args
+		var Array anArray
+		
+		// create new block
+		aBlock = block
+			System.print("I am a Block!\n")
+		end
+		// call that block
+		aBlock.run()
+		
+		// create another block with param this time
+		aBlock = block int a
+			System.print("Another Block with a = " + a + "\n")
+		end
+		// call that block
+		aBlock.run(8)
+		
+		// create another block with three arguments
+		aBlock = block int a, String b, Object c
+			System.print("A whoopy block with a=" + a + ", b='" + b + "' and c='" + c + "'\n")
+		end
+		// call that block
+		aBlock.run(8, "Hallo", true)
+		args = Array.new()
+		args.add(6)
+		args.add("Welt")
+		args.add(5.6)
+		aBlock.runWith(args)
+		
+		// create another block that returns a value this time
+		aBlock = block int a
+			return a * 2
+		end
+		// call that block
+		System.print("Result of 8 is " + aBlock.run(8) + "\n")
+		
+		// now the big deal. we make an array and use a block to
+		// itterate over it and create a second array applying
+		// the block to it and print the result.
+		// we only add integers here as the block coming later
+		// only operates on integers. if there would be another
+		// type of object in the array we would get a EInvalidCast
+		// exception during the mapping.
+		anArray = Array.new()
+		anArray.add(4)
+		anArray.add(6)
+		anArray.add(13)
+		anArray.add(18)
+		anArray.add(25)
+		// now do the great thing. we use a block calculating
+		// the square of a number
+		mapPrintArray(anArray, block int value
+			return value * value
+		end)
+		// finished
+		return 0
+	end
+	
+	/**
+	 * This function iterates over an array, applies the given
+	 * block to each element and prints the result the same time.
+	 * for testing purpose the code is a bit stretched so the
+	 * blocks can be admired in doing their work ;=)
+	 */
+	private func void mapPrintArray(Array arr, Block theBlock)
+		var int i, count = arr.getCount()
+		var Array newArr = Array.new(count)
+		// in the first round we map the block onto the array
+		for i = 0 to count
+			newArr.add( theBlock.run( arr.getAt(i) ) )
+		end
+		// now print the content of the second array using
+		// another block (yeah... we are crazy ;=) )
+		for i = 0 to count
+			block int number
+				System.print("- " + number + "\n")
+			end .run( newArr.getAt(i) )
+		end
+	end
+	
+end

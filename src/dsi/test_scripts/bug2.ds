@@ -1,0 +1,38 @@
+class TestClass1
+	public var String name
+	public var int index
+	public func new( String aname )
+		this.name = aname
+		this.index = -1
+	end
+end
+
+// this bug tests a problem with two nested blocks. if a variable is declared after
+// the nested block the value of variables in the outer block can get lost. in this
+// case a null pointer exception is thrown which should not happen
+class Bug2 extends Application
+	func new()
+	end
+	
+	func int run()
+		var Array buglist = Array.new()   // local variable 0
+		var Array list1 = Array.new()     // local variable 1
+		var int index                     // local variable 2
+		//var String s
+		
+		list1.add( TestClass1.new( "something" ) )
+		buglist.add( "test" )
+		
+		list1.forEach( block TestClass1 outer
+			outer.index = buglist.indexOf( buglist.find( block String each
+				// in the bug case outer becomes suddenly null inside this block
+				return each.equals( outer.name )
+			end ) cast String )
+		end )
+		
+		var String s = "this gives troubles"   // local variable 3. this one causes the probem
+		System.print( list1.toString() + "\n" )
+		
+		return 0
+	end
+end

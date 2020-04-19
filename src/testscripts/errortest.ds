@@ -1,0 +1,157 @@
+
+class cA
+	func new()
+		System.print("Executed cA.new()\n")
+	end
+	func new(int i)
+		System.print("Executed cA.new(" + i + ")\n")
+	end
+	
+	func int getMe()
+		return 0
+	end
+end
+
+class cB extends cA
+	func new()
+		System.print("Executed cB.new()\n")
+	end
+	func new(int i) super(i)
+		System.print("Executed cB.new(" + i + ")\n")
+	end
+	
+	func int getMe()
+		return 1
+	end
+end
+
+interface iA
+	func int ifaceFunc()
+end
+
+interface iB
+	func int oloadFunc()
+end
+
+interface iC implements iA, iB
+end
+
+class cC extends cA implements iC
+	func new() this(2)
+		System.print("Executed cC.new()\n")
+	end
+	func new(int i) super(i)
+		System.print("Executed cC.new(" + i + ")\n")
+	end
+	
+	func int getMe()
+		return 2
+	end
+	
+	func int ifaceFunc()
+		return 10
+	end
+	
+	func int oloadFunc()
+		return 15
+	end
+end
+
+
+
+/* correct. base class is object */
+/*
+class cD extends cC
+	func new()
+	end
+end
+*/
+
+/* incorrect. base class is not an object */
+/*
+class cD extends iA
+	func new()
+	end
+	func int ifaceFunc()
+		return -1
+	end
+end
+*/
+
+/* incorrect. implements only accepts interfaces */
+/*
+class cD implements cC
+	func new()
+	end
+end
+*/
+
+/* incorrect. no duplicate implements */
+/*
+class cD implements iA, iA
+	func new()
+	end
+	func int ifaceFunc()
+		return -1
+	end
+end
+*/
+
+/* incorrect. no duplicate implements (hidden duplicate) */
+/*
+class cD implements iA, iB
+	func new()
+	end
+	func int ifaceFunc()
+		return -1
+	end
+end
+*/
+
+/* incorrect. base class is an interface */
+/*
+interface iD extends iA
+	func int newFunc()
+end
+*/
+
+/* correct. implements are interfaces */
+/*
+interface iD implements iA, iB
+	func int newFunc()
+end
+*/
+
+/* incorrect. implements are not interfaces */
+/*
+interface iD implements iA, cB
+	func int newFunc()
+end
+*/
+
+
+
+class TestApp extends Application
+	func new()
+	end
+	
+	func int run()
+		var cA obj
+		var iA iface
+		var iB iface2
+		obj = cA.new()
+		System.print("value cA = " + obj.getMe() + "\n")
+		obj = cB.new()
+		System.print("value cB = " + obj.getMe() + "\n")
+		obj = cC.new()
+		iface = cC.new()
+		iface2 = cC.new()
+		System.print("value cC = " + obj.getMe() + ", " + iface.ifaceFunc() \
+			+ ", " + iface2.oloadFunc() + "\n")
+		System.print("iface is '" + iface + "'\n")
+		System.print("iface2 is '" + iface2 + "'\n")
+		cC.new(8)
+		return 0
+	end
+	
+end

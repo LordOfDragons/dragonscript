@@ -1,0 +1,58 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - JOEL</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / JOEL(dsByteCode::ebcJOEL,66)
+</div>
+
+<div class=stContent>
+<div class=stTitle>JOEL(dsByteCode::ebcJOEL,66) - Jump On Exception (long)</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Registers an entry-point to move the CP (Code Pointer) to marked by an offset specified in int range (very long jumps).
+Moves the CP (Code Pointer) to the point marked if later an exception occurs having the type specified.
+The maximal jump offset is in the range of -2'147'483'648 to 2'147'483'647 bytes.
+The entry-point will be calculated based on the location after reading the offset from the ByteCode stream and updating the CP plus this offset.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]     </span><span id=bold>dsByteCode::ebcJOEL</span>
+<span id=italic>[dsClass*] </span>exception-type
+<span id=italic>[int]      </span>offset
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>exception-type</div>
+<div class=stText>
+	The type of the exception to be thrown for the jump to be triggered.
+	The exception can occur any time after registring the entry-point.
+</div>
+<div id=bold>offset</div>
+<div class=stText>
+	Offset to mark the entry-point. Make sure to read this value as <span id=italic>signed int</span>.
+	The range for this offset value is -2'147'483'648 to 2'147'483'647.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

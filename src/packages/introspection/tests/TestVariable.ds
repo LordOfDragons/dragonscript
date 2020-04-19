@@ -1,0 +1,193 @@
+/* 
+ * DragonScript Script Language
+ *
+ * Copyright (C) 2015, Roland Plüss (roland@rptd.ch)
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+requires "DSUnit"
+requires "Introspection"
+
+namespace Introspection.Tests
+
+pin Introspection
+
+
+
+/**
+ * Test Case for testing the introspection Variable
+ *
+ * Testing the Variable introspection class is a bit tricky due to
+ * the way variables are stored in the engine. This means in particular
+ * that the ordering of the variables is not defined. To be able to
+ * make some tests anyways I used a special case I can predict how that
+ * the variables will end up in the order given.
+ * So in common code you can only rely on the class variables to stay
+ * in the same order as you defined them. Constants on the other hand
+ * can be at any position.
+ */
+class TestVariable extends DSUnit.TestCase
+
+	/**
+	 * Test Class with known features so we can test
+	 */
+	class TestClass
+		public fixed var int CONSTANT = 8
+		enum SomeConstants
+			iAmAgainConst
+			meTooConst
+		end
+		public fixed var String ANOTHERCONSTANT = "I am constant"
+		private var int privVar
+		public var String pubVar
+		
+		public func new(int a, String b)
+			privVar = a
+			pubVar = b
+		end
+	end
+	
+	
+	
+	/**
+	 * Creates a new TestVariable object
+	 */
+	public func new(String name) super(name)
+	end
+	
+	/**
+	 * Test the information retrieval functions of the Class object
+	 */
+	func void testGetters()
+		// make some variables to test on
+		var Class classTest = Class.new("Introspection.Tests.TestVariable.TestClass")
+		var Variable aVar
+		var TestClass testObj = TestClass.new(5, "test me")
+		
+		// test if the can get the correct informations from our test variable
+		aVar = classTest.getVariable(0)
+		assertTrue( aVar.getName().equals("CONSTANT") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.CONSTANT") )
+		assertTrue( aVar.getType().equals( Class.new("int") ) )
+		assertTrue( aVar.getParent().equals( classTest ) )
+		assertTrue( aVar.getTypeModifiers() == \
+			(TypeModifier.PUBLIC | TypeModifier.STATIC | TypeModifier.FIXED) )
+		assertTrue( aVar.getValue(null) cast int == 8 )
+		assertTrue( aVar.getValue(testObj) cast int == 8 )
+		
+		aVar = classTest.getVariable(1)
+		assertTrue( aVar.getName().equals("ANOTHERCONSTANT") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.ANOTHERCONSTANT") )
+		assertTrue( aVar.getType().equals( Class.new("String") ) )
+		assertTrue( aVar.getParent().equals( classTest ) )
+		assertTrue( aVar.getTypeModifiers() == \
+			(TypeModifier.PUBLIC | TypeModifier.STATIC | TypeModifier.FIXED) )
+		assertTrue( aVar.getValue(null).equals("I am constant") )
+		assertTrue( aVar.getValue(testObj).equals("I am constant") )
+		
+		aVar = classTest.getVariable(2)
+		assertTrue( aVar.getName().equals("privVar") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.privVar") )
+		assertTrue( aVar.getType().equals( Class.new("int") ) )
+		assertTrue( aVar.getParent().equals( classTest ) )
+		assertTrue( aVar.getTypeModifiers() == TypeModifier.PRIVATE )
+		try 
+			aVar.getValue(null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		assertTrue( aVar.getValue(testObj) cast int == 5 )
+		
+		aVar = classTest.getVariable(3)
+		assertTrue( aVar.getName().equals("pubVar") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.pubVar") )
+		assertTrue( aVar.getType().equals( Class.new("String") ) )
+		assertTrue( aVar.getParent().equals( classTest ) )
+		assertTrue( aVar.getTypeModifiers() == TypeModifier.PUBLIC )
+		try 
+			aVar.getValue(null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		assertTrue( aVar.getValue(testObj).equals("test me") )
+		
+		// test constant
+		var Class classSomeConstants = Class.new("Introspection.Tests.TestVariable.TestClass.SomeConstants")
+		
+		aVar = classSomeConstants.getVariable(0)
+		assertTrue( aVar.getName().equals("iAmAgainConst") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.SomeConstants.iAmAgainConst") )
+		assertTrue( aVar.getType().equals( Class.new("Introspection.Tests.TestVariable.TestClass.SomeConstants") ) )
+		assertTrue( aVar.getParent().equals( classSomeConstants ) )
+		System.print("" + aVar.getTypeModifiers())
+		assertTrue( aVar.getTypeModifiers() == \
+			(TypeModifier.PUBLIC | TypeModifier.STATIC | TypeModifier.FIXED) )
+		assertTrue( TestClass.SomeConstants.iAmAgainConst == aVar.getValue(null) )
+		assertTrue( TestClass.SomeConstants.iAmAgainConst == aVar.getValue(testObj) )
+		
+		aVar = classSomeConstants.getVariable(1)
+		assertTrue( aVar.getName().equals("meTooConst") )
+		assertTrue( aVar.getFullName().equals("Introspection.Tests.TestVariable.TestClass.SomeConstants.meTooConst") )
+		assertTrue( aVar.getType().equals( Class.new("Introspection.Tests.TestVariable.TestClass.SomeConstants") ) )
+		assertTrue( aVar.getParent().equals( classSomeConstants ) )
+		assertTrue( aVar.getTypeModifiers() == \
+			(TypeModifier.PUBLIC | TypeModifier.STATIC | TypeModifier.FIXED) )
+		assertTrue( TestClass.SomeConstants.meTooConst == aVar.getValue(null) )
+		assertTrue( TestClass.SomeConstants.meTooConst == aVar.getValue(testObj) )
+	end
+	
+	/**
+	 * Test the special functions like equals
+	 */
+	func void testSpecialFunctions()
+		var Class classTest = Class.new("Introspection.Tests.TestVariable.TestClass")
+		var Class classSomeConstants = Class.new("Introspection.Tests.TestVariable.TestClass.SomeConstants")
+		var Variable aVar = classTest.getVariable(0)
+		
+		// test if equals works
+		assertTrue( aVar.equals( classTest.getVariable(0) ) )
+		assertFalse( aVar.equals( classTest.getVariable(1) ) )
+		assertFalse( aVar.equals( 8 ) )
+		assertFalse( aVar.equals( null ) )
+		
+		// test if the class returns the coclassTestrrect variables
+		assertTrue( classTest.getVariable(0).equals( classTest.getVariable("CONSTANT") ) )
+		assertTrue( classTest.getVariable(1).equals( classTest.getVariable("ANOTHERCONSTANT") ) )
+		assertTrue( classTest.getVariable(2).equals( classTest.getVariable("privVar") ) )
+		assertTrue( classTest.getVariable(3).equals( classTest.getVariable("pubVar") ) )
+		
+		assertTrue( classSomeConstants.getVariable(0).equals( classSomeConstants.getVariable("iAmAgainConst") ) )
+		assertTrue( classSomeConstants.getVariable(1).equals( classSomeConstants.getVariable("meTooConst") ) )
+		
+		// test that the hasCode is at last not 0
+		assertTrue( aVar.hashCode() != 0 )
+		
+		// test that the string representation is what we want it to look like
+		assertTrue( aVar.toString().equals( aVar.getFullName() ) )
+	end
+	
+	/**
+	 * A Test that always fails (for testing)
+	 */
+	func void testFailsAlways()
+		//Class.new("ThisClassDoesNotExist")
+	end
+	
+end

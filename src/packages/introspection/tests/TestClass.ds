@@ -1,0 +1,195 @@
+/* 
+ * DragonScript Script Language
+ *
+ * Copyright (C) 2015, Roland Plüss (roland@rptd.ch)
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+requires "DSUnit"
+requires "Introspection"
+
+namespace Introspection.Tests
+
+pin Introspection
+
+
+
+/**
+ * Test Case for testing the introspection Class
+ */
+class TestClass extends DSUnit.TestCase
+
+	/**
+	 * Interface for testing. does nothing
+	 */
+	interface TestInterface
+		func void someFunc()
+	end
+	
+	/**
+	 * Test Class with known features so we can test
+	 */
+	class TestClass implements TestInterface
+		private var int privVar
+		public var String pubVar
+		public var String anotherVar
+		
+		public func new()
+		end
+		
+		public func void someFunc()
+		end
+		
+		class InnerClass
+		end
+	end
+	
+	
+	
+	/**
+	 * Creates a new TestClass object
+	 */
+	public func new(String name) super(name)
+	end
+	
+	/**
+	 * Try if all the constructors are working. This is necessary
+	 * for all other tests.
+	 */
+	func void testCreation()
+		// test if we can find a primitive class in the main namespace
+		Class.new("int")
+		
+		// test if we can find a normal class in the main namespace
+		Class.new("String")
+		
+		// test if we can find a namespace
+		Class.new("Introspection")
+		
+		// test if we can find a namespace in a namespace
+		Class.new("Introspection.Tests")
+		
+		// test if we can find a class in a namespace
+		Class.new("Introspection.Tests.TestClass")
+		
+		// test if we can find an interface in a namespace
+		Class.new("Introspection.Tests.TestClass.TestInterface")
+		
+		// test if we get an exception if the class does not exist
+		try 
+			Class.new("ThisDefinitlyDoesNotExist")
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end		
+		
+		// test if we get an exception if the class does not exist
+		// in the given namespace
+		try 
+			Class.new("Introspection.Tests.ThisDefinitlyDoesNotExist")
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		
+		// test if we can get the class of an object
+		Class.new(8)
+	end
+	
+	/**
+	 * Test the information retrieval functions of the Class object
+	 */
+	func void testGetters()
+		// make some variables to test on
+		var Class classObject = Class.new("Object")
+		var Class classTest = Class.new("Introspection.Tests.TestClass.TestClass")
+		
+		// test if the can get the correct informations from our test class
+		assertTrue( classTest.getName().equals("TestClass") )
+		assertTrue( classTest.getFullName().equals("Introspection.Tests.TestClass.TestClass") )
+		assertTrue( classTest.getClassType() == Class.CLASS )
+		assertTrue( classTest.getTypeModifiers() == TypeModifier.PUBLIC )
+		assertTrue( classTest.getBase().getFullName().equals("Object") )
+		assertTrue( classTest.getParent().getFullName().equals("Introspection.Tests.TestClass") )
+		assertTrue( classTest.isSubClassOf(classObject) )
+		assertFalse( classObject.isSubClassOf(classTest) )
+		assertFalse( classTest.isSubClassOf(classTest) )
+		
+		// test interfaces
+		assertTrue( classTest.getInterfaceCount() == 1 )
+		assertTrue( classTest.getInterface(0).getFullName().equals( \
+			"Introspection.Tests.TestClass.TestInterface") )
+		try 
+			classTest.getInterface(1)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end		
+		
+		// test inner classes
+		assertTrue( classTest.getClassCount() == 1 )
+		assertTrue( classTest.getClass(0).getFullName().equals( \
+			"Introspection.Tests.TestClass.TestClass.InnerClass") )
+		try 
+			classTest.getClass(1)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end		
+		
+		// test variables
+		assertTrue( classTest.getVariableCount() == 3 )
+		classTest.getVariable(0)
+		classTest.getVariable(2)
+		try 
+			classTest.getVariable(3)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end		
+		
+		// test functions
+		assertTrue( classTest.getFunctionCount() == 2 )
+		classTest.getFunction(0)
+		classTest.getFunction(1)
+		try 
+			classTest.getFunction(2)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end		
+	end
+	
+	/**
+	 * Test the special functions like equals
+	 */
+	func void testSpecialFunctions()
+		// test if equals works
+		assertTrue( Class.new("Object").equals( Class.new("Object") ) )
+		assertFalse( Class.new("Object").equals( Class.new("int") ) )
+		assertFalse( Class.new("Object").equals( 8 ) )
+		assertFalse( Class.new("Object").equals( null ) )
+		
+		// test that the hasCode is at last not 0
+		assertTrue( Class.new("Object").hashCode() != 0 )
+		
+		// test that the string representation is what we want it to look like
+		assertTrue( Class.new("Introspection.Tests").toString().equals("Introspection.Tests") )
+	end
+	
+end

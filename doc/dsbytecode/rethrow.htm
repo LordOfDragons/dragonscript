@@ -1,0 +1,48 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - RETHROW</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / THROW(dsByteCode::ebcThrow,75)
+</div>
+
+<div class=stContent>
+<div class=stTitle>THROW(dsByteCode::ebcThrow,75) - throws an exception</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Rethrows the last exception thrown and caught by a JOE* command.
+This command can only be used inside a JOE* handler block and not inside or outside a try-block.
+The current try-handler will no more take action thus any other JOE* handlers in this try-handler will not be taken into account whilest thrown the exception.
+If a corresponding JOE* command outside this try-handler has been invoked earlier the given JOE* handler will be fired.
+Otherwise the engine halts the execution of the code and outputs an exception trace.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]     </span><span id=bold>dsByteCode::ebcReThrow</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>none</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

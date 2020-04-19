@@ -1,0 +1,113 @@
+requires "Introspection"
+pin Introspection
+
+
+class cA
+	public var int a
+	public var String b
+	public var Object c
+	public func new()
+		a=0: b="default": c=0
+	end
+	public func new(int na, String nb, Object nc)
+		a=na: b=nb: c=nc
+	end
+	public func String getMe()
+		return "a=(" + a + ") b=(" + b + ") c=(" + c + ")"
+	end
+	public func String getPlus(Object something)
+		return "a=(" + a + ") b=(" + b + ") c=(" + c + ") something=(" + something + ")"
+	end
+end
+
+class TestScript extends Application
+
+	func new()
+	end
+	
+	func int run()
+		var bool result
+		
+		result = String.new("8") == null
+		
+		result = null == String.new("8")
+		
+		result = (null cast String) == null
+		
+		testFunc(null)
+		
+		var cA o1, o2, newO
+		var Class clsA = Class.new("cA")
+		var Variable varA = clsA.getVariable("a")
+		var Variable varB = clsA.getVariable("b")
+		var Variable varC = clsA.getVariable("c")
+		var Function func1 = clsA.getFunction("getMe",null)
+		var Array callSig1 = Array.new()
+		callSig1.add( Class.new("Object") )
+		var Function func2 = clsA.getFunction("getPlus",callSig1)
+		var Function func3 = clsA.getFunction("new",null)
+		var Array callSig2 = Array.new()
+		callSig2.add( Class.new("int") )
+		callSig2.add( Class.new("String") )
+		callSig2.add( Class.new("Object") )
+		var Function func4 = clsA.getFunction("new",callSig2)
+		var Array args = Array.new()
+		
+		o1 = cA.new()
+		o1.a = 3
+		o1.b = "hallo"
+		o1.c = 20
+		o2 = cA.new()
+		o2.a = 4
+		o2.b = "welt"
+		o2.c = cA.new()
+		System.print("o1.a=" + varA.getValue(o1) + ", o1.b='" + varB.getValue(o1) \
+			+ "', o1.c='" + varC.getValue(o1) + "'\n")
+		System.print("o2.a=" + varA.getValue(o2) + ", o2.b='" + varB.getValue(o2) \
+			+ "', o2.c='" + varC.getValue(o2) + "'\n")
+		System.print("o1.getMe(): " + func1.call(o1,null) + "\n")
+		System.print("o2.getMe(): " + func1.call(o2,null) + "\n")
+		args.add(8)
+		System.print("o1.getPlus(8): " + func2.call(o1, args) + "\n")
+		args.removeAll()
+		args.add("supi!" cast Object)
+		System.print("o2.getPlus('supi'): " + func2.call(o2, args) + "\n")
+		
+		var Array testArray = Array.new()
+		var int i
+		testArray.add("Hallo Welt")
+		testArray.add(8)
+		testArray.add(5.6)
+		testArray.add(o1)
+		testArray.add(clsA)
+		testArray.add(func1)
+		for i = 0 to testArray.getCount()
+			System.print("Array item " + i + " has value '" + \
+				testArray.getAt(i) + "' and is of type " + \
+				Class.new(testArray.getAt(i)).getFullName() + "\n")
+		end
+		
+		newO = func3.call(null, null) cast cA
+		System.print("newO = new(): " + newO.getMe() + "\n")
+		args = Array.new()
+		args.add(20)
+		args.add("Irgendwas")
+		args.add(true)
+		newO = func4.call(null, args) cast cA
+		System.print("newO = new(,,): " + newO.getMe() + "\n")
+		
+		System.print("Object.isSubClassOf(String) = " + \
+			Class.new("Object").isSubClassOf( Class.new("String") ) + "\n")
+		System.print("String.isSubClassOf(Object) = " + \
+			Class.new("String").isSubClassOf( Class.new("Object") ) + "\n")
+		System.print("Object.isSubClassOf(Object) = " + \
+			Class.new("Object").isSubClassOf( Class.new("Object") ) + "\n")
+			
+		return 0
+	end
+	
+	private func void testFunc(String str)
+	end
+	
+end
+

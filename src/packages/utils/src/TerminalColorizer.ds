@@ -1,0 +1,137 @@
+/* 
+ * DragonScript Script Language
+ *
+ * Copyright (C) 2015, Roland Plüss (roland@rptd.ch)
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+
+namespace Utils
+
+
+
+/**
+ * Provides a small static class to create terminal color change
+ * strings that can be output later to change the foreground
+ * and background color of vt100 compatible terminals
+ */
+class TerminalColorizer
+
+	fixed private static var int foregroundOffset = 29
+	fixed private static var int backgroundOffset = 39
+	
+	/** Available Colors */
+	enum Colors
+		/** Use the default color set by the user */
+		default
+		/** Use Black color */
+		black
+		/** Use Red color */
+		red
+		/** Use Green color */
+		green
+		/** Use Yellow color */
+		yellow
+		/** Use Blue color */
+		blue
+		/** Use Purple color */
+		purple
+		/** Use Cyan color */
+		cyan
+		/** Use White color */
+		white
+	end
+	
+	
+	
+	/**
+	 * Returns a clear string resetting the foreground and
+	 * background color to the user set defaults
+	 *
+	 * @returns Color reset string
+	 */
+	public static func String reset()
+		return "\33[0m"
+	end
+	
+	/**
+	 * Returns the string for setting the foreground and backround
+	 * color to the given values. By default the text is not bold.
+	 *
+	 * @param foreground The foreground color
+	 * @param background The background color
+	 * @returns String for setting the foreground and background color
+	 */
+	public static func String setColor(Colors foreground, Colors background)
+		return setColor(foreground, background, false)
+	end
+	
+	/**
+	 * Returns the string for setting the foreground
+	 * color to the given value. If bold is true the font used
+	 * for rendering is set to bold. By default the background
+	 * color will be set to the user default value.
+	 *
+	 * @param foreground The foreground color
+	 * @param bold True of the text should be rendered bold
+	 * @returns String for setting the foreground color
+	 */
+	public static func String setColor(Colors foreground, bool bold)
+		return setColor(foreground, Colors.default, bold)
+	end
+	
+	/**
+	 * Returns the string for setting the foreground
+	 * color to the given value. By default the background
+	 * color will be set to the user default value and
+	 * the text is not bold.
+	 *
+	 * @param foreground The foreground color
+	 * @returns String for setting the foreground color
+	 */
+	public static func String setColor(Colors foreground)
+		return setColor(foreground, Colors.default, false)
+	end
+	
+	/**
+	 * Returns the string for setting the foreground and backround
+	 * color to the given values. If bold is true the font used
+	 * for rendering is set to bold.
+	 *
+	 * @param foreground The foreground color
+	 * @param background The background color
+	 * @param bold True of the text should be rendered bold
+	 * @returns String for setting the foreground and background color
+	 */
+	public static func String setColor(Colors foreground, Colors background, bool bold)
+		var String text = "\33["
+		if foreground == Colors.default
+			text = text + "0"
+		else
+			text = text + (foregroundOffset + foreground.order())
+		end
+		if bold
+			text = text + ";1"
+		end
+		if background != Colors.default
+			text = text + ";" + (backgroundOffset + background.order())
+		end
+		return text + "m"
+	end
+	
+end

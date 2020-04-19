@@ -1,0 +1,5 @@
+build_dsi = 'yes'
+with_debug = 'no'
+with_warnerrors = 'no'
+with_sanitize = 'no'
+prefix = '/usr'

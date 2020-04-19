@@ -1,0 +1,53 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - CAST</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / CAST(dsByteCode::ebcCast,67)
+</div>
+
+<div class=stContent>
+<div class=stTitle>CAST(dsByteCode::ebcCast,67) - Cast Operation</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Casts the execution object to the type specified if possible.
+If the cast is not possible an exception of type <span id=italic>EInvalidCast</span> will be thrown.
+If the execution object is of a primitive type (byte,bool,int,float) the value will be converted to the new type (with data loss if implied).
+If the execution object is of an object type only the type will be changed if the new type exists in the object class inheritance tree.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]     </span><span id=bold>dsByteCode::ebcCast</span>
+<span id=italic>[dsClass*] </span>type
+<span id=italic>can throw EInvalidCast</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type</div>
+<div class=stText>
+	Specifies the type to cast to.
+	Any class existing in the engine context is valid except <span id=italic>void or null</span>.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

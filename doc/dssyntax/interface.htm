@@ -1,0 +1,83 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Interface Definition</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Interface Definition
+</div>
+
+<div class=stContent>
+<div class=stTitle>Interface Definition</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Interfaces provide functions that classes can inherit and overwrite.
+You can then call those functions afterwards through the interface and you will call the overwritten version of the function.
+Such functions are called abtract functions and are very usefull for object oriented programming.
+For a more profound description of how you can use interfaces to write good scripts please search the internet or book store for articles about Object Oriented Programming (OOP).
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>interface</span> <span id=italic>interface-name</span>
+'{'
+   [ <span id=italic>function declarations</span> ]
+'}'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>interface-name</div>
+<div class=stText>
+The interface-name must be unique in the namespace the interface definition appears in.
+If you think you might get into trouble using a certain interface name you can enclose the interface definition in a namespace definition to make it unique again.
+</div>
+<div id=bold>function declarations</div>
+<div class=stText>
+Functions are declared the same way as you would do it in a class definition with restrictions.
+Following the list of <a href="typemods.htm">Type Modifiers</a> that are allowed(+) or not(-):
+<div class=stText>
+(+) <span id=italic>public</span>, <span id=italic>abstract</span><br>
+(-) <span id=italic>protected</span>, <span id=italic>private</span>, <span id=italic>const</span>, <span id=italic>static</span>
+</div>
+By default functions defined without type modifiers are assigned <span id=italic>public abstract</span>.<br>
+These are only function definitions so no function-body is allowed.
+Thus instead of a statement list you just write a semi-colon ';'.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Simple interface definition having one function.<br>
+<table border=0><tr><td><pre class=stCode>
+interface MyInterface{
+   void OnClick(Point location);
+}
+</pre></td></tr></table>
+You can also specify the full type modifiers but it's not a requirement.
+This example is the exact same as above.<br>
+<table border=0><tr><td><pre class=stCode>
+interface MyInterface{
+   public abstract void OnClick(Point location);
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+class Class1
+   public func new()
+      this.shadowedFunction()
+   end
+   private func void shadowedFunction()
+      System.print("  > Class1.shadowedFunction()\n" )
+   end
+end
+
+class Class2 extends Class1
+   public func new()
+      this.shadowedFunction()
+   end
+   private func void shadowedFunction()
+      System.print("  > Class2.shadowedFunction()\n" )
+   end
+end
+
+class Class3 extends Class2
+   public func new()
+      this.shadowedFunction()
+   end
+   private func void shadowedFunction()
+      System.print("  > Class3.shadowedFunction()\n" )
+   end
+end
+
+class BugShadowFunction extends Application
+   func new()
+   end
+   
+   func int run()
+      System.print("- Test1, should be Class1\n" )
+      Class1.new()
+      
+      System.print("- Test2, should be Class1, Class2\n" )
+      Class2.new()
+      
+      System.print("- Test3, should be Class1, Class2, Class3\n" )
+      Class3.new()
+      
+      return 0
+   end
+end

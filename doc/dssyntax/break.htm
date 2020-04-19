@@ -1,0 +1,59 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Break Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / Break Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>Break Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The Break Statement immediatly quits the inner most For, While or Select statement enclosing the statement-block the Break Statement is in.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>break</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>none</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+This example loops as long no key has been pressed.
+Keyboard is a native class of some fictive application.
+<table border=0><tr><td><pre class=stCode>
+while true // loops indefinitly
+   if Keyboard.GetAnyKeyPressed()
+      break
+   end
+   // do some work here each time a key is not pressed
+end
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

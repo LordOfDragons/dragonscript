@@ -1,0 +1,59 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - CALL</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / CALL(dsByteCode::ebcCall,70)
+</div>
+
+<div class=stContent>
+<div class=stTitle>CALL(dsByteCode::ebcCall,70) - Call Function</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Calls the function indicated by the index in a late-binding fashion popping the needed amount of arguments off the
+argument stack, building an argument list from them and passing the execution over to the fuction.
+The function executed is the most recent function definition found in the object class the function is called upon.
+Any function owned by one of the classes in the engine space can be used.
+If the function is a non-static function the execution object is taken as the object the function is called upon.
+If the function is a static function the execution object is ignored and null is passed to the function called.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte] </span><span id=bold>dsByteCode::ebcCall</span>
+<span id=italic>[int]  </span>function-index
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>function-index</div>
+<div class=stText>
+	Function to call specified by an index into the function table of the appropriate object class.
+	The index has to be in the range of 0 to the count of functions in the approtrate object class.
+	To obtain a correct function index get the function list (GetFuncList) from the caller class,
+	look for the function you need (FindBestFunction) and get the index for this function (GetIndexOf).
+	This function has to be member of one of the classes existing in the engine space.
+	Arguments stored for calling the function have to be stored in reverse order (argument is a stack).
+	The function expects them to be in correct order upon execution.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

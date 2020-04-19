@@ -1,0 +1,53 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - LOCVAR</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / LOCVAR(dsByteCode::ebcLocVar,12)
+</div>
+
+<div class=stContent>
+<div class=stTitle>LOCVAR(dsByteCode::ebcLocVar,12) - Load Locale Variable</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Loads a local function variable and stores it into the execution object.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]  </span><span id=bold>dsByteCode::ebcLocVar</span>
+<span id=italic>[short] </span>index
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>index</div>
+<div class=stText>
+	Local Variables are stored on a stack. Thus the last local variable created has to be
+	refered to using the index 0. The Compiler manages an internal stack to keep track of
+	the correct local variable index numbers at each time. If you do this by hand be carefull
+	to pick the correct number. To find the correct index of a local variable the function
+	<br><span id=italic>int dspParserCheckCode::FindLocalVariable(const char *Name, bool OnlyLocal) const</span><br>
+	has to be used.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

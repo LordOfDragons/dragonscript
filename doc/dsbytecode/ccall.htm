@@ -1,0 +1,55 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - CCALL</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / CCALL(dsByteCode::ebcCCall,72)
+</div>
+
+<div class=stContent>
+<div class=stTitle>CCALL(dsByteCode::ebcCCall,72) - Constructor Call Function</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Calls the given constructor function popping the needed amount of arguments off the argument stack, building an argument list from them and passing the execution over to the fuction.
+Any constructor function owned by one of the classes in the engine space can be used.
+Before the constructor function is invoked the engine creates a new object of the type matching the function's owner class.
+Thus CCALL has a similar effect as the commonly known <span id=italic>new</span> keyword found in C++ language.
+The newly created object will be placed in the execution object and the function is called upon this.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]        </span><span id=bold>dsByteCode::ebcCCall</span>
+<span id=italic>[dsFunction*] </span>function
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>function</div>
+<div class=stText>
+	Constructor function to call.
+	This function has to be member of one of the classes existing in the engine space and has to me declared as beeing a Constructor.
+	Arguments stored for calling the function have to be stored in reverse order (argument is a stack).
+	The function expects them to be in correct order upon execution.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

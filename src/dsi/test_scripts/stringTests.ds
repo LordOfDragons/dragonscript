@@ -1,0 +1,49 @@
+class StringTests extends Application
+	public func new()
+	end
+	
+	public func int run()
+		System.print( "empty: should true is " + "".empty() + "\n" )
+		System.print( "empty: should false is " + "hallo".empty() + "\n" )
+		
+		var String str1 = "this is a test"
+		System.print( "substring: should 'this is a test' is '" + str1.substring( 0 ) + "'\n" )
+		System.print( "substring: should 'is a test' is '" + str1.substring( 5 ) + "'\n" )
+		System.print( "substring: should 'is a ' is '" + str1.substring( 5, 10 ) + "'\n" )
+		System.print( "substring: should 'is a ' is '" + str1.substring( 5, -4 ) + "'\n" )
+		System.print( "substring: should 'is a ' is '" + str1.substring( -9, -4 ) + "'\n" )
+		System.print( "substring: should 'test' is '" + str1.substring( -4 ) + "'\n" )
+		
+		System.print( "find: should -1 is " + str1.find( 'x' ) + "\n" )
+		System.print( "find: should 0 is " + str1.find( 't' ) + "\n" )
+		System.print( "find: should 8 is " + str1.find( 'a' ) + "\n" )
+		
+		System.print( "findString: should -1 is " + str1.findString( "tEsT" ) + "\n" )
+		System.print( "findString: should 10 is " + str1.findString( "test" ) + "\n" )
+		System.print( "findString: should 10 is " + str1.findString( "tes" ) + "\n" )
+		System.print( "findString: should -1 is " + str1.findString( "testa" ) + "\n" )
+		
+		System.print( "findStringReverse: should -1 is " + str1.findStringReverse( "tEsT" ) + "\n" )
+		System.print( "findStringReverse: should 10 is " + str1.findStringReverse( "test" ) + "\n" )
+		System.print( "findStringReverse: should 10 is " + str1.findStringReverse( "tes" ) + "\n" )
+		System.print( "findStringReverse: should -1 is " + str1.findStringReverse( "testa" ) + "\n" )
+		
+		System.print( "reverse: is '" + str1.reverse() + "'\n" )
+		
+		System.print( "replace: should 'thXs Xs a test' is '" + str1.replace( 'i', 'X' ) + "'\n" )
+		System.print( "replace: should 'XhXX XX a XeXX' is '" + str1.replace( "istx", 'X' ) + "'\n" )
+		System.print( "replaceString: should 'this SuperDuper test' is '" + str1.replaceString( "is a", "SuperDuper" ) + "'\n" )
+		System.print( "replaceString: should 'thHolla Holla test' is '" + str1.replaceString( "is", "Holla" ) + "'\n" )
+		System.print( "replaceString: should 'HollaHollaHolla' is '" + "aaa".replaceString( "a", "Holla" ) + "'\n" )
+		System.print( "replaceString: should 'HollaHollaa' is '" + "ababa".replaceString( "ab", "Holla" ) + "'\n" )
+		
+		System.print( "split: should [this,is,a,test] is " + str1.split( ' ' ) + "\n" )
+		var String str2 = "this_is-aXtest"
+		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
+		var String str3 = "this_--X_is-_-aXXXXtest__-X"
+		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
+		
+		return 0
+	end
+end
+

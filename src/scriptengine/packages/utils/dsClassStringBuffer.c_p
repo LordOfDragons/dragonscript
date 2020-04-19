@@ -1,0 +1,389 @@
+/* 
+ * DragonScript Library -- DS Programming Language
+ *
+ * Copyright (C) 2004, Pl�ss Roland ( rptd@gmx.net )
+ * 
+ * myself program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * myself program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+
+// includes
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include "../../../config.h"
+#include "dsClassStringBuffer.h"
+#include "../../dsEngine.h"
+#include "../../dsRunTime.h"
+#include "../../exceptions.h"
+#include "../../objects/dsValue.h"
+#include "../../objects/dsSignature.h"
+#include "../../objects/dsRealObject.h"
+
+/*
+function list
+-------------
+Constructors, Destructors:
+	new()
+		creates new empty string buffer
+	new(byte Char, int Count)
+		creates string having Count times Char
+	new(String str)
+		creates new string buffer with the value of string
+	new(StringBuffer str)
+		creates new string buffer from another string buffer
+	destructor()
+		destructor
+Management:
+	int getLength()
+		returns the length of the string buffer
+	byte getChar(int Position)
+		retrieves the char stored at the given index (starting at 0)
+	void setChar(int Position, byte Char)
+		stores the given character at the given index (starting at 0)
+	int findChar(byte Char, int StartPos)
+		find first occurance of Char starting at Position and return its
+		position or -1 if not found
+	int findCharReverse(byte Char)
+		find last occurance of Char and return its position or -1 if not found
+	String toString()
+		returns string of the string buffer content
+Operators:
+	StringBuffer + String
+		appends string
+	StringBuffer + byte
+		appends a utf-8 character
+	StringBuffer + bool
+		appends "true" or "false"
+	StringBuffer + int
+		appends an integer (converted to string first)
+	StringBuffer + float
+		appends a float to a string (converted to string first)
+
+*/
+
+// native data structure
+struct sSBNatData{
+	char *str;
+	int len;
+};
+
+// native functions
+/////////////////////
+// public func new()
+dsClassStringBuffer::nfNew::nfNew(const sInitData &init) : dsFunction(init.clsSB, "new",
+DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+}
+void dsClassStringBuffer::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	nd->str = NULL;
+	nd->len = 0;
+}
+
+// public func new(byte char, int count)
+dsClassStringBuffer::nfNew2::nfNew2(const sInitData &init) : dsFunction(init.clsSB,
+"new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+	p_AddParameter(init.clsByte); // char
+	p_AddParameter(init.clsInt); // count
+}
+void dsClassStringBuffer::nfNew2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	char theChar = rt->GetValue(0)->GetByte();
+	int size = rt->GetValue(1)->GetInt();
+	if(!(nd->str = new char[size])) THROW(dueOutOfMemory);
+	memset(nd->str, theChar, size);
+	nd->len = size;
+}
+
+// public func new(String str)
+dsClassStringBuffer::nfNew3::nfNew3(const sInitData &init) : dsFunction(init.clsSB,
+"new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+	p_AddParameter(init.clsStr); // str
+}
+void dsClassStringBuffer::nfNew3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	const char *str = rt->GetValue(0)->GetString();
+	int size = strlen(str);
+	if(!(nd->str = new char[size+1])) THROW(dueOutOfMemory);
+	strcpy(nd->str, str);
+	nd->len = size;
+}
+
+// public func new(StringBuffer strBuf)
+dsClassStringBuffer::nfNew4::nfNew4(const sInitData &init) : dsFunction(init.clsSB,
+"new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+	p_AddParameter(init.clsSB); // strBuf
+}
+void dsClassStringBuffer::nfNew4::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	dsRealObject *obj = rt->GetValue(0)->GetRealObject();
+	if(!obj) THROW(dueNullPointer);
+	sSBNatData *nd2 = (sSBNatData*)p_GetNativeData(obj);
+	if(!(nd->str = new char[nd2->len])) THROW(dueOutOfMemory);
+	memcpy(nd->str, nd2->str, nd2->len);
+	nd->len = nd2->len;
+}
+
+// public func destructor()
+dsClassStringBuffer::nfDestructor::nfDestructor(const sInitData &init) : dsFunction(init.clsSB,
+"destructor", DSFT_DESTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+}
+void dsClassStringBuffer::nfDestructor::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	if(nd->str){
+		delete [] nd->str;
+		nd->str = NULL;
+		nd->len = 0;
+	}
+}
+
+// public func int getLength()
+dsClassStringBuffer::nfGetLength::nfGetLength(const sInitData &init) : dsFunction(init.clsSB, "getLength",
+DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt){
+}
+void dsClassStringBuffer::nfGetLength::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	rt->PushInt(nd->len);
+}
+
+// public func byte getChar(int pos)
+dsClassStringBuffer::nfGetChar::nfGetChar(const sInitData &init) : dsFunction(init.clsSB,
+"getChar", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsByte){
+	p_AddParameter(init.clsInt); // pos
+}
+void dsClassStringBuffer::nfGetChar::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	int pos = rt->GetValue(0)->GetInt();
+	if((pos < 0) || (pos >= nd->len)) THROW(dueOutOfBoundary);
+	rt->PushByte(nd->str[pos]);
+}
+
+// public func void setChar(int pos, byte char)
+dsClassStringBuffer::nfSetChar::nfSetChar(const sInitData &init) : dsFunction(init.clsSB,
+"setChar", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
+	p_AddParameter(init.clsInt); // pos
+	p_AddParameter(init.clsByte); // char
+}
+void dsClassStringBuffer::nfSetChar::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	int pos = rt->GetValue(0)->GetInt();
+	char theChar = rt->GetValue(1)->GetByte();
+	if((pos < 0) || (pos >= nd->len)) THROW(dueOutOfBoundary);
+	nd->str[pos] = theChar;
+}
+
+// public func int findChar(byte char, int startPos)
+dsClassStringBuffer::nfFindChar::nfFindChar(const sInitData &init) : dsFunction(init.clsSB,
+"findChar", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt){
+	p_AddParameter(init.clsByte); // char
+	p_AddParameter(init.clsInt); // startPos
+}
+
+void dsClassStringBuffer::nfFindChar::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	char theChar = rt->GetValue(0)->GetByte();
+	int i, pos = rt->GetValue(1)->GetInt();
+	if((pos < 0) || (pos > nd->len)) THROW(dueOutOfBoundary);
+	for(i=pos; i<nd->len; i++){
+		if(nd->str[i] == theChar){
+			rt->PushInt(i); return;
+		}
+	}
+	rt->PushInt(-1);
+}
+
+// public func String toString()
+dsClassStringBuffer::nfToString::nfToString(const sInitData &init) : dsFunction(init.clsSB,
+"findChar", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr){
+}
+
+void dsClassStringBuffer::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	if(nd->str){
+		rt->PushString(nd->str);
+	}else{
+		rt->PushString("");
+	}
+}
+
+
+
+// public func +=(StringBuffer strBuf)
+dsClassStringBuffer::nfOpAdd::nfOpAdd(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsSB); // strBuf
+}
+
+void dsClassStringBuffer::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	dsRealObject *obj = rt->GetValue(0)->GetRealObject();
+	if(!obj) THROW(dueNullPointer);
+	sSBNatData *nd2 = (sSBNatData*)p_GetNativeData(obj);
+	char *newStr = new char[nd->len + nd2->len];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	memcpy(newStr+nd->len, nd2->str, nd2->len);
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len += nd2->len;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+// public func +=(byte Byte)
+dsClassStringBuffer::nfOpAddByte::nfOpAddByte(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsByte); // Byte
+}
+
+void dsClassStringBuffer::nfOpAddByte::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	char theByte = rt->GetValue(0)->GetByte();
+	char *newStr = new char[nd->len + 1];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	newStr[nd->len] = theByte;
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len++;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+// public func +=(bool Bool)
+dsClassStringBuffer::nfOpAddBool::nfOpAddBool(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsBool); // Bool
+}
+
+void dsClassStringBuffer::nfOpAddBool::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	const char *str = rt->GetValue(0)->GetBool() ? "true" : "false";
+	int len = strlen(str);
+	char *newStr = new char[nd->len + len];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	memcpy(newStr+nd->len, str, len);
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len++;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+// public func +=(int Int)
+dsClassStringBuffer::nfOpAddInt::nfOpAddInt(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsInt); // Int
+}
+
+void dsClassStringBuffer::nfOpAddInt::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	char str[20];
+	sprintf((char*)&str, "%i", rt->GetValue(0)->GetInt());
+	int len = strlen(str);
+	char *newStr = new char[nd->len + len];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	memcpy(newStr+nd->len, str, len);
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len++;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+// public func +=(float Float)
+dsClassStringBuffer::nfOpAddFloat::nfOpAddFloat(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsFlt); // Float
+}
+
+void dsClassStringBuffer::nfOpAddFloat::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	char str[20];
+	sprintf((char*)&str, "%f", rt->GetValue(0)->GetFloat());
+	int len = strlen(str);
+	char *newStr = new char[nd->len + len];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	memcpy(newStr+nd->len, str, len);
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len++;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+// public func +=(String str)
+dsClassStringBuffer::nfOpAddString::nfOpAddString(const sInitData &init) : dsFunction(init.clsSB, "+=",
+DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsSB){
+	p_AddParameter(init.clsStr); // str
+}
+
+void dsClassStringBuffer::nfOpAddString::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSBNatData *nd = (sSBNatData*)p_GetNativeData(myself);
+	const char *str = rt->GetValue(0)->GetString();
+	int len = strlen(str);
+	char *newStr = new char[nd->len + len];
+	if(!newStr) THROW(dueOutOfMemory);
+	memcpy(newStr, nd->str, nd->len);
+	memcpy(newStr+nd->len, str, len);
+	if(nd->str) delete [] nd->str;
+	nd->str = newStr;
+	nd->len++;
+	rt->PushObject(myself, GetOwnerClass());
+}
+
+
+
+// class dsClassStringBuffer
+////////////////////////
+// constructor, destructor
+dsClassStringBuffer::dsClassStringBuffer() : dsClass("StringBuffer",
+DSCT_CLASS, DSTM_PUBLIC | DSTM_NATIVE){
+	p_SetNativeDataSize(sizeof(sSBNatData));
+}
+dsClassStringBuffer::~dsClassStringBuffer(){ }
+
+// management
+void dsClassStringBuffer::CreateClassMembers(dsEngine *engine){
+	sInitData init;
+	// store classes
+	init.clsSB = this;
+	init.clsStr = engine->GetClassString();
+	init.clsVoid = engine->GetClassVoid();
+	init.clsByte = engine->GetClassByte();
+	init.clsBool = engine->GetClassBool();
+	init.clsInt = engine->GetClassInt();
+	init.clsFlt = engine->GetClassFloat();
+	// constructor, destructor
+	AddFunction(new nfNew(init));
+	AddFunction(new nfNew2(init));
+	AddFunction(new nfNew3(init));
+	AddFunction(new nfNew4(init));
+	AddFunction(new nfDestructor(init));
+	// management
+	AddFunction(new nfGetLength(init));
+	AddFunction(new nfGetChar(init));
+	AddFunction(new nfSetChar(init));
+	AddFunction(new nfFindChar(init));
+	AddFunction(new nfToString(init));
+	// operators
+	AddFunction(new nfOpAdd(init));
+	AddFunction(new nfOpAddByte(init));
+	AddFunction(new nfOpAddBool(init));
+	AddFunction(new nfOpAddInt(init));
+	AddFunction(new nfOpAddFloat(init));
+	AddFunction(new nfOpAddString(init));
+}

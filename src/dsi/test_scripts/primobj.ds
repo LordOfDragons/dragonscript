@@ -1,0 +1,40 @@
+
+class TestApp extends Application
+	func new()
+	end
+	
+	func int run()
+		var Object testObj
+		var Array numbers
+		var int i
+		// store string
+		testObj = String.new("hallo")
+		System.print("testObj='" + testObj + "'\n")
+		// store int
+		testObj = 8
+		System.print("testObj='" + testObj + "', int=" + (testObj cast int) + "\n")
+		// store float
+		testObj = 1.23
+		System.print("testObj='" + testObj + "', float=" + (testObj cast float) + "\n")
+		// store float but use int
+		testObj = 5.2
+		System.print("testObj='" + testObj + "', int=" + (testObj cast int) + "\n")
+		// test array
+		numbers = Array.new()
+		numbers.add( 5 )
+		numbers.add( 1.445 )
+		numbers.add( true )
+		numbers.add( '1' )
+		for i = 0 to numbers.getCount()
+			System.print("number " + (i + 1) + " = " + numbers.getAt(i) + "\n")
+		end
+		// this is incorrect. you can only cast a primitive type to Object but
+		// not any arbitrary other class
+		/*
+		var String myStr = 8
+		*/
+		// finished
+		return 0
+	end
+	
+end

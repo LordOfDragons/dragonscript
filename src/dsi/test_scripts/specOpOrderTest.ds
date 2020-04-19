@@ -1,0 +1,24 @@
+class StringTests extends Application
+	public func new()
+	end
+	
+	public func int run()
+		var String a = "Hallo"
+		var bool b = true
+		System.print( "'a castable bool' should false is " + ( a castable bool ) + "\n" )
+		System.print( "'b castable bool' should true is " + ( b castable bool ) + "\n" )
+		System.print( "'not a castable bool' should true is " + ( not a castable bool ) + "\n" )
+		System.print( "'not b castable bool' should false is " + ( not b castable bool ) + "\n" )
+		System.print( "'(not b) castable bool' should true is " + ( (not b) castable bool ) + "\n" )
+		System.print( "'not (b castable bool)' should false is " + ( not (b castable bool) ) + "\n" )
+		
+		System.print( "'a typeof String' should true is " + ( a typeof String ) + "\n" )
+		System.print( "'b typeof String' should false is " + ( b typeof String ) + "\n" )
+		System.print( "'not a typeof String' should false is " + ( not a typeof String ) + "\n" )
+		System.print( "'not b typeof String' should true is " + ( not b typeof String ) + "\n" )
+		System.print( "'(not b) typeof String' should false is " + ( (not b) typeof String ) + "\n" )
+		
+		return 0
+	end
+end
+

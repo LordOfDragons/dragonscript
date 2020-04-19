@@ -1,0 +1,3 @@
+export ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:detect_invalid_pointer_pairs=2
+export LSAN_OPTIONS=verbosity=1:log_threads=1
+export UBSAN_OPTIONS=verbosity=1:print_stacktrace=1

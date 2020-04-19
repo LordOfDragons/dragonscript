@@ -1,0 +1,110 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Variable Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Variable Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Variable Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Class variables contain the working parameters of each object instantiated from a class.
+Depending on the type modifiers this class variables can only be accessed by a certain group of classes.
+You can also create class variables which are static and do not belong to instantiated objects.
+This can be usefull to share data over different instances of this class.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>type-modifiers</span> <span id=bold>var</span> <span id=italic>type</span>
+   <span id=italic>name</span> [ '=' <span id=italic>init-value</span> ]
+   [ ',' ... ] ';'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type-modifiers</div>
+<div class=stText>
+Following the list of <a href="typemods.htm">Type Modifiers</a> that are allowed(+) or not(-):
+<div class=stText>
+(+) <span id=italic>public</span>, <span id=italic>protected</span>, <span id=italic>private</span>, <span id=italic>const</span>, <span id=italic>static</span><br>
+(-) <span id=italic>abstract</span>
+</div>
+Static variables can only be accessed using the class name not an object.
+Those variables need an init value assigned to them.
+Because non-static constant variables do not make much of sense specifying <span id=italic>const</span> will always also imply <span id=italic>static</span>.
+</div>
+<div id=bold>type</div>
+<div class=stText>
+Declares the type of the variable.
+All classes and interfaces are allowed as types.
+Not allowed is <span id=italic>void</span>.
+</div>
+<div id=bold>name</div>
+<div class=stText>
+The name of the variable.
+This one has to be unique in the class the definition appears in.
+You can declare more than one variable of the same type seperating them with a commata.
+</div>
+<div id=bold>init-value</div>
+<div class=stText>
+If and only if the variable has been declared as static (or const) you have to specify an init value for the variable.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Simple variable declaration of a private variable only accessible by the class itself.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   private var int p_PrivVar;
+}
+</pre></td></tr></table>
+A const variable (in fact a static because const implies static) with it's init value.
+<table border=0><tr><td><pre class=stCode>
+class Color{
+   public const var Color RED = Color.CreateRGB(255,0,0);
+   public const var int COUNT = 1;
+}
+</pre></td></tr></table>
+Class variables are threated by default as private class members.
+The following two declarations are both private class variables.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   private var int p_Var1;
+   var int p_Var2;
+}
+</pre></td></tr></table>
+</div>
+
+<div class=stHeader>Tip</div>
+<div class=stText>
+Variables declared as constants are handled by the compiler in two different ways.
+If the type of the variables is a primitive type (byte,bool,int,float) and the init value can be calculated at compile time (meaning does not include function calls) then the constant Variables is considered a Compile-Time-Constant.
+Whenever such a constant is used in a script the actual value is compiled into the script as if the value had been specified in place of the constant.
+Those constants also don't take up memory space as they are no real variables.
+All other constant variables are allocated in memory and befitted with their respective value during initialization of the class.
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

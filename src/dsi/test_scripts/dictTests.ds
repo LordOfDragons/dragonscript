@@ -1,0 +1,297 @@
+class DictTests extends Application
+	public func new()
+	end
+	
+	public func int run()
+		var Dictionary dict1
+		var String key1 = "something"
+		var String key2 = "hello"
+		var String key3 = "oops"
+		var String value1 = "abc"
+		var String value2 = "efg"
+		var String value3 = "hij"
+		var String default1 = "123"
+		
+		dict1 = Dictionary.new()
+		System.print( "new: should {} is " + dict1 + "\n" )
+		System.print( "getCount: should 0 is " + dict1.getCount() + "\n" )
+		System.print( "has: should false is " + dict1.has( key1 ) + "\n" )
+		dict1.removeIfExisting( key1 )
+		
+		dict1.setAt( key1, value1 )
+		System.print( "setAt: should {something->abc} is " + dict1 + "\n" )
+		System.print( "getCount: should 1 is " + dict1.getCount() + "\n" )
+		System.print( "has: should true is " + dict1.has( key1 ) + "\n" )
+		System.print( "has: should false is " + dict1.has( key2 ) + "\n" )
+		System.print( "getAt: should 'abc' is " + dict1.getAt( key1 ) + "\n" )
+		System.print( "getAt: should 'abc' is " + dict1.getAt( key1, default1 ) + "\n" )
+		System.print( "getAt: should '123' is " + dict1.getAt( key2, default1 ) + "\n" )
+		
+		dict1.setAt( key2, value2 )
+		System.print( "setAt: should {something->abc,hello->efg} is " + dict1 + "\n" )
+		System.print( "getCount: should 2 is " + dict1.getCount() + "\n" )
+		System.print( "has: should true is " + dict1.has( key1 ) + "\n" )
+		System.print( "has: should true is " + dict1.has( key2 ) + "\n" )
+		System.print( "getAt: should 'abc' is " + dict1.getAt( key1 ) + "\n" )
+		System.print( "getAt: should 'abc' is " + dict1.getAt( key1, default1 ) + "\n" )
+		System.print( "getAt: should 'efg' is " + dict1.getAt( key2, default1 ) + "\n" )
+		
+		var Dictionary dict2 = Dictionary.new( dict1 )
+		System.print( "copy: should {something->abc,hello->efg} is " + dict2 + "\n" )
+		
+		dict2.remove( key1 )
+		System.print( "setAt: should {hello->efg} is " + dict2 + "\n" )
+		System.print( "getCount: should 1 is " + dict2.getCount() + "\n" )
+		System.print( "has: should false is " + dict2.has( key1 ) + "\n" )
+		System.print( "has: should true is " + dict2.has( key2 ) + "\n" )
+		System.print( "getAt: should '123' is " + dict2.getAt( key1, default1 ) + "\n" )
+		System.print( "getAt: should 'efg' is " + dict2.getAt( key2, default1 ) + "\n" )
+		
+		dict2 = Dictionary.new( dict1 )
+		dict2.removeAll()
+		System.print( "removeAll: should {} is " + dict2 + "\n" )
+		System.print( "getCount: should 0 is " + dict2.getCount() + "\n" )
+		System.print( "has: should false is " + dict2.has( key1 ) + "\n" )
+		
+		dict1.setAt( key3, value3 )
+		System.print( "add: should {something->abc,hello->efg,oops->hij} is " + dict1 + "\n" )
+		System.print( "getKeys: should [something,hello,oops] is " + dict1.getKeys() + "\n" )
+		System.print( "getValues: should [abc,efg,hij] is " + dict1.getValues() + "\n" )
+		
+		dict1.forEach( block String key, String value
+			System.print( "forEach: '" + key + "' -> '" + value + "'\n" )
+		end )
+		dict1.forEachKey( block String key
+			System.print( "forEachKey: '" + key + "'\n" )
+		end )
+		dict1.forEachValue( block String value
+			System.print( "forEachValue: '" + value + "'\n" )
+		end )
+		
+		System.print( "map: should {something->ABC,hello->EFG,oops->HIJ} is " + \
+			dict1.map( block String key, String value
+				return value.toUpper()
+			end ) + "\n" )
+		
+		System.print( "collect: should {something->abc,oops->hij} is " + \
+			dict1.collect( block String key, String value
+				return not value.equals( value2 )
+			end ) + "\n" )
+		
+		System.print( "count: should 2 is " + \
+			dict1.count( block String key, String value
+				return not value.equals( value2 )
+			end ) + "\n" )
+		
+		dict1.removeIf( block String key, String value
+			return value.equals( value2 )
+		end )
+		System.print( "removeIf: should {something->abc,oops->hij} is " + dict1 + "\n" )
+		
+		var Dictionary dict3 = Dictionary.new()
+		var int i
+		for i = 'A' to 'Z' + 1
+			dict3.setAt( "" + ( i cast byte ), i )
+		end
+		System.print( "grow: should {A->65,B->66,...,Z->90} is " + dict3 + "\n" )
+		
+		// array tests
+		var Object obj1, obj2
+		
+		obj1 = 4
+		obj2 = 6
+		System.print( "4.compare(6): should <0 is " + obj1.compare( obj2 ) + "\n" )
+		System.print( "4.compare(4): should 0 is " + obj1.compare( obj1 ) + "\n" )
+		System.print( "6.compare(4): should >0 is " + obj2.compare( obj1 ) + "\n" )
+		
+		obj1 = 7.0
+		obj2 = 9.0
+		System.print( "7.0.compare(9.0): should <0 is " + obj1.compare( obj2 ) + "\n" )
+		System.print( "7.0.compare(7.0): should 0 is " + obj1.compare( obj1 ) + "\n" )
+		System.print( "9.0.compare(7.0): should >0 is " + obj2.compare( obj1 ) + "\n" )
+		
+		obj1 = 'b'
+		obj2 = 'e'
+		System.print( "b.compare(e): should <0 is " + obj1.compare( obj2 ) + "\n" )
+		System.print( "b.compare(b): should 0 is " + obj1.compare( obj1 ) + "\n" )
+		System.print( "e.compare(b): should >0 is " + obj2.compare( obj1 ) + "\n" )
+		
+		obj1 = "D"
+		obj2 = "G"
+		System.print( "D.compare(G): should <0 is " + obj1.compare( obj2 ) + "\n" )
+		System.print( "D.compare(D): should 0 is " + obj1.compare( obj1 ) + "\n" )
+		System.print( "G.compare(D): should >0 is " + obj2.compare( obj1 ) + "\n" )
+		
+		var Array arr1 = Array.new()
+		arr1.add( 8 )
+		arr1.add( 12 )
+		arr1.add( 2 )
+		arr1.add( 1 )
+		arr1.add( 9 )
+		
+		var Array arr2 = Array.new( arr1 )
+		arr2.sort()
+		System.print( "sort: should [1,2,8,9,12] is " + arr2 + "\n" )
+		arr2 = Array.new( arr1 )
+		arr2.sort( block int prev, int next
+			return next.compare( prev )
+		end )
+		System.print( "sort(block): should [12,9,8,2,1] is " + arr2 + "\n" )
+		System.print( "sorted: should [1,2,8,9,12] is " + arr1.sorted() + "\n" )
+		System.print( "check: should [8,12,2,1,9] is " + arr1 + "\n" )
+		System.print( "sorted(block): should [12,9,8,2,1] is " + arr1.sorted( block int prev, int next
+			return next.compare( prev )
+		end ) + "\n" )
+		System.print( "check: should [8,12,2,1,9] is " + arr1 + "\n" )
+		
+		var Dictionary dict4 = Dictionary.new()
+		dict4.setAt( "value", 8 )
+		dict4.setAt( "null", null )
+		dict4.setAt( "something", "else" )
+		System.print( "toString: " + dict4 + "\n" )
+		
+		testEquals()
+		iterateModifyProtection()
+		
+		return 0
+	end
+	
+	public func void testEquals()
+		var Dictionary d1, d2
+		
+		d1 = Dictionary.new()
+		d1.setAt( 0, 6 )
+		d1.setAt( 1, 8 )
+		
+		d2 = Dictionary.new()
+		d2.setAt( 0, 6 )
+		d2.setAt( 1, 8 )
+		System.print( "equals (0->6,1->8) (0->6, 1->8) is " + d1.equals(d2) + "\n" )
+		
+		d2.setAt( 0, 2 )
+		System.print( "equals (0->6,1->8) (0->2, 1->8) is " + d1.equals(d2) + "\n" )
+		
+		d2.setAt( 0, 6 )
+		d2.setAt( 2, 9 )
+		System.print( "equals (0->6,1->8) (0->6, 1->8, 2->9) is " + d1.equals(d2) + "\n" )
+		
+		d2.remove( 0 )
+		d2.remove( 2 )
+		System.print( "equals (0->6,1->8) (1->8) is " + d1.equals(d2) + "\n" )
+		
+		
+		
+		d1 = Dictionary.new()
+		d1.setAt( "aA", "AA" )
+		d1.setAt( "bB", "BB" )
+		
+		d2 = Dictionary.new()
+		d2.setAt( "aA", "AA" )
+		d2.setAt( "bB", "BB" )
+		System.print( "equals (aA->AA,bB->BB) (aA->AA, bB->BB) is " + d1.equals(d2) + "\n" )
+		
+		d2.setAt( "aA", "aa" )
+		System.print( "equals (aA->AA,bB->BB) (aA->aa, bB->BB) is " + d1.equals(d2) + "\n" )
+		
+		d2.setAt( "aA", "AA" )
+		d2.setAt( "cC", "CC" )
+		System.print( "equals (aA->AA,bB->BB) (aA->AA, bB->BB, cC->CC) is " + d1.equals(d2) + "\n" )
+		
+		d2.remove( "aA" )
+		d2.remove( "cC" )
+		System.print( "equals (aA->AA,bB->BB) (bB->BB) is " + d1.equals(d2) + "\n" )
+		
+		
+		
+		d1 = Dictionary.new()
+		d1.setAt( 0, 6 )
+		d1.setAt( 1, 8 )
+		d1.setAt( 2, 4 )
+		
+		d2 = Dictionary.new()
+		d2.setAt( 2, 4 )
+		d2.setAt( 1, 8 )
+		d2.setAt( 0, 6 )
+		System.print( "equals (0->6,1->8,2->4) (2->4,1->8,0->6) is " + d1.equals(d2) + "\n" )
+		
+		
+		
+		d1 = Dictionary.new()
+		d1.setAt( "aA", "AA" )
+		d1.setAt( "bB", "BB" )
+		d1.setAt( "cC", "CC" )
+		
+		d2 = Dictionary.new()
+		d2.setAt( "cC", "CC" )
+		d2.setAt( "bB", "BB" )
+		d2.setAt( "aA", "AA" )
+		System.print( "equals (aA->AA,bB->BB,cC->CC) (cC->CC,bB->BB,aA->AA) is " + d1.equals(d2) + "\n" )
+	end
+	
+	public func void iterateModifyProtection()
+		var Dictionary dict = Dictionary.new()
+		var bool failed = false
+		
+		dict.setAt( "hallo", 8 )
+		dict.setAt( "welt", 10 )
+		
+		// getAt inside forEach: should not fail
+		try
+			dict.forEach( block String key, int value
+				dict.getAt( "oops", null )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "getAt inside forEach: should fail false is " + failed + "\n" )
+		
+		// setAt inside forEach should fail
+		try
+			dict.forEach( block String key, int value
+				dict.setAt( "welt", value )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "setAt inside forEach: should fail true is " + failed + "\n" )
+		
+		// getAt inside forEach inside forEach should not fail
+		try
+			dict.forEach( block String key, int value
+				dict.forEach( block String key2, int value2
+					dict.getAt( "oops", null )
+				end )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "getAt inside forEach inside forEach: should fail false is " + failed + "\n" )
+		
+		// setAt inside forEach should fail
+		try
+			dict.forEach( block String key, int value
+				dict.forEach( block String key2, int value2
+					dict.setAt( "welt", value2 )
+				end )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "setAt inside forEach inside forEach: should fail true is " + failed + "\n" )
+		
+		// remove inside forEach should fail
+		try
+			dict.forEach( block String key, int value
+				dict.remove( key )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "remove inside forEach: should fail true is " + failed + "\n" )
+	end
+end

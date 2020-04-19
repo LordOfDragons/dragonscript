@@ -1,0 +1,114 @@
+/* 
+ * DragonScript Interpreter -- DS Programming Language
+ *
+ * Copyright (C) 2004, Plüss Roland ( rptd@gmx.net )
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+requires "Exceptions"
+
+class cA
+	private var int pVal
+	
+	public func new(int value)
+		pVal = value
+	end
+
+	public func int get()
+		return pVal
+	end
+	
+	public func cA +(cA obj)
+		return cA.new(pVal + obj.get())
+	end
+	
+	public func bool equals(Object obj)
+		if not (obj castable cA) or obj == null
+			return false
+		else
+			return (pVal == (obj cast cA).get())
+		end
+	end
+end
+
+class cB extends cA
+	public func new(int value) super(value)
+	end
+	
+	public func cA +(cA obj)
+		return cB.new(get() + obj.get() * 2)
+	end
+	
+	public func bool equals(Object obj)
+		if not (obj castable cA) or obj == null
+			return false
+		else
+			return (get() == ((obj cast cA).get() / 2))
+		end
+	end
+end
+
+	
+class TestScript extends Application
+
+	func new()
+	end
+	
+	func int run()
+		var cA obj
+		var bool result
+		
+		obj = cA.new(8) + cA.new(3)
+		System.print("test 1: value should be 11 is " + obj.get() + "\n")
+		
+		obj = cB.new(8) + (cB.new(3) cast cA)
+		System.print("test 2: value should be 14 is " + obj.get() + "\n")
+		
+		obj = (cB.new(8) cast cA) + (cB.new(3) cast cA)
+		System.print("test 3: value should be 14 is " + obj.get() + "\n")
+
+		result = cA.new(8).equals(cA.new(8))
+		System.print("test 4: cA(8).equals(cA(8)) should be true is " + result + "\n")
+
+		result = cA.new(8).equals(cA.new(10))
+		System.print("test 5: cA(8).equals(cA(10)) should be false is " + result + "\n")
+
+		result = (cB.new(8) cast cA).equals(cB.new(16) cast cA)
+		System.print("test 6: (cB(8) cast cA)equals(cB(16) cast cA) should be true is " + result + "\n")
+
+		result = (cB.new(8) cast cA).equals(cB.new(8) cast cA)
+		System.print("test 7: (cB(8) cast cA).equals(cB(8) cast cA) should be false is " + result + "\n")
+		
+		result = cB.new(8) == null
+		System.print("test 8: cB(8) == null should be false is " + result + "\n")
+		
+		result = null == cB.new(8)
+		System.print("test 8: null == cB(8) should be false is " + result + "\n")
+		
+		result = (null cast cB) == null
+		System.print("test 9: (null cast cB) == null should be true is " + result + "\n")
+		
+		result = cB.new(8) != null
+		System.print("test 10: cB(8) != null should be true is " + result + "\n")
+		
+		result = (null cast cB) != null
+		System.print("test 11: (null cast cB) != null should be false is " + result + "\n")
+		
+		return 0
+	end
+end
+

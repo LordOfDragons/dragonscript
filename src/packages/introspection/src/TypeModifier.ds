@@ -1,0 +1,218 @@
+/* 
+ * DragonScript Script Language
+ *
+ * Copyright (C) 2015, Roland Plüss (roland@rptd.ch)
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+
+namespace Introspection
+
+
+
+/**
+ * Type Modifiers used by Classes, Variables and Functions.
+ * This can be used either just as a class carrying the needed
+ * flag constants or can be used to manage type modifiers.
+ */
+class TypeModifier
+
+	/** Public access flag */
+	public fixed var int PUBLIC = 0h1
+	
+	/** Protected access flag */
+	public fixed var int PROTECTED = 0h2
+	
+	/** Private access flag */
+	public fixed var int PRIVATE = 0h4
+	
+	/** Native class flag */
+	public fixed var int NATIVE = 0h8
+	
+	/** Abstract class/function flag */
+	public fixed var int ABSTRACT = 0h10
+	
+	/** Fixed variable flag */
+	public fixed var int FIXED = 0h20
+	
+	/** Static function/variable flag */
+	public fixed var int STATIC = 0h40
+	
+	/** Masc for all access flags (public, protected, private) */
+	public fixed var int MASC_ACCESS = PUBLIC | PROTECTED | PRIVATE
+	
+	/** Masc for non-access flags */
+	public fixed var int MASC_NONACCESS = NATIVE | ABSTRACT | FIXED | STATIC
+	
+	/** Masc for all valid flags */
+	public fixed var int MASC_ALL = MASC_ACCESS | MASC_NONACCESS
+	
+	
+
+	/** Current type */
+	private var int pFlags
+	
+	/**
+	 * Creates a new Type Modifier object using the given flags.
+	 * The flags must be a valid combination of the flags specified
+	 * as constants. An exception is thrown if incompatible types
+	 * are mixed up. All flags can be mixed expect from the Access
+	 * Group (public, protected, private) has to be specified exactly
+	 * one flag. Other flags are ignored.
+	 *
+	 * @param flags	Flags to store
+	 */
+	public func new(int flags)
+		var int accessCount = 0
+		// check how many access modifiers are specified
+		if flags & PUBLIC != 0
+			accessCount++
+		end
+		if flags & PROTECTED != 0
+			accessCount++
+		end
+		if flags & PRIVATE != 0
+			accessCount++
+		end
+		if accessCount != 1
+			throw EInvalidParam.new()
+		end
+		// store the flags using the all masc
+		pFlags = flags & MASC_ALL
+	end
+	
+	/**
+	 * Returns the current flags
+	 *
+	 * @returns Current flags
+	 */
+	public func int getFlags()
+		return pFlags
+	end
+	
+	/**
+	 * Sets the given flag. If the flag is an access flag then
+	 * the current access flag is replaced with the new one.
+	 *
+	 * @param flag	Flag to set
+	 */
+	public func void setFlag(int flag)
+		// verify parameter
+		if not hasOnlyOneFlag(flag)
+			throw EInvalidParam.new()
+		end
+		// check if this is an access flag
+		if flag & PUBLIC != 0 or flag & PROTECTED != 0 or flag & PRIVATE != 0
+			pFlags &= ~(PUBLIC | PROTECTED | PRIVATE)
+			pFlags |= flag
+		// some other flag
+		else
+			pFlags |= flag
+		end
+	end
+	
+	/**
+	 * Unsets the given flag. This has to be a non-access flag.
+	 *
+	 * @param flag	Flag to unset
+	 */
+	public func void unsetFlag(int flag)
+		// verify parameter
+		if not hasOnlyOneFlag(flag)
+			throw EInvalidParam.new()
+		end
+		if flag & PUBLIC != 0 or flag & PROTECTED != 0 or flag & PRIVATE != 0
+			throw EInvalidParam.new()
+		end
+		// unset flag
+		pFlags &= ~flag
+	end
+	
+	/**
+	 * Check if the given flag is set.
+	 *
+	 * @param flag	Flag to test if it is set
+	 * @returns True if the flag is set
+	 */
+	public func bool isSet(int flag)
+		// verify parameter
+		if not hasOnlyOneFlag(flag)
+			throw EInvalidParam.new()
+		end
+		// test flag
+		return pFlags & flag == flag
+	end
+	
+	
+	
+	/**
+	 * Returns a String representation of the flags. This is done
+	 * by writing all flags with their name seperated by a comma.
+	 *
+	 * @returns String representation of flags
+	 */
+	public func String toString()
+		var String flagString
+		// access flags
+		if pFlags & PUBLIC != 0
+			flagString = "public"
+		elif pFlags & PROTECTED != 0
+			flagString = "protected"
+		else
+			flagString = "private"
+		end
+		// native flag
+		if pFlags & NATIVE != 0
+			flagString = flagString + " native"
+		end
+		// abstract flag
+		if pFlags & ABSTRACT != 0
+			flagString = flagString + " abstract"
+		end
+		// fixed flag
+		if pFlags & FIXED != 0
+			flagString = flagString + " fixed"
+		end
+		// static flag
+		if pFlags & STATIC != 0
+			flagString = flagString + " static"
+		end
+		// finished
+		return flagString
+	end
+	
+	
+	
+	/**
+	 * Checks if the given flags contain only one single flag set.
+	 * Checked are only for the flags specified as constants.
+	 *
+	 * @param flags	Flags to test
+	 * @returns True if only one flag is set
+	 */
+	private func bool hasOnlyOneFlag(int flags)
+		var int i, flagCount = 0
+		for i = 0 to 7
+			if flags & (1 << i) != 0
+				flagCount++
+			end
+		end
+		return flagCount == 1
+	end
+	
+end

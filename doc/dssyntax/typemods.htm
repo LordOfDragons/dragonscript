@@ -1,0 +1,94 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Type Modifiers</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Type Modifiers
+</div>
+
+<div class=stContent>
+<div class=stTitle>Type Modifiers</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Type Modifiers specify additional attributes for class variables and functions.
+They can modify the access permissions and access scope.
+Not all type modifiers can be used on all member declarations.
+See the class and interface definition topics for more information about restrictions.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+[ <span id=italic>access-modifier</span> ] [ <span id=bold>const</span> ] [ <span id=bold>static</span> ] [ <span id=bold>abstract</span> ]
+   <span id=italic>member-declaration</span> ';'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>access-modifier</div>
+<div class=stText>
+Access Modifiers are <span id=bold>public</span>, <span id=bold>protected</span> and <span id=bold>private</span>.
+They set the access level for the class member.
+You can only use one of them at the time.
+The following keywords are possible:
+<ul>
+<li><span id=bold>public</span>: class members can be access from any other class without restrictions.</li>
+<li><span id=bold>protected</span>: only the class itself and all classes inheriting directly (meaning one level above the class in the inheritance tree) from this class can access the class member.</li>
+<li><span id=bold>private</span>: only the class itself can access the class member.</li>
+</ul>
+</div>
+<div id=bold>const</div>
+<div class=stText>
+The const type modifer declares a member as a constant member.
+A constant variable can only be assigned a value once and never be changed again.
+A constant function can only read but not modify the values of the object it has been called upon.
+</div>
+<div id=bold>static</div>
+<div class=stText>
+Static class members do not belong to an object but to the class itself.
+If you declare a member variable or function as static you can only access those members through the class-name not an object.
+This way you can create member variables that will be shared among all objects instantiated from this class.
+Static functions can only access static variables.
+</div>
+<div id=bold>abstract</div>
+<div class=stText>
+Used with functions only this type modifier declares a function as overwritable.
+A class inheriting this function and declaring an own function will cause a call to the abstract function to be redirected to it's new version of the very same function.
+See the function definition topic for further information.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Declaring a variable only accessible by this class.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   private var int p_PrivVar;
+}
+</pre></td></tr></table>
+A static function to do calculations where no object is required.
+<table border=0><tr><td><pre class=stCode>
+class Math{
+   public static Sqrt(float Num){ /* code */ }
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

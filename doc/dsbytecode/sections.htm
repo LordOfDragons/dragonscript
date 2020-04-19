@@ -1,0 +1,181 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - Opcodes by Sections</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript ByteCode">
+<meta name="keywords" content="DragonScript, ByteCode">
+
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+<!--
+<link rel="shortcut icon" href="pics/webicon.ico">
+<link rel=icon type"image/png" href="pics/webicon.png">
+-->
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / Opcodes after Section
+</div>
+
+<div class=stContent>
+	<div class=stTitle>
+	Opcodes by Sections
+	</div>
+
+	<div class=stSection><a name=top>Sections</a></div>
+	<div class=stText>
+		<a href="#general">General Purpose</a><br>
+		<a href="#constants">Constants</a><br>
+		<a href="#objref">Object References</a><br>
+		<a href="#unop">Unary Operators</a><br>
+		<a href="#binop">Arithmetic Operators</a><br>
+		<a href="#bitop">Bitwise Operators</a><br>
+		<a href="#compop">Comparisson Operators</a><br>
+		<a href="#postop">Post Operators</a><br>
+		<a href="#cast">Cast/Type Operators</name><br>
+		<a href="#var">Variables</a><br>
+		<a href="#call">Function Calling</a><br>
+		<a href="#jumps">Jumps</a><br>
+		<a href="#excep">Exception Handling</a><br>
+	</div>
+
+	<div class=stSection><a name=general>General Purpose</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="noop.htm">NOOP(dsByteCode::ebcNop,0) - No Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=constants>Constants</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="cbyte.htm">CBYTE(dsByteCode::ebcCByte,1) - Constant Byte Value</a><br>
+		<a href="cint.htm">CINT(dsByteCode::ebcCInt,2) - Const Int Value</a><br>
+		<a href="cflt.htm">CFLT(dsByteCode::ebcCFlt,3) - Const Float Value</a><br>
+		<a href="cstr.htm">CSTR(dsByteCode::ebcCStr,4) - Const String Value</a><br>
+		<a href="true.htm">TRUE(dsByteCode::ebcTrue,5) - Constant Bool Value true</a><br>
+		<a href="false.htm">FALSE(dsByteCode::ebcFalse,6) - Constant Bool Value false</a><br>
+		<a href="null.htm">NULL(dsByteCode::ebcNull,7) - Null Object</a><br>
+	</div>
+
+	<div class=stSection><a name=objref>Object References</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="this.htm">THIS(dsByteCode::ebcThis,8) - Load This Object</a><br>
+		<a href="super.htm">SUPER(dsByteCode::ebcSuper),9 - Load Super Object</a><br>
+	</div>
+
+	<div class=stSection><a name=unop>Unary Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="opinc.htm">OPINC(dsByteCode::ebcOpInc,15) - Primitive Increment Operation</a><br>
+		<a href="opdec.htm">OPDEC(dsByteCode::ebcOpDec,16) - Primitive Decrement Operation</a><br>
+		<a href="opmin.htm">OPMIN(dsByteCode::ebcOpMin,17) - Primitive Minus Operation</a><br>
+		<a href="opnot.htm">OPNOT(dsByteCode::ebcOpNot,18) - Primitive Not Operation</a><br>
+		<a href="opinv.htm">OPINV(dsByteCode::ebcOpInv,19) - Primitive Invert Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=binop>Arithmetic Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="opmul.htm">OPMUL(dsByteCode::ebcOpMul,20) - Primitive Multiply Operation</a><br>
+		<a href="opdiv.htm">OPDIV(dsByteCode::ebcOpDiv,21) - Primitive Division Operation</a><br>
+		<a href="opmod.htm">OPMOD(dsByteCode::ebcOpMod,22) - Primitive Modulus Operation</a><br>
+		<a href="opadd.htm">OPADD(dsByteCode::ebcOpAdd,23) - Primitive Add Operation</a><br>
+		<a href="opsub.htm">OPSUB(dsByteCode::ebcOpSub,24) - Primitive Subtract Operation</a><br>
+		<a href="opass.htm">OPASS(dsByteCode::ebcOpAss,36) - Assign Operation</a><br>
+		<a href="opmula.htm">OPMULA(dsByteCode::ebcOpMulA,37) - Primitive Multiply Assign Operation</a><br>
+		<a href="opdiva.htm">OPDIVA(dsByteCode::ebcOpDivA,38) - Primitive Division Assign Operation</a><br>
+		<a href="opmoda.htm">OPMODA(dsByteCode::ebcOpModA,39) - Primitive Modulate Assign Operation</a><br>
+		<a href="opadda.htm">OPADDA(dsByteCode::ebcOpAddA,40) - Primitive Add Assign Operation</a><br>
+		<a href="opsuba.htm">OPSUBA(dsByteCode::ebcOpSubA,41) - Primitive Subtract Assign Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=bitop>Bitwise Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="opls.htm">OPLS(dsByteCode::ebcOpLS,25) - Primitive Left Shift Operation</a><br>
+		<a href="oprs.htm">OPRS(dsByteCode::ebcOpRS,26) - Primitive Right Shift Operation</a><br>
+		<a href="opand.htm">OPAND(dsByteCode::ebcOpAnd,33) - Primitive And Operation</a><br>
+		<a href="opor.htm">OPOR(dsByteCode::ebcOpOr,34) - Primitive Or Operation</a><br>
+		<a href="opxor.htm">OPXOR(dsByteCode::ebcOpXor,35) - Primitive Xor Operation</a><br>
+		<a href="oplsa.htm">OPLSA(dsByteCode::ebcLSA,42) - Primitive Left Shift Assign Operation</a><br>
+		<a href="oprsa.htm">OPRSA(dsByteCode::ebcRSA,43) - Primitive Right Shift Assign Operation</a><br>
+		<a href="opanda.htm">OPANDA(dsByteCode::ebcAndA,44) - Primitive And Assign Operation</a><br>
+		<a href="opora.htm">OPORA(dsByteCode::ebcOrA,45) - Primitive Or Assign Operation</a><br>
+		<a href="opxora.htm">OPXORA(dsByteCode::ebcXorA,46) - Primitive Xor Assign Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=compop>Comparisson Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="ople.htm">OPLE(dsByteCode::ebcOpLe,27) - Primitive Less Comparission</a><br>
+		<a href="opgr.htm">OPGR(dsByteCode::ebcOpGr,28) - Primitive Greater Comparisson</a><br>
+		<a href="opleq.htm">OPLEQ(dsByteCode::ebcOpLEq,29) - Primitive Less Or Equal Comparisson</a><br>
+		<a href="opgeq.htm">OPGEQ(dsByteCode::ebcOpGEq,30) - Primitive Greater Or Equal Comparisson</a><br>
+		<a href="opeq.htm">OPEQ(dsByteCode::ebcOpEq,31) - Primitive Equal Comparisson</a><br>
+		<a href="opneq.htm">OPNE(dsByteCode::ebcOpNEq,32) - Primitive Not Equal Comparisson</a><br>
+	</div>
+
+	<div class=stSection><a name=postop>Post Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="pinc.htm">PINC(dsByteCode::ebcPInc,47) - Post Increment Operation</a><br>
+		<a href="pdec.htm">PDEC(dsByteCode::ebcPDec,48) - Post Decrement Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=cast>Cast/Type Operators</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="cast.htm">CAST(dsByteCode::ebcCast,67) - Cast Operation</a><br>
+		<a href="cato.htm">CATO(dsByteCode::ebcCaTo,68) - CastableTo Operation</a><br>
+		<a href="typo.htm">TYPO(dsByteCode::ebcTypO,69) - IsTypeOf Operation</a><br>
+	</div>
+
+	<div class=stSection><a name=var>Variables</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="clsvar.htm">CLSVAR(dsByteCode::ebcClsVar,10) - Load Class Variable</a><br>
+		<a href="param.htm">PARAM(dsByteCode::ebcParam,11) - Load Function Parameter</a><br>
+		<a href="locvar.htm">LOCVAR(dsByteCode::ebcLocVar,12) - Load Locale Variable</a><br>
+		<a href="alv.htm">ALV(dsByteCode::ebcALV,49) - Add Locale Variable</a><br>
+		<a href="flv.htm">FLV(dsByteCode::ebcFLV,50) - Free Locale Variable</a><br>
+	</div>
+
+	<div class=stSection><a name=call>Function Calling</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="push.htm">PUSH(dsByteCode::ebcPush,13) - Push Execution Object onto Stack</a><br>
+		<a href="pop.htm">POP(dsByteCode::ebcPop,14) - Pop Value from Stack into Execution Object</a><br>
+		<a href="call.htm">CALL(dsByteCode::ebcCall,70) - Call Function</a><br>
+		<a href="acall.htm">DCALL(dsByteCode::ebcDCall,71) - Direct Function Call</a><br>
+		<a href="ccall.htm">CCALL(dsByteCode::ebcCCall,72) - Constructor Call Function</a><br>
+		<a href="ret.htm">RET(dsByteCode::ebcRet,51) - Return</a><br>
+	</div>
+
+	<div class=stSection><a name=jumps>Jumps</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="jmpb.htm">JMPB(dsByteCode::ebcJMPB,52) - Unconditional Jump (byte)</a><br>
+		<a href="jmps.htm">JMPS(dsByteCode::ebcJMPS,53) - Unconditional Jump (short)</a><br>
+		<a href="jmpl.htm">JMPL(dsByteCode::ebcJMPL,54) - Unconditional Jump (long)</a><br>
+		<a href="jeqb.htm">JEQB(dsByteCode::ebcJEQB,55) - Jump If Equal (byte)</a><br>
+		<a href="jeqs.htm">JEQS(dsByteCode::ebcJEQS,56) - Jump If Equal (short)</a><br>
+		<a href="jeql.htm">JEQL(dsByteCode::ebcJEQL,57) - Jump If Equal (long)</a><br>
+		<a href="jneb.htm">JNEB(dsByteCode::ebcJNEB,58) - Jump If Not Equal (byte)</a><br>
+		<a href="jnes.htm">JNES(dsByteCode::ebcJNES,59) - Jump If Not Equal (short)</a><br>
+		<a href="jnel.htm">JNEL(dsByteCode::ebcJNEL,60) - Jump If Not Equal (long)</a><br>
+		<a href="jceb.htm">JCEB(dsByteCode::ebcJCEB,61) - Jump If Case Equal (byte)</a><br>
+		<a href="jces.htm">JCES(dsByteCode::ebcJCES,62) - Jump If Case Equal (short)</a><br>
+		<a href="jcel.htm">JCEL(dsByteCode::ebcJCEL,63) - Jump If Case Equal (long)</a><br>
+	</div>
+
+	<div class=stSection><a name=excep>Exception Handling</a> <a href="#top">(top)</a></div>
+	<div class=stText>
+		<a href="joeb.htm">JOEB(dsByteCode::ebcJOEB,64) - Jump On Exception (byte)</a><br>
+		<a href="joes.htm">JOES(dsByteCode::ebcJOES,65) - Jump On Exception (short)</a><br>
+		<a href="joel.htm">JOEL(dsByteCode::ebcJOEL,66) - Jump On Exception (long)</a><br>
+		<a href="btb.htm">BTB(dsByteCode::ebcBTB,73) - Begin Try Block</a><br>
+		<a href="etb.htm">ETB(dsByteCode::ebcETB,74) - End Try Block</a><br>
+		<a href="throw.htm">THROW(dsByteCode::ebcThrow,75) - throws an exception</a><br>
+		<a href="rethrow.htm">RETHROW(dsByteCode::ebcReThrow,76) - rethrows the last exception</a><br>
+	</div>
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

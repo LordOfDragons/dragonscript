@@ -1,0 +1,89 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Namespace Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="script.htm">Script and Compilation Settings</a> / Namespace Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>Namespace Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Namespaces provide a way to use classes and interfaces with the same name without running into a name clash.
+Classes and interfaces are required to have unique names.
+If now such structures happen to have the same name you can get around this problem by specifying a namespace they should belong to.
+You can think of namespaces as directories on a disc.
+They serve the purpose to organize and seperate the classes and interfaces.
+This is usefull especially for applications dealing with a waste number of scripts.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>namespace</span> [ <span id=italic>namespace-name</span> ] ';'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>namespace-name</div>
+<div class=stText>
+The namespace-name specifies the full namespace-name composed of identifiers seperated by a '.'.
+Think of this name as a path to the correct namespace-'directory' but only with a '.' as seperator.
+The namespace-name has to be unique.
+The namespace change takes place immediatly after the namespace statement has been invoked.
+You can change the namespace at any point in the script as long as it does happen outside any class or interface definitions.<br>
+Specifying no namespace-name will revert to the default top namespace which has no name.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+In this example we assume an application using plugins for audio and graphics.
+We want to make a graphics plugin script and put it in the correct namespace so the application can find it.
+The unique full name of the resulting class yields then <span id=italic>Plugins.Graphics.MyPlugin.MyClass</span>.
+If you want to access another class in the same namespace you don't have to use the full class-name the simple class-name is enough.
+<table border=0><tr><td><pre class=stCode>
+namespace Plugins.Graphics.MyPlugin;
+class MyClass{
+   /* member declarations */
+}
+</pre></td></tr></table>
+The same in this example but this time we want the second class to be back in the top namespace again.
+<table border=0><tr><td><pre class=stCode>
+namespace Plugins.Graphics.MyPlugin;
+class MyClass{
+   /* member declarations */
+}
+namespace;
+class MainClass{
+   /* member declarations */
+}
+</pre></td></tr></table>
+</div>
+
+<div class=stHeader>Tip</div>
+<div class=stText>
+Although you can change namespaces during the course of a script it's better to use only one namespace for one script file.
+This way you can prevent difficulties with classes residing suddenly in wrong namespaces and the hazzle of searching all namespace declarations throughout the code.
+The best place for the namespace statement is at beginning of the script right after the require-statements.
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

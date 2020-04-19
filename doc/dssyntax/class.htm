@@ -1,0 +1,110 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Definition</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Definition
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Definition</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+A Class is the basic unit of every script you write.
+It's a definition of the objects you can create using this class as it's type.
+Classes are refered to throughout this documentation as types.
+The class definition consists of two different pieces:<br>
+<ul>
+<li>The class header: containing the name of the class and inheritance information</li>
+<li>The class body: containing the definition of all class members</li>
+</ul>
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>class</span> <span id=italic>class-name</span>
+[ <span id=bold>extends</span> <span id=italic>base-class</span> ]
+[ <span id=bold>implements</span> <span id=italic>interface1</span> [ ',' <span id=italic>interface1</span> ... ] ]
+'newline'
+   [ <span id=italic>inner class definition</span> ]
+   [ <span id=italic>inner interface definition</span> ]
+   [ <span id=italic>enumeration declarations</span> ]
+   [ <span id=italic>variable declarations</span> ]
+   [ <span id=italic>function declarations</span> ]
+'end'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>class-name</div>
+<div class=stText>
+The class-name must be unique in the namespace the class definition appears in.
+If you think you might get into trouble using a certain class name you can enclose the class definition in a namespace definition to make it unique again.
+</div>
+<div id=bold>base-class</div>
+<div class=stText>
+Each class is derived from another class to build a hierarchy of classes.
+If you do not specify a base class here the parser will use <span id=italic>Object</span> as the base class.
+You can specify any class defined in either the scripts already loaded or any scripts the given package contains where this script belongs to.
+A class must have only one base class.
+</div>
+<div id=bold>interface1, interface2, ...</div>
+<div class=stText>
+A class can have one or more interfaces.
+The class inherits from each interface the functions and has to implement them.
+A class definition is only valid if all functions defined in the interfaces listed here have been implemented.
+If interfaces have duplicate functions an error will be issued.
+</div>
+<div id=bold>inner class/interface definitions</div>
+<div class=stText>
+A class can have inner classes and interfaces.
+You can then access those inner classes/interfaces with the usage of the '.'-operator.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Simple class definition.<br>
+<table border=0><tr><td><pre class=stCode>
+class MyScript
+   // member declarations
+end
+</pre></td></tr></table>
+A more elaborate example of a class definition including base class and interfaces
+<table border=0><tr><td><pre class=stCode>
+class MyScript extends BaseScript implements MouseEvent, RenderEvent
+   // member declarations
+end
+</pre></td></tr></table>
+Classes can also contain nested inner classes.
+This way you can create a hierarchy of classes.
+You can then refer to this class using the '.'-Operator like <span id=italic>MyClass.InnerClass</span>.
+<table border=0><tr><td><pre class=stCode>
+class MyClass
+   class InnerClass
+      /* member declarations */
+   end
+   // member declarations
+end
+</pre></td></tr></table>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

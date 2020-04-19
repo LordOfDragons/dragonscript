@@ -1,0 +1,147 @@
+class ClassA
+	enum Another
+		a
+		b
+		c
+	end
+	
+	public func new()
+	end
+end
+
+enum GlobalEnum
+	a
+	b
+	c
+end
+
+class TestScript extends Application
+	enum Testing
+		a
+		b
+		c
+	end
+	
+	func new()
+	end
+	
+	func int run()
+		this.printEnums()
+		return 0
+	end
+	
+	public func void printEnums()
+		// instance methods
+		System.print( "Testing.a.name(): " + Testing.a.name() + "\n" )
+		System.print( "Testing.a.order(): " + Testing.a.order() + "\n" )
+		System.print( "Testing.c.name(): " + Testing.c.name() + "\n" )
+		System.print( "Testing.c.order(): " + Testing.c.order() + "\n" )
+		
+		System.print( "Testing.a.toString(): " + Testing.a + "\n" )
+		System.print( "ClassA.Another.a.toString(): " + ClassA.Another.a + "\n" )
+		System.print( "GlobalEnum.a.toString(): " + GlobalEnum.a + "\n" )
+		
+		System.print( "Testing.a == Testing.a: " + (Testing.a == Testing.a) + "\n" )
+		System.print( "Testing.a == Testing.b: " + (Testing.a == Testing.b) + "\n" )
+		System.print( "Testing.a == ClassA.Another.a: " + (Testing.a == ClassA.Another.a) + "\n" )
+		
+		System.print( "Testing.a equals Testing.a: " + Testing.a.equals(Testing.a) + "\n" )
+		System.print( "Testing.a equals Testing.b: " + Testing.a.equals(Testing.b) + "\n" )
+		System.print( "Testing.a equals ClassA.Another.a: " + Testing.a.equals(ClassA.Another.a) + "\n" )
+		
+		System.print( "Testing.a compare Testing.a: " + Testing.a.compare(Testing.a) + "\n" )
+		System.print( "Testing.a compare Testing.b: " + Testing.a.compare(Testing.b) + "\n" )
+		System.print( "Testing.a compare Testing.c: " + Testing.a.compare(Testing.c) + "\n" )
+		
+		System.print( "Testing.a.set(): " + Testing.a.set() + "\n" )
+		System.print( "Testing.a.setWithout(): " + Testing.a.setWithout() + "\n" )
+		
+		// class methods
+		System.print( "Testing.none(): " + Testing.none() + "\n" )
+		System.print( "Testing.all(): " + Testing.all() + "\n" )
+		
+		Testing.forEach(block Enumeration each
+			System.print( "Testing.forEach: " + each.name() + " " + each.order() + "\n" )
+		end)
+		
+		var ClassA.Another e1 = ClassA.Another.a
+		System.print( "e1: " + e1 + "\n" )
+		
+		Array.newWith(ClassA.Another.a, ClassA.Another.b, ClassA.Another.c).forEach(block ClassA.Another each
+			select each
+			case ClassA.Another.a
+				System.print( "select1: ClassA.Another.a\n" )
+				
+			case ClassA.Another.b
+				System.print( "select1: ClassA.Another.b\n" )
+				
+			case ClassA.Another.c
+				System.print( "select1: ClassA.Another.c\n" )
+				
+			else
+				System.print( "select1: else\n" )
+			end
+		end)
+		
+		Array.newWith(Testing.a, ClassA.Another.b, null).forEach(block Enumeration each
+			select each
+			case Testing.a
+				System.print( "select2: Testing.a\n" )
+				
+			case Testing.b
+				System.print( "select2: Testing.b\n" )
+				
+			case Testing.c
+				System.print( "select2: Testing.c\n" )
+				
+			case ClassA.Another.a
+				System.print( "select2: ClassA.Another.a\n" )
+				
+			case ClassA.Another.b
+				System.print( "select2: ClassA.Another.b\n" )
+				
+			case ClassA.Another.c
+				System.print( "select2: ClassA.Another.c\n" )
+				
+			else
+				System.print( "select2: else\n" )
+			end
+		end)
+		
+		System.print( "Testing.named('a'): " + Testing.named("a") + "\n" )
+		System.print( "Testing.named('c'): " + Testing.named("c") + "\n" )
+		System.print( "Testing.named('A'): " + Testing.named("A") + "\n" )
+		
+		System.print( "ClassA.Another.named('a'): " + ClassA.Another.named("a") + "\n" )
+		System.print( "ClassA.Another.named('c'): " + ClassA.Another.named("c") + "\n" )
+		System.print( "ClassA.Another.named('A'): " + ClassA.Another.named("A") + "\n" )
+		
+		System.print( "Testing.withOrder(0): " + Testing.withOrder(0) + "\n" )
+		System.print( "Testing.withOrder(2): " + Testing.withOrder(2) + "\n" )
+		System.print( "Testing.withOrder(5): " + Testing.withOrder(5) + "\n" )
+		
+		System.print( "ClassA.Another.withOrder(0): " + ClassA.Another.withOrder(0) + "\n" )
+		System.print( "ClassA.Another.withOrder(2): " + ClassA.Another.withOrder(2) + "\n" )
+		System.print( "ClassA.Another.withOrder(5): " + ClassA.Another.withOrder(5) + "\n" )
+		
+		System.print( "Testing.a < Testing.a: " + ( Testing.a < Testing.a ) + "\n" )
+		System.print( "Testing.a < Testing.b: " + ( Testing.a < Testing.b ) + "\n" )
+		System.print( "Testing.a < Testing.c: " + ( Testing.a < Testing.c ) + "\n" )
+		System.print( "Testing.c < Testing.b: " + ( Testing.c < Testing.b ) + "\n" )
+		
+		System.print( "Testing.a <= Testing.a: " + ( Testing.a <= Testing.a ) + "\n" )
+		System.print( "Testing.a <= Testing.b: " + ( Testing.a <= Testing.b ) + "\n" )
+		System.print( "Testing.a <= Testing.c: " + ( Testing.a <= Testing.c ) + "\n" )
+		System.print( "Testing.c <= Testing.b: " + ( Testing.c <= Testing.b ) + "\n" )
+		
+		System.print( "Testing.a > Testing.a: " + ( Testing.a > Testing.a ) + "\n" )
+		System.print( "Testing.a > Testing.b: " + ( Testing.a > Testing.b ) + "\n" )
+		System.print( "Testing.a > Testing.c: " + ( Testing.a > Testing.c ) + "\n" )
+		System.print( "Testing.c > Testing.b: " + ( Testing.c > Testing.b ) + "\n" )
+		
+		System.print( "Testing.a >= Testing.a: " + ( Testing.a >= Testing.a ) + "\n" )
+		System.print( "Testing.a >= Testing.b: " + ( Testing.a >= Testing.b ) + "\n" )
+		System.print( "Testing.a >= Testing.c: " + ( Testing.a >= Testing.c ) + "\n" )
+		System.print( "Testing.c >= Testing.b: " + ( Testing.c >= Testing.b ) + "\n" )
+	end
+end

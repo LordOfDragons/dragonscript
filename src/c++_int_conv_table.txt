@@ -1,0 +1,60 @@
+// unary operators
+opIncrement,	// ++
+opDecrement,	// --
+opPlus,			// +
+opMinus,		// -
+opNot,			// !
+opInverse,		// ~
+// normal operators
+opMultiply,		// *
+opDivide,		// /
+opModulate,		// %
+opAdd,			// +
+opSubtract,		// -
+opLeftShift,	// <<
+opRightShift,	// >>
+opLess,			// <
+opBigger,		// >
+opLessEqual,	// <=
+opBiggerEqual,	// >=
+opEqual,		// ==
+opNotEqual,		// !=
+opAnd,			// &
+opOr,			// |
+opXor,			// ^
+opAssign,		// =
+opMultiplyAssign,	// *=
+opDivideAssign,		// /=
+opModulateAssign,	// %=
+opAddAssign,		// +=
+opSubtractAssign,	// -=
+opLeftShiftAssign,	// <<=
+opRightShiftAssign,	// >>=
+opAndAssign,	// &=
+opOrAssign,		// |=
+opXorAssign,	// ^=
+
+
+++ byte => byte (6)
+-- byte => byte (4)
++ byte => int (5)
+- byte => int (-5)
+! byte => bool (0)
+~ byte => int (-6)
+++ bool => bool (1)
++ bool => int (1)
+- bool => int (-1)
+! bool => bool (0)
+~ bool => int (-2)
+++ int => int (6)
+-- int => int (4)
++ int => int (5)
+- int => int (-5)
+! int => bool (0)
+~ int => int (-6)
+++ float => float (3.500000)
+-- float => float (1.500000)
++ float => float (2.500000)
+- float => float (-2.500000)
+! float => bool (0)
+

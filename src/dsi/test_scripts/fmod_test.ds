@@ -1,0 +1,32 @@
+requires "Math"
+
+class FModTest extends Application
+
+	func new()
+	end
+	
+	func int run()
+		var float minValue = 2.0
+		var float maxValue = 10.0
+		var float range = maxValue - minValue
+		var float curValue, clampedValue
+		var int i
+		
+		System.print( "fmod test.\n\n" )
+		curValue = -20.0
+		while curValue < 20.0
+			clampedValue = Math.fmod( curValue - minValue, range )
+			if clampedValue < 0
+				clampedValue += minValue + range
+			else
+				clampedValue += minValue
+			end
+			
+			System.print( "" + curValue + " => " + clampedValue + "\n" )
+			
+			curValue += 0.1
+		end
+		
+		return 0
+	end
+end

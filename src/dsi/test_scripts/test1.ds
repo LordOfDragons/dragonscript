@@ -1,0 +1,766 @@
+/* 
+ * DragonScript Interpreter -- DS Programming Language
+ *
+ * Copyright (C) 2004, Plüss Roland ( rptd@gmx.net )
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+
+/* ============================= *\
+|*   DragonScript Testing File   *|
+\* ============================= */
+
+// requires "script2.ds"
+requires "Math"
+//requires "fobug.ds"
+
+//namespace Plugins.RPTD
+
+/**
+ * This is how DS-Doc looks like. Text is written on one line
+ * like in HTML pages ignoring any leading or trailing spaces.
+ * the '* ' at the beginning (including the space) is not
+ * required. The parser ignores leading characters belonging
+ * to ds comments (thus '/' and '*').
+ * You can use special tags in the doc like the 'br' tag to
+ * hard break a line.
+ *
+ * @short  A short description of the class or func
+ *         that is used in the quick summary of a class.
+ *         This is usually a short one-liner text.
+ * @param arg1   Describes the meaning of the func parameter
+ *               arg1. Each parameter is written with a new
+ *               param block.
+ * @returns   Describes what value is returned if any.
+ * @throws EOutOfMemory   Describe when this happens
+ * @see    SomeClass.SubClass
+ * @see    SomeClass.SubClass.func(int a, int b)
+ */
+class Tests
+	// test interface
+	interface ITest
+		func String getCaption()
+		func void run()
+	end
+	
+	// simple test
+	class ETestFailed extends Exception
+		func new() super("Test Failed")
+		end
+		
+		func new(String reason) super(reason)
+		end
+	end
+	
+	// testing loop
+	class TestLoop implements ITest
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "For loop test"
+		end
+		
+		func void run()
+			var int i, vAge=10
+			for i = 0 to 6
+				vAge++
+			end
+			if vAge == 16
+				System.print("Test succeeded.\n")
+			else
+				System.print("Test failed: " + vAge + ".\n")
+			end
+		end
+	end
+	
+	// test String output
+	class TestHallo implements ITest
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "Say Hallo"
+		end
+		
+		func void run()
+			System.print("Just saying Hallo, that's all.\n")
+		end
+	end
+	
+	// some exception
+	class MyException extends Exception
+		func new() super("My Own Exception")
+		end
+	end
+	
+	// test exception handling
+	class TestException implements ITest
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Exception"
+		end
+		
+		func void run()
+			var int vResult, vOperand=0
+			try
+//				vResult = 10 / vOperand
+				try
+//					vResult = 10 / vOperand
+					throw Exception.new("Some Stupid Exception")
+				catch EOutOfMemory e
+					System.print("Exception EOutOfMemory caught.\n")
+				end
+	//			throw Exception.new("Some Stupid Exception")
+	//			throw MyException.new()
+			catch EDivisionByZero e
+				System.print("Exception DivByZero caught.\n")
+			end
+		end
+	end
+	
+	// test constants
+	class TestConstants implements ITest
+		public fixed var int MODEBASE = 10
+		public fixed var int MODE1 = MODEBASE + 5
+		enum Directions
+			left
+			right
+			top
+			bottom
+		end
+		
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Constants/Enumeration"
+		end
+		
+		func void run()
+			System.print("MODE1 = " + MODE1 + "\n")
+			System.print("eLeft=" + Directions.left + ", eRight=" + Directions.right \
+				+ ", eTop=" + Directions.top + ", eBottom=" + Directions.bottom + "\n")
+		end
+	end
+	
+	// test speed... well... sort of
+	class TestSpeed implements ITest
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Speed"
+		end
+		
+		func void run()
+			var int i, vValue
+			var float vRet, vTime
+			// start
+			System.print("Starting Test...\n")
+			// loop
+			vTime = System.getTickTime()
+			for i = 0 to 150000
+				vValue = 1145677
+				vRet = ((vValue & 2047) cast float) / 8.0
+				vRet = (((vValue >> 11) & 2047) cast float) / 8.0
+				vRet = (((vValue >> 22) & 1023) cast float) / 4.0
+			end
+			vTime = System.getTickTime() - vTime
+			// finished
+			System.print("Finished Test, " + vTime + "s.\n")
+		end
+	end
+	
+	// test static ,e,bers
+	class TestStatics implements ITest
+		public static var int StaVarInt = 8
+
+		class Color
+			public fixed var Color RED = Color.new(1,0,0)
+			public fixed var Color GREEN = Color.new(0,1,0)
+			public fixed var Color BLUE = Color.new(0,0,1)
+			public fixed var Color SPECIAL = Color.new(1,0.5,0)
+		
+			public var float r, g, b
+			func new(float red, float green, float blue)
+				r=red: g=green: b=blue
+			end
+		end
+
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Statics"
+		end
+		
+		func void run()
+			System.print("StaVarInt = " + StaVarInt + "\n")
+//			Color.RED.g = 8
+//			Color.RED = Color.GREEN
+			System.print("RED = (" + Color.RED.r + "," + Color.RED.g + "," + \
+				Color.RED.b + ")\n")
+			System.print("GREEN = (" + Color.GREEN.r + "," + Color.GREEN.g + "," + \
+				Color.GREEN.b + ")\n")
+			System.print("BLUE = (" + Color.BLUE.r + "," + Color.BLUE.g + "," + \
+				Color.BLUE.b + ")\n")
+			System.print("SPECIAL = (" + Color.SPECIAL.r + "," + Color.SPECIAL.g + \
+				"," + Color.SPECIAL.b + ")\n")
+		end
+	end
+
+	// test math
+	class TestMath implements ITest
+		public fixed var float EPSILON = 0.00001
+		
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Math"
+		end
+		
+		func bool mathEqual(float result, float value)
+			if result < value
+				return (value - result) <= EPSILON
+			else
+				return (result - value) <= EPSILON
+			end
+		end
+		
+		func void run()
+			System.print("running Math Tests...\n")
+			/*
+			System.print("Math Constants:\n")
+			System.print("e=" + Math.M_E + ", log_2(e)=" + Math.M_LOG2E + 
+				", log_10(e)=" + Math.M_LOG10E + ", log_e(2)=" + Math.M_LN2 + "\n")
+			System.print("log_e(10)=" + Math.M_LN10 + ", pi=" + Math.M_PI + 
+				", pi/2=" + Math.M_PI_2 + ", pi/4=" + Math.M_PI_4 + "\n")
+			System.print("1/pi=" + Math.M_1_PI + ", 2/pi=" + Math.M_2_PI + 
+				", 2/sqrt(pi)=" + Math.M_2_SQRTPI + ", sqrt(2)=" + Math.M_SQRT2 + "\n")
+			System.print("1/sqrt(2)=" + Math.M_SQRT1_2 + "\n")
+			*/
+			if (Math.abs(5) != 5) or (Math.abs(-3) != 3)
+				throw ETestFailed.new()
+			end
+			if not mathEqual(Math.acos(0), Math.M_PI_2) or not mathEqual(Math.acos(1), 0)
+				throw ETestFailed.new()
+			end
+			if not mathEqual(Math.atan(-1), -Math.M_PI_4) or not mathEqual(Math.atan(0), 0) or \
+			not mathEqual(Math.atan(1), Math.M_PI_4)
+				throw ETestFailed.new()
+			end
+			if not mathEqual(Math.atan2(1,0), Math.M_PI_2) or \
+			not mathEqual(Math.atan2(1,1), Math.M_PI_4) or \
+			not mathEqual(Math.atan2(1,-1), Math.M_PI_4*3)
+				throw ETestFailed.new()
+			end
+			if (Math.ceil(1.2) != 2.0) or (Math.ceil(1) != 1.0) or (Math.ceil(-1.2) != -1.0)
+				throw ETestFailed.new()
+			end
+			if not mathEqual(Math.cos(Math.M_PI_2), 0) or not mathEqual(Math.cos(0), 1)
+				throw ETestFailed.new()
+			end
+			if (Math.fabs(5.2) != 5.2) or (Math.fabs(-2.1) != 2.1)
+				throw ETestFailed.new()
+			end
+			if (Math.floor(1.2) != 1.0) or (Math.floor(1) != 1.0)  or (Math.floor(-1.2) != -2.0)
+				throw ETestFailed.new()
+			end
+			if (Math.fmod(2.0,0.75) != 0.5)
+				throw ETestFailed.new()
+			end
+			if (Math.pow(2,4) != 16)
+				throw ETestFailed.new()
+			end
+			if not mathEqual(Math.sqrt(2), Math.M_SQRT2)
+				throw ETestFailed.new()
+			end
+			
+			// test of bools
+			var bool bvalt1 = true
+			var bool bvalt2 = true
+			var bool bvalf1 = false
+			var bool bvalf2 = false
+			
+			if ( not ( bvalt1 & bvalt1 ) ) or ( not ( bvalt1 & bvalt2 ) )
+				throw ETestFailed.new()
+			end
+			if ( bvalt1 & bvalf1 ) or ( bvalf1 & bvalt1 ) or ( bvalf1 & bvalf2 )
+				throw ETestFailed.new()
+			end
+			if ( not ( bvalt1 | bvalt2 ) ) or ( not ( bvalt1 | bvalf1 ) ) or ( not ( bvalf1 | bvalt1 ) )
+				throw ETestFailed.new()
+			end
+			if bvalf1 | bvalf2
+				throw ETestFailed.new()
+			end
+			if ( not ( bvalt1 ^ bvalf1 ) ) or ( not ( bvalf1 ^ bvalt1 ) )
+				throw ETestFailed.new()
+			end
+			if ( bvalt1 ^ bvalt2 ) or ( bvalf1 ^ bvalf2 )
+				throw ETestFailed.new()
+			end
+			
+			System.print("All Tests passed.\n")
+		end
+	end
+	
+	// test other constructs
+	class TestConstructs implements ITest
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Constructs"
+		end
+		
+		func int selectFunc(int code)
+			select code
+			case 0
+				return 10
+			case 1, 2
+				return 20
+			else
+				return 40
+			end
+		end
+		
+		func void run()
+			var int arg, result
+			// test select construct
+			if (selectFunc(0) != 10) or (selectFunc(1) != 20) or (selectFunc(2) != 20) or \
+			(selectFunc(3) != 40)
+				throw ETestFailed.new("selectFunc")
+			end
+			// test inline-if construction
+			arg = 3
+			result = arg > 2 if 5 else 3
+			if result != 5
+				throw ETestFailed.new("inline-if-1")
+			end
+			result = arg < 2 if 5 else 3
+			if result != 3
+				throw ETestFailed.new("inline-if-2")
+			end
+			
+			
+			System.print("All Tests passed.\n")
+		end
+	end
+
+	// test string
+	class TestString implements ITest
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test String"
+		end
+		
+		func void run()
+			var String a, b, c
+			System.print("running String Tests...\n")
+			
+			a = "abc"
+			if a.compare("abc") != 0
+				throw ETestFailed.new()
+			end
+			if a.compare("abcd") >= 0
+				throw ETestFailed.new()
+			end
+			if a.compare("ab") <= 0
+				throw ETestFailed.new()
+			end
+			
+			a = String.new('x', 8)
+			if a.compare("xxxxxxxx") != 0
+				throw ETestFailed.new()
+			end
+			
+			b = a
+			if b.compare("xxxxxxxx") != 0
+				throw ETestFailed.new()
+			end
+			
+			if a.getLength() != 8
+				throw ETestFailed.new()
+			end
+			a = "hallo"
+			if a.getAt(0) != 'h' or a.getAt(2) != 'l' or a.getAt(4) != 'o'
+				throw ETestFailed.new()
+			end
+			b = "HalLo WElt!"
+			c = b.toLower()
+			if c.compare("hallo welt!") != 0
+				throw ETestFailed.new()
+			end
+			c = b.toUpper()
+			if c.compare("HALLO WELT!") != 0
+				throw ETestFailed.new()
+			end
+			c = b.reverse()
+			if c.compare("!tlEW oLlaH") != 0
+				throw ETestFailed.new()
+			end
+			a = "34"
+			if a.toInt() != 34
+				throw ETestFailed.new()
+			end
+			a = "3.445"
+			if a.toFloat() != 3.445
+				throw ETestFailed.new()
+			end
+			
+			a = "  hallo    "
+			if a.trimLeft().compare("hallo    ") != 0
+				throw ETestFailed.new()
+			end
+			if a.trimRight().compare("  hallo") != 0
+				throw ETestFailed.new()
+			end
+			if a.trimBoth().compare("hallo") != 0
+				throw ETestFailed.new()
+			end
+			a = "hallo"
+			if a.trimLeft().compare("hallo") != 0
+				throw ETestFailed.new()
+			end
+			if a.trimRight().compare("hallo") != 0
+				throw ETestFailed.new()
+			end
+			if a.trimBoth().compare("hallo") != 0
+				throw ETestFailed.new()
+			end
+			
+			System.print("All Tests passed.\n")
+		end
+	end
+
+	// test garbage collection
+	class TestGarbage implements ITest
+		class Garbage
+			public var Garbage2 ref
+			public func new()
+			end
+			public func destructor()
+				System.print("TestGarbage.Garbage.destructor()\n")
+			end
+		end
+		class Garbage2
+			public var Garbage3 ref
+			public func new()
+			end
+			public func destructor()
+				System.print("TestGarbage.Garbage2.destructor()\n")
+			end
+		end
+		class Garbage3
+			public var Garbage ref
+			public func new()
+			end
+			public func destructor()
+				System.print("TestGarbage.Garbage3.destructor()\n")
+			end
+		end
+	
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Garbage Collector"
+		end
+		
+		func void run()
+			var Garbage objA
+			var Garbage2 objB
+			var Garbage3 objC
+			System.print("creating garbage objects (2 of them)...\n")
+			objA = Garbage.new()
+			objB = Garbage2.new()
+			objC = Garbage3.new()
+			objA.ref = objB
+			objB.ref = objC
+			objC.ref = objA
+		end
+	end
+
+	// test objects
+	class TestObject implements ITest
+		class SomeClass
+			func new(): end
+		end
+		
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Object"
+		end
+		
+		func void run()
+			var Object obj = SomeClass.new()
+			// to string
+			System.print("Object of class SomeClass. toString() = '" + obj.toString() +"'\n")
+			// test equals function
+			obj = null
+			if not (obj == null)
+				throw ETestFailed.new("not (obj == null)")
+			end
+			if obj != null
+				throw ETestFailed.new("obj != null")
+			end
+			obj = "I am a String"
+			if obj.equals(null)
+				throw ETestFailed.new("obj == null")
+			end
+			if obj.equals(SomeClass.new())
+				throw ETestFailed.new("obj == SomeClass")
+			end
+			if obj.equals("i AM a StRinG")
+				throw ETestFailed.new("obj == 'i AM a StRinG'")
+			end
+			if not obj.equals("I am a String")
+				throw ETestFailed.new("obj != 'I am a String'")
+			end
+			// has code
+			System.print("Hash-Code of string is " + obj.hashCode() + "\n")
+		end
+	end
+
+	// test array
+	class TestArray implements ITest
+		class SomeClass
+			func new(): end
+		end
+		
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test Array"
+		end
+		
+		func void run()
+			var Array arr = Array.new()
+			// test moving
+			arr.add( "a" )
+			arr.add( "b" )
+			arr.add( "c" )
+			arr.add( "d" )
+			arr.add( "e" )
+			arr.add( "f" )
+			arr.move( 2, 4 )
+			if not arr.getAt( 0 ).equals( "a" ): throw ETestFailed.new( "failed a1" ): end
+			if not arr.getAt( 1 ).equals( "b" ): throw ETestFailed.new( "failed a2" ): end
+			if not arr.getAt( 2 ).equals( "d" ): throw ETestFailed.new( "failed a3" ): end
+			if not arr.getAt( 3 ).equals( "e" ): throw ETestFailed.new( "failed a4" ): end
+			if not arr.getAt( 4 ).equals( "c" ): throw ETestFailed.new( "failed a5" ): end
+			if not arr.getAt( 5 ).equals( "f" ): throw ETestFailed.new( "failed a6" ): end
+			arr.move( 1, 5 )
+			if not arr.getAt( 0 ).equals( "a" ): throw ETestFailed.new( "failed b1" ): end
+			if not arr.getAt( 1 ).equals( "d" ): throw ETestFailed.new( "failed b2" ): end
+			if not arr.getAt( 2 ).equals( "e" ): throw ETestFailed.new( "failed b3" ): end
+			if not arr.getAt( 3 ).equals( "c" ): throw ETestFailed.new( "failed b4" ): end
+			if not arr.getAt( 4 ).equals( "f" ): throw ETestFailed.new( "failed b5" ): end
+			if not arr.getAt( 5 ).equals( "b" ): throw ETestFailed.new( "failed b6" ): end
+			arr.move( 4, 2 )
+			if not arr.getAt( 0 ).equals( "a" ): throw ETestFailed.new( "failed c1" ): end
+			if not arr.getAt( 1 ).equals( "d" ): throw ETestFailed.new( "failed c2" ): end
+			if not arr.getAt( 2 ).equals( "f" ): throw ETestFailed.new( "failed c3" ): end
+			if not arr.getAt( 3 ).equals( "e" ): throw ETestFailed.new( "failed c4" ): end
+			if not arr.getAt( 4 ).equals( "c" ): throw ETestFailed.new( "failed c5" ): end
+			if not arr.getAt( 5 ).equals( "b" ): throw ETestFailed.new( "failed c6" ): end
+			arr.move( 3, 0 )
+			if not arr.getAt( 0 ).equals( "e" ): throw ETestFailed.new( "failed d1" ): end
+			if not arr.getAt( 1 ).equals( "a" ): throw ETestFailed.new( "failed d2" ): end
+			if not arr.getAt( 2 ).equals( "d" ): throw ETestFailed.new( "failed d3" ): end
+			if not arr.getAt( 3 ).equals( "f" ): throw ETestFailed.new( "failed d4" ): end
+			if not arr.getAt( 4 ).equals( "c" ): throw ETestFailed.new( "failed d5" ): end
+			if not arr.getAt( 5 ).equals( "b" ): throw ETestFailed.new( "failed d6" ): end
+		end
+	end
+
+	// test int float operations
+	class TestOpIntFloat implements ITest
+		func new()
+		end
+		
+		func String getCaption()
+			return "Test OpIntFloat"
+		end
+		
+		func void run()
+			var int a = 10
+			var int b = 20
+			var float c = 0.31
+			var String str1 = "a string"
+			var String str2 = null
+			
+			//System.print( "10 + 4.8 = " + ( a + c ) + "\n")
+			//System.print( "10 + 20 * 0.3 = " + ( a + d * b ) + "\n")
+			System.print( "10 + 4.8 = " + ( 10 + 4.8 ) + "\n")
+			System.print( "10 + 20 * 0.31 = " + ( 10 + 20 * 0.31 ) + "\n")
+			System.print( "10 + 20 * 0.31 = " + ( a + b * c ) + "\n")
+		end
+	end
+	
+	// variables
+	//////////////
+	var Array p_Tests
+	
+	// constructor
+	////////////////
+	func new()
+		p_Tests = Array.new()
+		// build Array with tests in it
+		p_Tests.add( TestLoop.new() )
+		p_Tests.add( TestHallo.new() )
+		p_Tests.add( TestException.new() )
+		p_Tests.add( TestConstants.new() )
+		p_Tests.add( TestSpeed.new() )
+		p_Tests.add( TestStatics.new() )
+		p_Tests.add( TestMath.new() )
+		p_Tests.add( TestConstructs.new() )
+		p_Tests.add( TestString.new() )
+		p_Tests.add( TestGarbage.new() )
+		p_Tests.add( TestObject.new() )
+		p_Tests.add( TestArray.new() )
+		p_Tests.add( TestOpIntFloat.new() )
+	end
+	
+	// MainMenu
+	/////////////
+	func void mainMenu()
+		// main menu loop
+		var int i, vSelection
+		var ITest vTest
+		var String str = "hallo"
+		str = "bla"
+		while true
+			System.print("\n=== Main Menu ===\n")
+			for i = 0 to p_Tests.getCount()
+				vTest = p_Tests.getAt(i) cast ITest
+				System.print("" + (i+1) + ". " + vTest.getCaption() + "\n")
+			end
+			System.print("0. Exit\n")
+			System.print("Make Your Selection: ")
+			vSelection = System.getString().toInt()
+			if vSelection == 0
+				break
+			elif vSelection <= p_Tests.getCount()
+				vTest = p_Tests.getAt(vSelection - 1) cast ITest
+				try
+					vTest.run()
+				catch Exception e
+					e.printTrace()
+				end
+			else
+				System.print("Please enter a number between 0 and " + p_Tests.getCount() + ".\n")
+			end
+		end
+	end
+	
+end
+
+// pin namespace test
+pin MyNamespace.DeepInside.AnyDeeper
+pin OhMyGood.Another.Nested.Namespace
+
+// the script
+class TestScript extends Application
+
+	class dummy
+		public var int val
+		public func new(int nv)
+			this.val = nv
+		end
+		public func dummy +(dummy other)
+			return new(val + other.val)
+		end
+	end
+	
+	func new()
+	end
+	
+	func int run()
+		var Tests vTests
+		var int i
+		// print out infos about script and arguments passed
+		System.print("*** Dragon-Script TestScript ***\n")
+		System.print("* Arguments Passed: " + getArgumentCount() + "\n")
+		for i = 0 to getArgumentCount()
+			System.print("* Argument " + (i + 1) + ": " + getArgument(i) + "\n")
+		end
+		System.print("*\n")
+		// temporary
+		var CrudeClass vCrude = CrudeClass.new()
+		var BlaClass vBla = BlaClass.new()
+		var MyTestOfSubClass vTOSC = MyTestOfSubClass.new()
+		// run test menu
+		vTests = Tests.new()
+		vTests.mainMenu()
+		// finished
+		return 0
+	end
+end
+
+class MyBase
+	private var int p_val
+	func new()
+		p_val = 8
+	end
+	public func int getVal()
+		return p_val
+	end
+end
+
+class MySubClass extends MyBase
+	func new() super()
+	end
+end
+
+class MyTestOfSubClass
+	func new()
+		var MySubClass subClass = MySubClass.new()
+		System.print("Value is " + subClass.getVal() + ".\n")
+	end
+end
+
+// a test class in another namespace for testing pinning
+namespace MyNamespace.DeepInside.AnyDeeper
+
+class CrudeClass
+	func new()
+	end
+end
+
+namespace OhMyGood.Another.Nested.Namespace
+
+class BlaClass
+	func new()
+	end
+end

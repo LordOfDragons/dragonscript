@@ -1,0 +1,55 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - OPOR</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / OPOR(dsByteCode::ebcOpOr,34)
+</div>
+
+<div class=stContent>
+<div class=stTitle>OPOR(dsByteCode::ebcOpOr,34) - Primitive Or Operation</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Pops one argument off the argument stack, carries out a bitwise OR of the current execution object with the argument and stores the result as new execution object.
+This operator can only be applied to objects of the following types: <span id=italic>byte, int</span>.
+In both cases the result will be of type <span id=italic>int</span>.
+The operation checks all bits of both values and sets a bit to 1 if at least the source or destination bit are 1.<br>
+<table border=1 align=center>
+<tr><td align=center>source bit</td><td align=center>destination bit</td><td align=center>result bit</td></tr>
+<tr><td align=center>0</td><td align=center>0</td><td align=center>0</td></tr>
+<tr><td align=center>0</td><td align=center>1</td><td align=center>1</td></tr>
+<tr><td align=center>1</td><td align=center>0</td><td align=center>1</td></tr>
+<tr><td align=center>1</td><td align=center>1</td><td align=center>1</td></tr>
+</table>
+In all cases the type of the argument from the stack has to be same as the type of the execution object.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte] </span><span id=bold>dsByteCode::ebcOpOr</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>none</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

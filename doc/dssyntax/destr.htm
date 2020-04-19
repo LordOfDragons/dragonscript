@@ -1,0 +1,91 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Destructor Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Destructor Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Destructor Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The Class destructor is like a function but gets called before an object is freed.
+You can only have one destructor function declared in a class and the destructor is not allowed to have any arguments.
+This makes the function very simple.
+Usually you do not need this function at all and you will see it very scarcly if ever.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>type-modifiers</span> <span id=bold>destructor</span> <span id=italic>name</span> '(' ')'
+   <span id=italic>statement</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type-modifiers</div>
+<div class=stText>
+Following the list of <a href="typemods.htm">Type Modifiers</a> that are allowed(+) or not(-):
+<div class=stText>
+(+) <span id=italic>public</span><br>
+(-) <span id=italic>protected</span>, <span id=italic>private</span>, <span id=italic>static</span>, <span id=italic>const</span>, <span id=italic>abstract</span>
+</div>
+The destructor function is very restricted and can only be assigned public which is also the default.
+It is considered a non-static, non-const, non-abstract function.
+You can't do much wrong with this destructor.
+</div>
+<div id=bold>name</div>
+<div class=stText>
+The name of the constructor.
+This one has to be unique in the class the definition appears in.
+No other function or constructor can have the same name having no arguments.
+</div>
+<div id=bold>statement</div>
+<div class=stText>
+Each function has to define a function body consisting of a statement.
+Only interfaces functions are not allowed to have a body.
+A statement can be either a single statement whereas a function becomes very simple or it can be a block of statements using the curly brackets.
+See the topic about statements for more informations about it.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+A typical destructor function doing nothing.
+It uses the standard name <span id=italic>Destructor</span>.
+It's completly irrelevant what name this function has.
+You cannot call it directly from code anyways.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   public destructor Destructor();
+}
+</pre></td></tr></table>
+Destructors are only usefull for native classes to deal with memory cleanup.
+Classes written in scripts usually don't need this.
+But as an example a Create-Me-Kill-Me example (where System is a native class and Print write to the console).
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   public constructor Create() System.Print("Create-Me");
+   public destructor Destructor() System.Print("Kill-Me");
+}
+</pre></td></tr></table>
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

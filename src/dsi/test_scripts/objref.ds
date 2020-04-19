@@ -1,0 +1,27 @@
+class ObjectRefTest extends Application
+	public func new()
+	end
+	
+	public func int run()
+		var ObjectReference obj = ObjectReference.new( "" )
+		Array.newWith( 'a', 'b', 'c' ).forEach( block byte each
+			obj.set( ( obj.get() cast String ) + each )
+		end )
+		System.print( "forEach: should 'abc' is " + obj.get() + "\n" )
+		
+		obj.set( 0 )
+		Array.newWith( 2, 7, 11 ).forEach( block int each
+			obj.set( ( obj.get() cast int ) + each )
+		end )
+		System.print( "forEach: should 20 is " + obj.get() + "\n" )
+		
+		giveMe( obj )
+		System.print( "refCall: should 'hallo' is " + obj.get() + "\n" )
+		
+		return 0
+	end
+	
+	public func void giveMe( ObjectReference putHere )
+		putHere.set( "hallo" )
+	end
+end

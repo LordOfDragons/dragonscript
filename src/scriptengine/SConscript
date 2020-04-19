@@ -1,0 +1,90 @@
+from glob_files import globFiles
+from config_file_writer import writeConfigFile
+import os
+
+Import('globalEnv')
+
+envLibrary = globalEnv.Clone()
+
+if envLibrary['TARGET_PLATFORM'] == 'beos':
+	envLibrary.Append(LIBS = ['root', 'be'])
+elif envLibrary['TARGET_PLATFORM'] == 'windows':
+	envLibrary.Append(LIBS = ['kernel32'])
+
+# check configuration presence
+configFileDefines = {}
+configFileDefines['OS_UNIX'] = envLibrary['TARGET_PLATFORM'] in ['linux', 'android']
+configFileDefines['OS_W32'] = envLibrary['TARGET_PLATFORM'] == 'windows'
+configFileDefines['OS_BEOS'] = envLibrary['TARGET_PLATFORM'] == 'beos'
+configFileDefines['OS_MACOS'] = envLibrary['TARGET_PLATFORM'] == 'macos'
+
+conf = envLibrary.Configure()
+
+if envLibrary['TARGET_PLATFORM'] in ['linux', 'android', 'macos']:
+	if conf.CheckLibWithHeader('dl', 'dlfcn.h', 'c++', 'dlerror();'):
+		envLibrary.Append(LIBS = ['dl'])
+		configFileDefines['HAVE_DLFCN_H'] = True
+	else:
+		print('dlfcn.h or libdl could not be found or is not usable.')
+		Exit(1)
+
+conf.Finish()
+
+writeConfigFile(envLibrary.File('#src/config.h').srcnode().abspath, configFileDefines)
+
+# update the compile flags
+# format path string to be used as define declaration on the command line.
+# returns '-D{NAME}={PATH}' with path properly escaped for the operating
+# system used in environment.
+def cmdlineDefinePath(env, name, path):
+	import os
+	path = path.replace('/', os.sep)
+	# escape backslash. double escape is required since the python string
+	# consumes one escape and the bash command line consumes the second
+	path = path.replace( '\\', '\\\\\\\\' )
+	return '-D{}=\\"{}\\"'.format( name, path )
+
+pathInclude = os.path.join(envLibrary.subst('$includedir'), 'libdscript')
+pathLib = envLibrary.subst('$libdir')
+pathPakPath = os.path.join(pathLib, 'dragonscript')
+
+envLibrary.Append(CPPFLAGS = [cmdlineDefinePath(envLibrary, 'DS_PAK_PATH', pathPakPath)])
+
+if envLibrary['TARGET_PLATFORM'] == 'macos':
+	envLibrary.Append(LINKFLAGS = ['-install_name', '@rpath/libdscript.dylib'])
+
+envLibrary.Append(CPPFLAGS = envLibrary['SANITIZE_FLAGS'])
+envLibrary.Append(LINKFLAGS = envLibrary['SANITIZE_FLAGS'])
+
+# setup the builders
+targetLibrary = globalEnv.targetManager.TargetLibrary('DragonScript Library')
+globalEnv.targetManager.add('dscript', targetLibrary)
+
+sources = []
+headers = []
+globFiles(envLibrary, '.', '*.cpp', sources)
+globFiles(envLibrary, '.', '*.h', headers)
+
+objects = [envLibrary.SharedObject(s) for s in sources]
+
+for h in headers:
+	envLibrary.Command('include/libdscript/{}'.format(h), h, Copy('$TARGET', '$SOURCE'))
+
+if envLibrary['TARGET_PLATFORM'] != 'windows':
+	envLibrary['SHLIBVERSION'] = '1.0.0'
+
+library = envLibrary.SharedLibrary(target='dscript', source=objects)
+targetLibrary.build.extend(library)
+targetLibrary.aliasBuild(envLibrary, 'dscript_build')
+
+targetLibrary.installCutDirs(envLibrary, pathInclude, headers, 0)
+if 'SHLIBVERSION' in envLibrary:
+	targetLibrary.install.extend(envLibrary.InstallVersionedLib(pathLib, library))
+else:
+	targetLibrary.install.extend(envLibrary.Install(pathLib, library))
+targetLibrary.aliasInstall(envLibrary, 'dscript')
+
+targetLibrary.archiveCutDirs(envLibrary, pathInclude, headers, 0)
+targetLibrary.archiveLibrary(envLibrary, pathLib, library)
+
+targetLibrary.addParametersBuildCPP(envLibrary, ['dscript'], 'include')

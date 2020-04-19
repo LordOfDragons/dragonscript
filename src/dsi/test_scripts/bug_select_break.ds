@@ -1,0 +1,19 @@
+class BugTest extends Application
+   func new()
+   end
+   
+   func int run()
+      var int testing = 8
+      select testing
+      case 0, 8, 2
+         if testing == 8 and testing > 0
+            System.print( "w007\n" )
+            break
+         end
+         System.print( "should not happen\n" )
+      case 1
+         System.print( "oh" )
+      end
+      return 0
+   end
+end

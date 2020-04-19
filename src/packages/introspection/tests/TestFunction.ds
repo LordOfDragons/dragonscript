@@ -1,0 +1,228 @@
+/* 
+ * DragonScript Script Language
+ *
+ * Copyright (C) 2015, Roland Plüss (roland@rptd.ch)
+ * 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later 
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+
+requires "DSUnit"
+requires "Introspection"
+
+namespace Introspection.Tests
+
+pin Introspection
+
+
+
+/**
+ * Test Case for testing the introspection Variable
+ */
+class TestFunction extends DSUnit.TestCase
+
+	/**
+	 * Test Class with known features so we can test
+	 */
+	class TestClass
+		public func new()
+		end
+		
+		private func void privFunc()
+		end
+		
+		public func int pubFunc(int arg)
+			return arg * 2
+		end
+		
+		public func String anotherFunc(int a, String b, Object c)
+			return "a=" + a + ", b='" + b + "', c='" + c + "'"
+		end
+		
+		public static func String staticFunc(String who)
+			return "Hallo " + who
+		end
+	end
+	
+	
+	
+	/**
+	 * Creates a new TestFunction object
+	 */
+	public func new(String name) super(name)
+	end
+	
+	/**
+	 * Test the information retrieval functions of the Function object
+	 */
+	func void testGetters()
+		// make some variables to test on
+		var Class classTest = Class.new("Introspection.Tests.TestFunction.TestClass")
+		var Function aFunc
+		var Object newObj
+		var Array args=Array.new(), sig
+		
+		// test if the can get the correct informations from our test function
+		aFunc = classTest.getFunction(0)
+		assertTrue( aFunc.getName().equals("new") )
+		assertTrue( aFunc.getFullName().equals("Introspection.Tests.TestFunction.TestClass.new") )
+		assertTrue( aFunc.getType().equals( Class.new("void") ) )
+		assertTrue( aFunc.getParent().equals( classTest ) )
+		assertTrue( aFunc.getTypeModifiers() == TypeModifier.PUBLIC )
+		sig = aFunc.getSignature()
+		assertTrue( sig.getCount() == 0)
+		newObj = aFunc.call(null, null)
+		assertTrue( newObj != null )
+		assertTrue( newObj typeof Introspection.Tests.TestFunction.TestClass )
+		newObj = aFunc.call(null, args)
+		assertTrue( newObj != null )
+		assertTrue( newObj typeof Introspection.Tests.TestFunction.TestClass )
+		
+		aFunc = classTest.getFunction(1)
+		assertTrue( aFunc.getName().equals("privFunc") )
+		assertTrue( aFunc.getFullName().equals("Introspection.Tests.TestFunction.TestClass.privFunc") )
+		assertTrue( aFunc.getType().equals( Class.new("void") ) )
+		assertTrue( aFunc.getParent().equals( classTest ) )
+		assertTrue( aFunc.getTypeModifiers() == TypeModifier.PRIVATE )
+		sig = aFunc.getSignature()
+		assertTrue( sig.getCount() == 0)
+		try 
+			aFunc.call(null, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		aFunc.call(newObj, null)
+		aFunc.call(newObj, args)
+		
+		aFunc = classTest.getFunction(2)
+		assertTrue( aFunc.getName().equals("pubFunc") )
+		assertTrue( aFunc.getFullName().equals("Introspection.Tests.TestFunction.TestClass.pubFunc") )
+		assertTrue( aFunc.getType().equals( Class.new("int") ) )
+		assertTrue( aFunc.getParent().equals( classTest ) )
+		assertTrue( aFunc.getTypeModifiers() == TypeModifier.PUBLIC )
+		sig = aFunc.getSignature()
+		assertTrue( sig.getCount() == 1)
+		assertTrue( sig.getAt(0).equals( Class.new("int") ) )
+		try 
+			aFunc.call(null, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		try 
+			aFunc.call(newObj, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		args.add(10)
+		assertTrue( aFunc.call(newObj, args) cast int == 20 )
+		args.removeAll()
+		
+		aFunc = classTest.getFunction(3)
+		assertTrue( aFunc.getName().equals("anotherFunc") )
+		assertTrue( aFunc.getFullName().equals("Introspection.Tests.TestFunction.TestClass.anotherFunc") )
+		assertTrue( aFunc.getType().equals( Class.new("String") ) )
+		assertTrue( aFunc.getParent().equals( classTest ) )
+		assertTrue( aFunc.getTypeModifiers() == TypeModifier.PUBLIC )
+		sig = aFunc.getSignature()
+		assertTrue( sig.getCount() == 3)
+		assertTrue( sig.getAt(0).equals( Class.new("int") ) )
+		assertTrue( sig.getAt(1).equals( Class.new("String") ) )
+		assertTrue( sig.getAt(2).equals( Class.new("Object") ) )
+		try 
+			aFunc.call(null, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		try 
+			aFunc.call(newObj, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		args.add(5)
+		args.add("hallo")
+		args.add(2)
+		assertTrue( aFunc.call(newObj, args).equals("a=5, b='hallo', c='2'") )
+		args.removeAll()
+		
+		aFunc = classTest.getFunction(4)
+		assertTrue( aFunc.getName().equals("staticFunc") )
+		assertTrue( aFunc.getFullName().equals("Introspection.Tests.TestFunction.TestClass.staticFunc") )
+		assertTrue( aFunc.getType().equals( Class.new("String") ) )
+		assertTrue( aFunc.getParent().equals( classTest ) )
+		assertTrue( aFunc.getTypeModifiers() == TypeModifier.PUBLIC | TypeModifier.STATIC )
+		sig = aFunc.getSignature()
+		assertTrue( sig.getCount() == 1)
+		assertTrue( sig.getAt(0).equals( Class.new("String") ) )
+		try 
+			aFunc.call(null, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		try 
+			aFunc.call(newObj, null)
+			fail("no exception thrown")
+		catch Exception e
+			//ok
+		end
+		args.add("test")
+		assertTrue( aFunc.call(null, args).equals("Hallo test") )
+		assertTrue( aFunc.call(newObj, args).equals("Hallo test") )
+		args.removeAll()
+	end
+	
+	/**
+	 * Test the special functions like equals
+	 */
+	func void testSpecialFunctions()
+		var Class classTest = Class.new("Introspection.Tests.TestFunction.TestClass")
+		var Function aFunc = classTest.getFunction(2)
+		var Array sig=Array.new()
+		
+		// test if equals works
+		assertTrue( aFunc.equals( classTest.getFunction(2) ) )
+		assertFalse( aFunc.equals( classTest.getFunction(1) ) )
+		assertFalse( aFunc.equals( 8 ) )
+		assertFalse( aFunc.equals( null ) )
+		
+		// test if the class returns the correct variables
+		assertTrue( classTest.getFunction(0).equals( classTest.getFunction("new",null) ) )
+		assertTrue( classTest.getFunction(1).equals( classTest.getFunction("privFunc",null) ) )
+		sig.add( Class.new("int") )
+		assertTrue( classTest.getFunction(2).equals( classTest.getFunction("pubFunc",sig) ) )
+		sig.removeAll()
+		sig.add( Class.new("int") )
+		sig.add( Class.new("String") )
+		sig.add( Class.new("Object") )
+		assertTrue( classTest.getFunction(3).equals( classTest.getFunction("anotherFunc",sig) ) )
+		sig.removeAll()
+		sig.add( Class.new("String") )
+		assertTrue( classTest.getFunction(4).equals( classTest.getFunction("staticFunc",sig) ) )
+		sig.removeAll()
+		
+		// test that the hasCode is at last not 0
+		assertTrue( aFunc.hashCode() != 0 )
+		
+		// test that the string representation is what we want it to look like
+		assertTrue( aFunc.toString().equals( aFunc.getFullName() ) )
+	end
+	
+end

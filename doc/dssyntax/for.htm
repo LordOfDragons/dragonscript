@@ -1,0 +1,105 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - For Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / For Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>For Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The For Statement executes a statement for a given number of times using a counter variable.
+The counter variable is incremented/decremented by 1 (or another value) each time the statement is executed.
+As soon as the counter variable reaches the limit the For Statement exits.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>for</span> <span id=italic>counter-variable</span> <span id=bold>=</span> <span id=italic>start-value</span> <span id=bold>to</span> <span id=italic>end-value</span> [ <span id=bold>step</span> <span id=italic>step-value</span> ] <span id=bold>do</span>
+   <span id=italic>statement-block</span>
+	  
+<span id=bold>for</span> <span id=italic>counter-variable</span> <span id=bold>=</span> <span id=italic>start-value</span> <span id=bold>downto</span> <span id=italic>end-value</span> [ <span id=bold>step</span> <span id=italic>step-value</span> ] <span id=bold>do</span>
+   <span id=italic>statement-block</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>counter-variable</div>
+<div class=stText>
+The variable used for counting.
+This variable has to be declared already (thus for does not declare this variable).
+The type of the variable has to be <span id=italic>int</span>.
+</div>
+<div id=bold>start-value</div>
+<div class=stText>
+Defines the value to start counting with.
+</div>
+<div id=bold>end-value</div>
+<div class=stText>
+Defines the value at to stop counting.
+The For Statement exits as soon as the counter variable reaches this value.
+For the <span id=italic>up</span> version of For this value has to be greater than the start-value.
+For the <span id=italic>downto</span> version of For this value has to be smaller than the start-value.
+Failing to do so can result in an infinite loop (dead loop).
+</div>
+<div id=bold>step-value</div>
+<div class=stText>
+Defines the value to be added to/subtracted from the counter value each time the statement has been executed.
+For both versions of For this value has to be positive.
+In the case of the <span id=italic>up</span> version the step value is added to the counter value.
+In the case of the <span id=italic>downto</span> version the step value is subtracted from the counter value.
+Failing to do so can result in an infinite loop (dead loop).
+If no step value is specified the default step value is used which is 1.
+</div>
+<div id=bold>statement-block</div>
+<div class=stText>
+The statement to execute each time the loop is run.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+This example adds 5 times the value of vOp1 to result.
+The local variable i is already defined as int.
+As soon as the values becomes 5 the loop is left so 5 is no more added to the result.
+<table border=0><tr><td><pre class=stCode>
+for i = 0 to 5 do
+   vResult += vOp2;
+</pre></td></tr></table>
+This example counts down from 5 to 0 and prints each time the value to the console.
+As soon as the values becomes 0 the loop is left so for 0 nothing is printed out.
+<table border=0><tr><td><pre class=stCode>
+for i = 5 downto 0 do{
+    System.Print("Seconds left: " + i);
+}
+</pre></td></tr></table>
+Here we sum up all values starting at 3 and incrementing each time by 2 until we reach 11.
+Again at 11 the loop ends and 11 is no more added to the result.
+<table border=0><tr><td><pre class=stCode>
+for i = 3 to 11 step 2 do
+   vResult += vOp2;
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

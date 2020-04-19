@@ -1,0 +1,58 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - ACALL</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / ACALL(dsByteCode::ebcACall,71)
+</div>
+
+<div class=stContent>
+<div class=stTitle>ACALL(dsByteCode::ebcACall,71) - Abstract Call Function</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Calls the given function abstract popping the needed amount of arguments off the argument stack, building an argument list from them and passing the execution over to the abstract fuction.
+Any function owned by one of the classes in the engine space can be used.
+Before execution the engine determines the most significent derivation of the abstract function in the execution object.
+Thus ACALL calls not the original function but the best derivation findable in the execution object.
+If you do not intend this use CALL instead.
+The function to call has to be <span id=italic>abstract</span> and not <span id=italic>static</span>.
+The execution object is taken as the object the function is called upon.
+A non-static function can not be called using ACALL (static functions can not be abstract).
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]        </span><span id=bold>dsByteCode::ebcACall</span>
+<span id=italic>[dsFunction*] </span>function
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>function</div>
+<div class=stText>
+	Function to call.
+	This function has to be member of one of the classes existing in the engine space.
+	Arguments stored for calling the function have to be stored in reverse order (argument is a stack).
+	The function expects them to be in correct order upon execution.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

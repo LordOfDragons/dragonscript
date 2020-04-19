@@ -1,0 +1,143 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Constructor Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Constructor Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Constructor Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Class constructors are like class functions with an important difference: they can construct an object.
+Objects can only be created by calling constructor functions.
+Calling a constructor function will create a new object, initialize the content of the object using the statements in the constructor function and returns the new object.
+This way you can create objects without having to use a special keyword or code construction.
+You can name the constructor function like you want which makes reading code much easier if good constructor names are used.<br>
+As a convention DragonScript Classes use <span id=italic>Create</span> as constructor name for the default constructor without any arguments.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>type-modifiers</span> <span id=bold>constructor</span> <span id=italic>name</span>
+'('
+   [ <span id=italic>arg-type</span> <span id=italic>arg-name</span> [ ',' ... ] ]
+')'
+   <span id=italic>statement</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type-modifiers</div>
+<div class=stText>
+Following the list of <a href="typemods.htm">Type Modifiers</a> that are allowed(+) or not(-):
+<div class=stText>
+(+) <span id=italic>public</span>, <span id=italic>protected</span>, <span id=italic>private</span>, <span id=italic>static</span><br>
+(-) <span id=italic>const</span>, <span id=italic>abstract</span>
+</div>
+Because a constructor is a special function it has a fixed set of type modifiers assigned to it.
+All constructor functions are threaded as static, non-const, non-abstract functions.
+Thus you can only call this function using the class-name and not an object.
+</div>
+<div id=bold>name</div>
+<div class=stText>
+The name of the constructor.
+This one has to be unique in the class the definition appears in concerning it's signature.
+A constructor signature is defined as beeing the name and the parameter types.
+More than one constructor can have the same name as long as their parameter types differ.
+</div>
+<div id=bold>arg-type</div>
+<div class=stText>
+The type of the argument to pass to the function.
+All classes and interfaces are allowed as types except <span id=italic>void</span>.
+</div>
+<div id=bold>arg-name</div>
+<div class=stText>
+The name of the argument passed to the function.
+You can refer to this parameter using this name in the function.
+If parameter names and variable names are the same function names have priority.
+It's a good idea to make those parameter names unique compared to the class members and local variables to avoid a lot of hazzles.
+</div>
+<div id=bold>statement</div>
+<div class=stText>
+Each function has to define a function body consisting of a statement.
+Only interfaces functions are not allowed to have a body.
+A statement can be either a single statement whereas a function becomes very simple or it can be a block of statements using the curly brackets.
+See the topic about statements for more informations about it.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+A typical constructor.
+It uses the standard name <span id=italic>Create</span>.
+Usually you chose names more informative than this.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   private var int p_PrivVar;
+   public constructor Create() p_PrivVar = 0;
+}
+// to create an oject you would use MyScript.Create()
+</pre></td></tr></table>
+An example of a simple color class storing informations about a color chosen.
+Using talkative constructor names can help.
+Here you can see two why different fconstructor names can be usefull.
+Both constructor functions have the same parameters and this would lead to a name-clash but using different names make not only emminent what the constructor does but also clears the name-clash.
+The type-modifier public is not needed.
+Constructor functions are assumed beeing public by default.
+Thus both constructors are public.
+<table border=0><tr><td><pre class=stCode>
+class Color{
+   private var int p_Red, p_Green, p_Blue;
+   public constructor CreateRGB(int Red, int Green, int Blue){ /* code */ }
+   constructor CreateHSB(int Hue, int Saturation, int Brightness){ /* code */ }
+}
+</pre></td></tr></table>
+</div>
+
+<div class=stHeader>Tip</div>
+<div class=stText>
+Constructors can be declared as private or protected which has some nifty side-effects.
+A Constructor declared as protected will prevent other classes to create an object from this class but classes inheriting from this class can create objects because the protected type-modifiers allowes them to do so.
+The same trick can be used with a private constructor.
+In this situation only the class itself can create objects of itself and nobody else.
+This can be used to implement Singleton Patterns in a simple way.
+See the example below for an implementation of the Singleton Pattern in DragonScript.
+<table border=0><tr><td><pre class=stCode>
+class MyClass{
+   private var MyClass p_OnlyObj;
+   private constructor p_Create(); // only using ; as stament indicates a function doing nothing
+   public MyClass GetObject(){
+      if p_OnlyObj == null then p_OnlyObj = p_Create();
+      return p_OnlyObj;
+   }
+}
+</pre></td></tr></table>
+Or if you like lean and mean code you can do it also like this.
+<table border=0><tr><td><pre class=stCode>
+class MyClass{
+   private var MyClass p_OnlyObj;
+   private constructor p_Create();
+   public MyClass GetObject() return p_OnlyObj == null ? p_OnlyObj = p_Create() : p_OnlyObj;
+}
+</pre></td></tr></table>
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

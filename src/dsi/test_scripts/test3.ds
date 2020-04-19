@@ -1,0 +1,28 @@
+interface iA
+	enum Test
+		valueA
+		valueB
+	end
+	func Test test()
+end
+
+class cA implements iA
+	public func new()
+	end
+	
+	public func iA.Test test()
+		return iA.Test.valueB
+	end
+end
+
+class TestScript extends Application
+	func new()
+	end
+	
+	func int run()
+		var cA obj = cA.new()
+		
+		System.print( "test 1: " + ( obj.test() == iA.Test.valueA ) + "\n")
+		return 0
+	end
+end

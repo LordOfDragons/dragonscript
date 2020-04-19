@@ -1,0 +1,22 @@
+class ArrayTests extends Application
+	public func new()
+	end
+	
+	public func int run()
+		// exception empty constructor
+		try
+			throw EInvalidParam.new()
+		catch Exception e
+			System.print( "EInvalidParam(): " + e + "\n" )
+		end
+		
+		// exception constructor with string
+		try
+			throw EInvalidParam.new( "Invalid argument 'bla'" )
+		catch Exception e
+			System.print( "EInvalidParam(String): " + e + "\n" )
+		end
+		
+		return 0
+	end
+end

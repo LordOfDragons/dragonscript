@@ -1,0 +1,38 @@
+class ProtectedBugApp extends Application
+	class TestClass
+		private var TestClass2 pNext
+		
+		public func new( TestClass2 next )
+			this.pNext = next
+		end
+		
+		public func void publicCall()
+			System.print( "publicCall " + this + "\n" )
+			this.protectedCall()
+		end
+		
+		protected func void protectedCall()
+			System.print( "protectedCall " + this + "\n" )
+			if this.pNext != null
+				this.pNext.protectedCall()
+			end
+		end
+	end
+	
+	class TestClass2 extends TestClass
+		public func new( TestClass next ) super( next )
+		end
+	end
+		
+	public func new()
+	end
+	
+	public func int run()
+		var TestClass obj1 = TestClass.new( null )
+		var TestClass obj2 = TestClass2.new( obj1 )
+		var TestClass obj3 = TestClass2.new( obj2 )
+		obj3.publicCall()
+		return 0
+	end
+end
+

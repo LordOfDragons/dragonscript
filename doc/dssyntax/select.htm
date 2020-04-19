@@ -1,0 +1,93 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Select Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / Select Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>Select Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The Select Statement executes statements depending on the value of a mode-expression.
+You can then specify a set of Cases for this mode-expression.
+On execution the value in the mode-expression is matched against all available Cases and in the case of a match the apropriate statement is executed.
+In all other cases the default statement is executed or all Cases skipped if such a statement does not exist.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>select</span> <span id=italic>mode-expression</span> <span id=bold>{</span>
+   <span id=bold>case</span> value1 [ <span id=bold>,</span> value2 ... ] <span id=bold>:</span>
+      <span id=italic>statement-block</span>
+   [ ... ]
+   [ <span id=bold>else</span>
+      <span id=italic>else-statement-block</span> ]
+<span id=bold>}</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>mode-expression</div>
+<div class=stText>
+Is an expression of type or castable to <span id=italic>int</span>.
+This value will be matched against all Cases.
+</div>
+<div id=bold>value1, value2, ...</div>
+<div class=stText>
+Defines the values the mode-expression has to be for the Case to apply.
+The values have to be unique in the Select Statement they are defined and have to be constant integer values.
+</div>
+<div id=bold>statement-block</div>
+<div class=stText>
+The statement to execute if the Case matches the mode-expression.
+After executing the statement the other Cases including the default case are skipped.
+</div>
+<div id=bold>else-statement-block</div>
+<div class=stText>
+If no Case matches this statement is executed.
+If the statement is missing all Case statements are skipped.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Select-Statements are usefull if there is a case where you want to execute code depending on the value of an expression.
+You could use lots of cascadet If-Else-Statements to do so or you can simply use a Select-Statement.
+<table border=0><tr><td><pre class=stCode>
+select vMode{
+   case 0: // executes if vMode is 0
+      vResult = vOp1;
+   case 1, 2, 3: // executes if vMode is 1, 2 or 3
+      vResult = vOp2;
+   case CONST_VALUE: // executes if vMode equals the
+      // constant class variable CONST_VALUE or the
+      // enumeration variable CONST_VALUE
+      vResult = vOp1 + vOp2;
+   else // in all other cases do this
+      vResult = 0;
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

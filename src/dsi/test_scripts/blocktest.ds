@@ -1,0 +1,556 @@
+requires "Math"
+
+class Dummy
+	private var String pName
+	private var int pAge
+	
+	public func new( String name, int age )
+		this.pName = name
+		this.pAge = age
+	end
+	
+	public func String getName()
+		return this.pName
+	end
+	
+	public func int getAge()
+		return this.pAge
+	end
+end
+
+class Shouter
+	private var String pName
+	private var int pNumber
+	
+	public func new( String name )
+		this.pName = name
+		this.pNumber = 0
+	end
+	
+	public func String getName()
+		return this.pName
+	end
+	
+	public func int getNumber()
+		return this.pNumber
+	end
+	
+	public func Block createBlock1()
+		return block
+			System.print( this.pName + "(" + this.pNumber + ")\n" )
+			this.pNumber++
+		end
+	end
+	
+	public func Block createBlock2()
+		return block String message
+			System.print( this.pName + "(" + this.pNumber + "): " + message + "\n" )
+			this.pNumber++
+		end
+	end
+	
+	public func Block createBlockCreator()
+		return block
+//			var int test
+			return block
+				System.print( this.pName + "(" + this.pNumber + ")[BlockInBlock]\n" )
+				this.pNumber++
+			end
+		end
+	end
+	
+	public func Block createBlock3( int param1, int param2 )
+		var int lvar1a = 100 + param1
+		
+		if true
+			var int lvar1b = 200 + param2
+			
+			return block String message
+				//System.print( this.pName + "(" + this.pNumber + "): " + message + "\n" )
+				System.print( this.pName + "(" + this.pNumber + ", p1=" + param1 + ", p2=" + param2 \
+					+ ", lvar1a=" + lvar1a + ", lvar1b=" + lvar1b + "): " + message + "\n" )
+				this.pNumber++
+			end
+		end
+		
+		return null
+	end
+	
+	public func Block createBlockCreator2( int param1, int param2 )
+		var int lvar1a = 100 + param1
+		
+		if true
+			var int lvar1b = 200 + param2
+			
+			return block int numi
+				var int lvar2a = 200 + lvar1a //lvar1a + lvar1b
+				
+				if true
+					var int lvar2b = 200 + lvar1b //lvar1a * lvar1b
+					var int lvar2c = param1 + numi
+					
+					return block String message
+						//System.print( this.pName + "(" + this.pNumber + "): " + message + "\n" )
+						System.print( this.pName + "(" + this.pNumber + ", p1=" + param1 + ", p2=" + param2 \
+							+ ", lvar1a=" + lvar1a + ", lvar1b=" + lvar1b + ", lvar2a=" + lvar2a \
+							+ ", lvar2b=" + lvar2b + ", lvar2c=" + lvar2c + ", numi=" + numi + ")[BlockInBlock]: " + message + "\n" )
+						this.pNumber++
+					end
+				end
+				
+				return null
+			end
+		end
+		
+		return null
+	end
+end
+
+
+
+class BlockTest extends Application
+	public func new()
+	end
+	
+	public func int run()
+		var Shouter shouter = Shouter.new( "Foo" )
+		var Block tblock1 = shouter.createBlock1()
+		var Block tblock2 = shouter.createBlock2()
+		var Block tblock3 = this.createShouter1( 1 )
+		var Block tblock4 = this.createShouter2( 2 )
+		var Block tblock5 = shouter.createBlockCreator().run() cast Block
+		var Block tblock6 = this.createBlockCreator( 3 )
+		var Block tblock7 = shouter.createBlock3( 10, 20 )
+		var Block tblock8 = shouter.createBlockCreator2( 10, 20 ).run( 30 ) cast Block
+		
+		tblock1.run()
+		tblock2.run( "Hallo!" )
+		tblock1.run()
+		tblock2.run( "Oh 'rly?" )
+		tblock1.run()
+		tblock2.run( "W00t!" )
+		
+		tblock3.run()
+		tblock4.run( "Meep!" )
+		tblock3.run()
+		tblock4.run( "LoL Wut?" )
+		tblock3.run()
+		tblock4.run( "¬.=.¬" )
+		
+		tblock5.run()
+		tblock6.run()
+		
+		tblock7.run( "Get it on" )
+		tblock8.run( "That's nested" )
+		
+		System.print( "Shouter has now number " + shouter.getNumber() + "\n" )
+		
+		this.testArrayBlockSupport()
+		this.testArrayBlockSupportEmpty()
+		
+		return 0
+	end
+	
+	public func Block createShouter1( int number )
+		return Shouter.new( "Bar" + number ).createBlock1()
+	end
+	
+	public func Block createShouter2( int number )
+		return Shouter.new( "Bar" + number ).createBlock2()
+	end
+	
+	public func Block createBlockCreator( int number )
+		return Shouter.new( "Bar" + number ).createBlockCreator().run() cast Block
+	end
+	
+	public func Array buildTestArray()
+		var Array array = Array.new()
+		
+		array.add( 1 )
+		array.add( 2 )
+		array.add( 5 )
+		array.add( 3 )
+		array.add( 10 )
+		array.add( 6 )
+		array.add( 7 )
+		array.add( 4 )
+		array.add( 9 )
+		array.add( 8 )
+		
+		return array
+	end
+	
+	public func void printArray( String what, Array array )
+		var int i, count = array.getCount()
+		var String text = what + " = ("
+		
+		for i = 0 to count
+			if i > 0
+				text = text + ","
+			end
+			text = text + array.getAt( i )
+		end
+		
+		System.print( text + ")\n" )
+	end
+	
+	public func void testArrayBlockSupport()
+		var Array array = this.buildTestArray()
+		var Array arr0, arr1, arrS, arrD
+		
+		arr0 = Array.new()
+		arr1 = Array.new()
+		arr1.add( 2 )
+		arrS = Array.new()
+		arrS.add( "Number" )
+		arrS.add( " " )
+		arrS.add( "is" )
+		arrS.add( " " )
+		arrS.add( 8 )
+		arrS.add( "\n" )
+		arrD = Array.new()
+		arrD.add( Dummy.new( "Samuel Degan", 35 ) )
+		arrD.add( Dummy.new( "Georgo Valentino", 42 ) )
+		arrD.add( Dummy.new( "Sean", 32 ) )
+		
+		System.print( "\nArray Block Support:\n" )
+		this.printArray( "initial", array )
+		
+		System.print( "forEach:" )
+		array.forEach( block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEach(2..6):" )
+		array.forEach( 2, 6, block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEach(2..2):" )
+		array.forEach( 2, 2, block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEach(2..6,2):" )
+		array.forEach( 2, 6, 2, block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEach(5..1,-1):" )
+		array.forEach( 5, 1, -1, block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEach(5..1,-2):" )
+		array.forEach( 5, 1, -2, block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachReverse:" )
+		array.forEachReverse( block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile:" )
+		array.forEachWhile( block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile(2..6):" )
+		array.forEachWhile( 2, 6, block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile(2..2):" )
+		array.forEachWhile( 2, 2, block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile(2..6,2):" )
+		array.forEachWhile( 2, 6, 2, block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile(5..1,-1):" )
+		array.forEachWhile( 5, 1, -1, block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile(5..1,-2):" )
+		array.forEachWhile( 5, 1, -2, block int each
+			System.print( " " + each )
+			return each < 8
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhileReverse:" )
+		array.forEachWhileReverse( block int each
+			System.print( " " + each )
+			return each < 10
+		end )
+		System.print( "\n" )
+		
+		this.printArray( "map", array.map( block Object each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "map(2..6)", array.map( 2, 6, block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "map(2..2)", array.map( 2, 2, block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "map(2..6,2)", array.map( 2, 6, 2, block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "map(5..1,-1)", array.map( 5, 1, -1, block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "map(5..1,-2)", array.map( 5, 1, -2, block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "mapReverse", array.mapReverse( block int each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "collect", array.collect( block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collect(2..6)", array.collect( 2, 6, block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collect(2..2)", array.collect( 2, 2, block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collect(2..6,2)", array.collect( 2, 6, 2, block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collect(5..1,-1)", array.collect( 5, 1, -1, block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collect(5..1,-2)", array.collect( 5, 1, -2, block int each
+			return each > 5
+		end ) )
+		
+		this.printArray( "collectReverse", array.collectReverse( block int each
+			return each > 5
+		end ) )
+		
+		System.print( "count[5] = " + array.count( block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "count(2..6)[2] = " + array.count( 2, 6, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "count(2..2)[0] = " + array.count( 2, 2, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "count(2..6,2)[1] = " + array.count( 2, 6, 2, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "count(5..1,-1)[2] = " + array.count( 5, 1, -1, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "count(5..1,-2)[1] = " + array.count( 5, 1, -2, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "countReverse[5] = " + array.countReverse( block int each
+			return each > 5
+		end ) + "\n" )
+		
+		// fold
+		System.print( "arr0: fold[null] = " + arr0.fold( block int e1, int e2
+			return Math.min( e1, e2 )
+		end ) + "\n" )
+		
+		System.print( "arr1: fold[2] = " + arr1.fold( block int e1, int e2
+			return Math.min( e1, e2 )
+		end ) + "\n" )
+		
+		System.print( "arrN: fold[1] = " + array.fold( block int e1, int e2
+			return Math.min( e1, e2 )
+		end ) + "\n" )
+		
+		System.print( "arr0: fold[null] = " + arr0.fold( block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "arr1: fold[2] = " + arr1.fold( block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "arrN: fold[55] = " + array.fold( block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..6)[24] = " + array.fold( 2, 6, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..3)[5] = " + array.fold( 2, 3, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..2)[null] = " + array.fold( 2, 2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..6,2)[15] = " + array.fold( 2, 6, 2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..4,2)[5] = " + array.fold( 2, 4, 2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..3,2)[5] = " + array.fold( 2, 3, 2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(2..2,2)[null] = " + array.fold( 2, 2, 2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(5..1,-1)[24] = " + array.fold( 5, 1, -1, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(5..1,-2)[9] = " + array.fold( 5, 1, -2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(5..3,-2)[6] = " + array.fold( 5, 3, -2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(5..4,-2)[6] = " + array.fold( 5, 4, -2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "fold(5..5,-2)[null] = " + array.fold( 5, 5, -2, block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "foldReverse[55] = " + array.foldReverse( block int e1, int e2
+			return e1 + e2
+		end ) + "\n" )
+		
+		System.print( "arrS: fold = " + arrS.fold( block Object e1, Object e2
+			return e1.toString() + e2
+		end ) )
+		
+		System.print( "find[10] = " + array.find( block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "find[null] = " + array.find( block int each
+			return each > 15
+		end ) + "\n" )
+		
+		System.print( "find(2..6)[10] = " + array.find( 2, 6, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "find(2..6)[null] = " + array.find( 2, 6, block int each
+			return each > 8
+		end ) + "\n" )
+		
+		System.print( "find(2..6,2)[10] = " + array.find( 2, 6, 2, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "find(2..6,2)[null] = " + array.find( 2, 6, 2, block int each
+			return each == 6
+		end ) + "\n" )
+		
+		System.print( "find(5..1,-1)[6] = " + array.find( 5, 1, -1, block int each
+			return each > 5
+		end ) + "\n" )
+		
+		System.print( "find(5..1,-2)[3] = " + array.find( 5, 1, -2, block int each
+			return each != 6
+		end ) + "\n" )
+		
+		System.print( "findReverse[4] = " + array.findReverse( block int each
+			return each < 5
+		end ) + "\n" )
+		
+		System.print( "findReverse[null] = " + array.findReverse( block int each
+			return each < 0
+		end ) + "\n" )
+		
+		arrD.forEach( block Dummy each
+			System.print( "  " + each.getName() + " is of age " + each.getAge() + "\n" )
+		end )
+		
+	end
+	
+	public func void testArrayBlockSupportEmpty()
+		var Array array = Array.new()
+		
+		System.print( "\nArray Block Support Empty:\n" )
+		this.printArray( "initial", array )
+		
+		System.print( "forEach:" )
+		array.forEach( block Object each
+			System.print( " " + each )
+		end )
+		System.print( "\n" )
+		
+		System.print( "forEachWhile:" )
+		array.forEachWhile( block Object each
+			System.print( " " + each )
+			return ( each cast int ) < 8
+		end )
+		System.print( "\n" )
+		
+		this.printArray( "map", array.map( block Object each
+			return "a" + each
+		end ) )
+		
+		this.printArray( "collect", array.collect( block int each
+			return each > 5
+		end ) )
+		
+		System.print( "count = " + array.count( block int each
+			return each > 5
+		end ) + "\n" )
+		
+		array = Array.new()
+		
+	end
+	
+end

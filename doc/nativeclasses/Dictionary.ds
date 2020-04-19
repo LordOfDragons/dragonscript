@@ -1,0 +1,194 @@
+//////////////////////////////////////////////////////////////////////////////////
+//                                                                              //
+//                 This is a native class documentation                         //
+//                                                                              //
+//                  This file is used only for DoxyGen                          //
+//                                                                              //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * \brief Linear list of objects.
+ * 
+ * This is a native class. It can not be subclassed.
+ * \author Roland Plüss
+ * \version 1.0
+ * \date 2015
+ */
+fixed class Dictionary
+	/** \name Constructors */
+	/*@{*/
+	/** \brief Create empty dictionary. */
+	public func new()
+	end
+	
+	/** \brief Create copy of another dictionary. */
+	public func new( Dictionary dictionary )
+	end
+	/*@}*/
+	
+	
+	
+	/** \name Management */
+	/*@{*/
+	/** \brief Number of keys. */
+	public func int getCount()
+	end
+	
+	/** \brief Key is present. */
+	public func bool has( Object key )
+	end
+	
+	/**
+	 * \brief Value of key.
+	 * \throws EInvalidParam Key is absent.
+	 */
+	public func Object getAt( Object key )
+	end
+	
+	/** \brief Value of key or default value if absent. */
+	public func Object getAt( Object key, Object valueIfMissing )
+	end
+	
+	/**
+	 * \brief Set value at key.
+	 * \details If key is missing it is added otherwise the new value set.
+	 */
+	public func void setAt( Object key, Object value )
+	end
+	
+	/**
+	 * \brief Remove key.
+	 * \throws EInvalidParam Key is absent.
+	 */
+	public func void remove( Object key )
+	end
+	
+	/** \brief Remove key if present. */
+	public func void removeIfExisting( Object key )
+	end
+	
+	/** \brief Remove all keys. */
+	public func void removeAll()
+	end
+	
+	
+	
+	/** \brief Array with all keys. */
+	public func Array getKeys()
+	end
+	
+	/** \brief Array with all values. */
+	public func Array getValues()
+	end
+	
+	
+	
+	/**
+	 * \brief Apply block to each key value pair.
+	 * \details Block is called with key as first argument and value as second.
+	 */
+	public func void forEach( Block ablock )
+	end
+	
+	/** \brief Apply block to each key. */
+	public func void forEachKey( Block ablock )
+	end
+	
+	/** \brief Apply block to each value. */
+	public func void forEachValue( Block ablock )
+	end
+	
+	/**
+	 * \brief Find value for which the block returns true.
+	 * 
+	 * Block is called with key as first argument and value as second. Returns \em null
+	 * if no value matches.
+	 */
+	public func Object find( Block ablock )
+	end
+	
+	/**
+	 * \brief Find key for which the block returns true.
+	 * 
+	 * Block is called with key as first argument and value as second. Returns \em null
+	 * if no value matches.
+	 */
+	public func Object findKey( Block ablock )
+	end
+	
+	/**
+	 * \brief Apply block to each key value pair assembling the result of the block into a new dictionary.
+	 * \details Block is called with key as first argument and value as second. New key vaule par added
+	 *          to the result dictionary composes of the key send to the block and the block return value.
+	 */
+	public func Dictionary map( Block ablock )
+	end
+	
+	/**
+	 * \brief Collect all elements into a new dictionary for which the block returns true.
+	 * \details Block is called with key as first argument and value as second. New key vaule par added
+	 *          to the result dictionary composes of the key send to the block and the block return value.
+	 */
+	public func Dictionary collect( Block ablock )
+	end
+	
+	/**
+	 * \brief Number of elements for which the block returns true.
+	 * \details Block is called with key as first argument and value as second.
+	 */
+	public func int count( Block ablock )
+	end
+	
+	/**
+	 * \brief Remove elements for which a block returns true.
+	 * \details Block is called with key as first argument and value as second.
+	 */
+	public func void removeIf( Block ablock )
+	end
+	
+	
+	
+	/**
+	 * \brief Fold dictionary values using block and injected value.
+	 * 
+	 * Each key/value pair in turn is send to block using the last result. For the first
+	 * key/value the injected value is used as result. The return value is then send together
+	 * with the next key/value pair to block. The last return value is returned.
+	 * 
+	 * Block receives as first argument Object injectValue, as second argument Object key
+	 * and as third argument Object value.
+	 */
+	public func Object inject( Object injectValue, Block ablock )
+	end
+	
+	/**
+	 * \brief Fold dictionary keys using block and injected value.
+	 * 
+	 * Each key in turn is send to block using the last result. For the first key the injected
+	 * value is used as result. The return value is then send together with the next key to
+	 * block. The last return value is returned.
+	 * 
+	 * Block receives as first argument Object injectValue and as second argument Object key.
+	 */
+	public func Object injectKey( Object injectValue, Block ablock )
+	end
+	
+	/**
+	 * \brief Fold dictionary values using block and injected value.
+	 * 
+	 * Each value in turn is send to block using the last result. For the first value the
+	 * injected value is used as result. The return value is then send together with the next
+	 * value to  block. The last return value is returned.
+	 * 
+	 * Block receives as first argument Object injectValue and as second argument Object value.
+	 */
+	public func Object injectValue( Object injectValue, Block ablock )
+	end
+	
+	
+	
+	/** \brief String representation of dictionary. */
+	public func String toString()
+	end
+	/*@}*/
+end

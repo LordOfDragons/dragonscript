@@ -1,0 +1,175 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Operator Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Operator Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Operator Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Operators are a special class of functions restricted in their usage and their signature.
+An operator can be used to declare the behaviour of common operators when applied to a class.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>type-modifiers</span> <span id=bold>operator</span> <span id=italic>type</span> <span id=italic>op</span>
+'('
+   [ <span id=italic>arg-type</span> <span id=italic>arg-name</span> ]
+')'
+   <span id=italic>statement</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type-modifiers</div>
+<div class=stText>
+Following the list of <a href="typemods.htm">Type Modifiers</a> that are allowed(+) or not(-):
+<div class=stText>
+(+) <span id=italic>public</span>, <span id=italic>const</span><br>
+(-) <span id=italic>protected</span>, <span id=italic>private</span>, <span id=italic>static</span>, <span id=italic>abstract</span>
+</div>
+Operator functions belong to a class and can not be subject to overloading.
+An operator can also be not static because it can only be applied to one or two objects.
+Operator functions are always public and can not be declared otherwise.
+All operator functions can be declared const but only operator functions not belonging to an assign-type operator make sense using this type modifier.
+By default public is assumed as the access-modifier.
+</div>
+<div id=bold>type</div>
+<div class=stText>
+Declares the return type of the operator function.
+All classes and interfaces are allowed as types except <span id=italic>void</span>.
+You should usually choose the class itself as return value but there are places where other types are needed like in comparisson operators.
+Const can be used on all operators but on assign operators it really makes no sense at all.
+</div>
+<div id=bold>op</div>
+<div class=stText>
+The operator you want to declare for the class.
+You can use unary and binary operators here.
+If you use an unary operator the operator function has no parameter if you chose a binary operator it has exactly one operator.
+A binary operator can have more than one function as long as the parameter is of a different type.
+The following operators can be used:
+<table border=1>
+<tr>
+<td id=aligncenter colspan=5>binary operator<br><span id=italic>object</span> <span id=italic>op</span> <span id=italic>object</span></td>
+<td id=aligncenter>unary operator<br><span id=italic>op</span> <span id=italic>object</span></td>
+</tr>
+<tr>
+<td id=aligncenter width=30>*</td>
+<td id=aligncenter width=30>%</td>
+<td id=aligncenter width=30>/</td>
+<td id=aligncenter width=30>+</td>
+<td id=aligncenter width=30>-</td>
+<td id=aligncenter>++</td>
+</tr>
+<tr>
+<td id=aligncenter width=30>&lt;&lt;</td>
+<td id=aligncenter width=30>&gt;&gt;</td>
+<td id=aligncenter width=30>&lt;</td>
+<td id=aligncenter width=30>&gt;</td>
+<td id=aligncenter width=30>&lt;=</td>
+<td id=aligncenter>--</td>
+</tr>
+<tr>
+<td id=aligncenter width=30>&gt;=</td>
+<td id=aligncenter width=30>&</td>
+<td id=aligncenter width=30>|</td>
+<td id=aligncenter width=30>^</td>
+<td id=aligncenter width=30>*=</td>
+<td id=aligncenter>+</td>
+</tr>
+<tr>
+<td id=aligncenter width=30>/=</td>
+<td id=aligncenter width=30>%=</td>
+<td id=aligncenter width=30>+=</td>
+<td id=aligncenter width=30>-=</td>
+<td id=aligncenter width=30>&lt;&lt;=</td>
+<td id=aligncenter>-</td>
+</tr>
+<tr>
+<td id=aligncenter width=30>&gt;&gt;=</td>
+<td id=aligncenter width=30>&=</td>
+<td id=aligncenter width=30>|=</td>
+<td id=aligncenter width=30>^=</td>
+<td id=aligncenter width=30>&gt;&gt;=</td>
+<td id=aligncenter>!</td>
+</tr>
+<tr>
+<td id=aligncenter width=30>&=</td>
+<td id=aligncenter width=30>|=</td>
+<td id=aligncenter width=30>^=</td>
+<td id=aligncenter width=30></td>
+<td id=aligncenter width=30></td>
+<td id=aligncenter>~</td>
+</tr>
+</table>
+The operators <span id=bold>==</span>, <span id=bold>=!</span> and <span id=bold>=</span> do have already a special meening in DragonScript and can not be redefined in a class.
+</div>
+<div id=bold>arg-type</div>
+<div class=stText>
+The type of the argument to pass to the function.
+All classes and interfaces are allowed as types except <span id=italic>void</span>.
+</div>
+<div id=bold>arg-name</div>
+<div class=stText>
+The name of the argument passed to the function.
+You can refer to this parameter using this name in the function.
+If parameter names and variable names are the same function names have priority.
+It's a good idea to make those parameter names unique compared to the class members and local variables to avoid a lot of hazzles.
+</div>
+<div id=bold>statement</div>
+<div class=stText>
+Each function has to define a function body consisting of a statement.
+Only interfaces functions are not allowed to have a body.
+A statement can be either a single statement whereas a function becomes very simple or it can be a block of statements using the curly brackets.
+See the topic about statements for more informations about it.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+A point class defining an addition operator and it's usage.
+<table border=0><tr><td><pre class=stCode>
+class Point{
+   private var int p_x, p_y;
+   public constructor Create(int x, int y){
+      p_x = x;
+      p_y = y;
+   }
+   public operator Point +(Point arg) return Create(p_x + arg.p_x, p_y + arg.p_y);
+}
+// would be invoked like a = b + c;
+</pre></td></tr></table>
+</div>
+
+<div class=stHeader>Tip</div>
+<div class=stText>
+Because the assignement operator is not allowed you have to use a function to set one object to another by duplicating its values.
+Usually this function is called <span id=italic>set</span>.
+It takes one parameter of the same type and has no return value.
+Also the equal and not equal operators are not allowed.
+For them you need to use functions as well.
+Usually the function used here would be named <span id=italic>IsEqual</span>.
+You can name them like you want but this is a nice convention to keep code clean.
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

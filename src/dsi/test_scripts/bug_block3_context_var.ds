@@ -1,0 +1,28 @@
+class BugBlock3ContextVar extends Application
+   class Dummy1
+      public var Array arr
+      public func new( Object child )
+         this.arr = Array.new()
+         this.arr.add(child)
+      end
+   end
+   
+   func new()
+   end
+   
+   func int run()
+      var Array v1 = Array.newWith( Dummy1.new( Dummy1.new("Hallo") ) )
+      
+      var Block block1 = block Dummy1 v2
+         var Block block2 = block Dummy1 v3
+            return v3.arr.find( block String v4
+               return not v4.empty() and v2 != null and v3 != null and v1.getCount() != 0
+            end ) != null
+         end
+         return v2.arr.find( block2 ) != null
+      end	
+      
+      System.print("" + v1.find(block1) + "\n")
+      return 0
+   end
+end

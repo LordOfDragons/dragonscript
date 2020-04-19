@@ -1,0 +1,89 @@
+//////////////////////////////////////////////////////////////////////////////////
+//                                                                              //
+//                 This is a native class documentation                         //
+//                                                                              //
+//                  This file is used only for DoxyGen                          //
+//                                                                              //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * \brief Code block with closure.
+ * 
+ * Block objects can not be constructed using a new constructor. Block objects
+ * are created during script compilation using the block keyword.
+ * 
+ * This is a native class. It can not be subclassed.
+ * \author Roland Plüss
+ * \version 1.0
+ * \date 2015
+ */
+fixed class Block
+	/** \name Management */
+	/*@{*/
+	/**
+	 * \brief Run code in the block with no arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run()
+	end
+	
+	/**
+	 * \brief Run code in the block with 1 arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run( Object arg1 )
+	end
+	
+	/**
+	 * \brief Run code in the block with 2 arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run( Object arg1, Object arg2 )
+	end
+	
+	/**
+	 * \brief Run code in the block with 3 arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run( Object arg1, Object arg2, Object arg3 )
+	end
+	
+	/**
+	 * \brief Run code in the block with 4 arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run( Object arg1, Object arg2, Object arg3, Object arg4 )
+	end
+	
+	/**
+	 * \brief Run code in the block with 5 arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object run( Object arg1, Object arg2, Object arg3, Object arg4, Object arg5 )
+	end
+	
+	/**
+	 * \brief Run code in the block with a list arguments.
+	 * \throws EInvalidAction Number of arguments does not match the block code.
+	 */
+	public func Object runWith( Array arguments )
+	end
+	
+	
+	
+	/**
+	 * \brief Block is equal to another object.
+	 * \returns \em true if \em other is of type Block and both point to the same code block.
+	*/
+	public func bool equals( Object other )
+	end
+	
+	/** \brief Hash code for use as dictionary keys. */
+	public func int hashCode()
+	end
+	
+	/** \brief String representation of block. */
+	public func String toString()
+	end
+	/*@}*/
+end

@@ -1,0 +1,81 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - While Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / While Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>While Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The While Statement executes a statement as long as a a condition is <span id=italic>true</span>.
+There are two versions of while.
+The first version checks the condition before the statement is executed for the first time.
+The second version executes first the statement and checks then for the first time the condition.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>while</span> <span id=italic>condition</span> <span id=bold>do</span>
+   <span id=italic>statement-block</span>
+	  
+<span id=bold>do</span>
+   <span id=italic>statement-block</span>
+<span id=bold>while</span> <span id=italic>condition</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>condition</div>
+<div class=stText>
+The While Statement executes the statement as long as this expression is <span id=italic>true</span>.
+The condition has to be of or castable to type <span id=italic>bool</span>.
+</div>
+<div id=bold>statement-block</div>
+<div class=stText>
+The statement to execute each time the loop is run.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+This example loops as long the key has not been pressed.
+Keyboard is a native class of some fictive application.
+<table border=0><tr><td><pre class=stCode>
+while Keyboard.GetKeyPressed(Keyboard.KEY_ESCAPE) do{
+   // do some work here each time the key is not pressed
+}
+</pre></td></tr></table>
+This time we want to add a character to a string and check each time if the new character added is a terminator character.
+Because we want to add the char before we check it we use the second While version here.
+vString is a local string variable initialized to "" and vChar a local byte variable.
+<table border=0><tr><td><pre class=stCode>
+do{
+   vChar = Keyboard.GetNextChar();
+   vString += vChar;
+}while vChar != Keyboard.KEY_RETURN;
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

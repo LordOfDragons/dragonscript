@@ -1,0 +1,57 @@
+class TestScript extends Application
+	func new()
+	end
+	
+	func int run()
+		var bool b = true
+		var byte y = 25
+		var int i = 184
+		var float f = 12.0
+		var Object ob = b
+		var Object oy = y
+		var Object oi = i
+		var Object of = f
+		
+		System.print( "bool as bool: " + ( b cast bool ) + "\n" )
+		System.print( "bool as byte: " + ( b cast byte ) + "\n" )
+		System.print( "bool as int: " + ( b cast int ) + "\n" )
+		System.print( "bool as float: " + ( b cast float ) + "\n" )
+		
+		System.print( "byte as bool: " + ( y cast bool ) + "\n" )
+		System.print( "byte as byte: " + ( y cast byte ) + "\n" )
+		System.print( "byte as int: " + ( y cast int ) + "\n" )
+		System.print( "byte as float: " + ( y cast float ) + "\n" )
+		
+		System.print( "int as bool: " + ( i cast bool ) + "\n" )
+		System.print( "int as byte: " + ( i cast byte ) + "\n" )
+		System.print( "int as int: " + ( i cast int ) + "\n" )
+		System.print( "int as float: " + ( i cast float ) + "\n" )
+		
+		System.print( "float as bool: " + ( f cast bool ) + "\n" )
+		System.print( "float as byte: " + ( f cast byte ) + "\n" )
+		System.print( "float as int: " + ( f cast int ) + "\n" )
+		System.print( "float as float: " + ( f cast float ) + "\n" )
+		
+		System.print( "object bool as bool: " + ( ob cast bool ) + "\n" )
+		System.print( "object bool as byte: " + ( ob cast byte ) + "\n" )
+		System.print( "object bool as int: " + ( ob cast int ) + "\n" )
+		System.print( "object bool as float: " + ( ob cast float ) + "\n" )
+		
+		System.print( "object byte as bool: " + ( oy cast bool ) + "\n" )
+		System.print( "object byte as byte: " + ( oy cast byte ) + "\n" )
+		System.print( "object byte as int: " + ( oy cast int ) + "\n" )
+		System.print( "object byte as float: " + ( oy cast float ) + "\n" )
+		
+		System.print( "object int as bool: " + ( oi cast bool ) + "\n" )
+		System.print( "object int as byte: " + ( oi cast byte ) + "\n" )
+		System.print( "object int as int: " + ( oi cast int ) + "\n" )
+		System.print( "object int as float: " + ( oi cast float ) + "\n" )
+		
+		System.print( "object float as bool: " + ( of cast bool ) + "\n" )
+		System.print( "object float as byte: " + ( of cast byte ) + "\n" )
+		System.print( "object float as int: " + ( of cast int ) + "\n" )
+		System.print( "object float as float: " + ( of cast float ) + "\n" )
+		
+		return 0
+	end
+end

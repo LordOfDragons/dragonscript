@@ -1,0 +1,92 @@
+
+requires "Collections"
+requires "Introspection"
+requires "DSUnit"
+
+//pin Introspection
+
+pin Collections
+pin DSUnit
+//pin Wrappers
+
+//requires "Introspection"
+
+pin Introspection
+
+class LinkedListTest extends TestCase
+	private var String methodToRun
+	private var LinkedList list
+		
+	public func new(String methodName) super (methodName)
+		this.methodToRun = methodName
+	end
+		
+	func void setUp()
+		this.list = LinkedList.new()
+	end
+		
+	func void runTest()
+		if this.methodToRun.equals("testAddAtEndAndRemove")
+			this.testAddAtEndAndRemove()
+		else
+		end
+	end
+		
+	func void tearDown()
+		this.list.removeAll()
+	end
+	
+	func void testAddAtEndAndRemove()
+		assertTrue(this.list.isEmpty())
+		assertEquals(0, this.list.getSize())
+		var int i
+		for i = 0 to 100
+			assertEquals(i, this.list.getSize())
+			this.list.add(Integer.new(i))
+			assertFalse(this.list.isEmpty())
+		end
+				
+		var Integer element
+		for i = 0 to 100
+			element = this.list.getAt(i) cast Integer
+			assertEquals(i, element.intValue())
+			//assertFalse(this.list.isEmpty())
+			//assertEquals(100 - i, this.list.getSize())
+			//first = this.list.getAt(0) cast Integer
+			//assertEquals(i, first.intValue())
+			//if i != first.intValue()
+				//System.print("expected: "+i+" was: "+first.intValue()+"\n")
+			//end 
+			//this.list.remove(0)
+		end
+		
+		var Integer first
+		for i = 0 to 100
+			assertFalse(this.list.isEmpty())
+			//assertEquals(100 - i, this.list.getSize())
+			first = this.list.getAt(0) cast Integer			
+			if i != first.intValue()
+				System.print("expected: "+i+" was: "+first.intValue()+"\n")
+			end
+			assertEquals(i, first.intValue())
+			this.list.remove(0)
+		end		
+		
+		//assertTrue(this.list.isEmpty())
+		//assertEquals(0, this.list.getSize())
+	end
+end
+
+class TestScript extends Application
+	func new()
+	end
+	
+	func int run()
+		//var TestSuite suite = TestSuite.new()
+		//var Test listTest = LinkedListTest.new("testAddAtEndAndRemove")
+		//suite.addTest(listTest)
+		
+		//ConsoleRunner.run(suite)
+		return 0
+	end
+end

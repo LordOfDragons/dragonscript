@@ -1,0 +1,147 @@
+/*****************/
+/* Tag Overloads */
+/*****************/
+body{
+	margin:5px;
+	background:white;
+}
+
+/*************/
+/* Modifiers */
+/*************/
+#italic{ font-style:italic; }
+#bold{ font-weight:bold; }
+#itabold{ font-style:italic; font-weight:bold; }
+#alignleft{ text-align:left; }
+#aligncenter{ text-align:center; }
+#indfirstline{ text-indent:5mm; }
+#aligntop{ vertical-align:top; }
+#alignmiddle{ vertical-align:middle; }
+#tddefc{ text-align:center; vertical-align:top; }
+#tddefl{ text-align:left; vertical-align:top; }
+#spacer{ margin-top:15px; }
+#keyword{ color:blue; font-weight:bold; }
+
+
+/**********************/
+/* Navigation Styles */
+/********************/
+.stNavigation{
+    margin:0px;
+	padding:3px;
+	text-align:left;
+	font-family:Times New Roman,Arial;
+	font-size:10pt;
+	font-style:normal;
+	font-weight:bold;
+	border-width:1px;
+	border-color:#43A4FF;
+	border-style:solid;
+	background:#ADD7FF;
+	color:black;
+}
+
+/*******************/
+/* Content Styles */
+/*****************/
+.stContent{
+	text-align:left;
+	font-family:Times New Roman,Arial;
+	font-size:12pt;
+	font-style:normal;
+	font-weight:normal;
+	background:white;
+	color:black
+}
+.stTitle{
+    margin-top:10px;
+    margin-bottom:25px;
+    padding:0px;
+	text-align:center;
+	font-family:Times New Roman,Arial;
+	font-size:20pt;
+	font-style:normal;
+	font-weight:bold;
+	white-space:nowrap;
+	color:#004000
+}
+.stHeader{
+	text-align:left;
+	margin-top:25px;
+	padding-top:0px;
+	padding-bottom:0px;
+	padding-left:10px;
+	padding-right:5px;
+	font-family:Times New Roman,Arial;
+	font-size:14pt;
+	font-style:normal;
+	font-weight:bold;
+	background:#ADD7FF;
+	border-width:1px;
+	border-color:#43A4FF;
+	border-style:solid;
+	white-space:nowrap;
+	color:#0000C0
+}
+.stSection{
+	text-align:left;
+	margin-top:20px;
+	padding-top:0px;
+	padding-bottom:0px;
+	font-family:Times New Roman,Arial;
+	font-size:12pt;
+	font-style:normal;
+	font-weight:bold;
+	white-space:nowrap;
+	color:black
+}
+/*
+.stHeader a{
+	white-space:nowrap;
+	color:#0000C0
+}
+*/
+.stText{
+	text-align:left;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left:15px;
+	padding-right:5px;
+	font-family:Times New Roman,Arial;
+	font-size:12pt;
+	font-style:normal;
+	font-weight:normal;
+	color:black
+}
+.stCode{
+	margin:15px;
+	padding:3px;
+	text-align:left;
+	font-family:Courier,Fixedsys;
+	font-size:10pt;
+	font-style:normal;
+	font-weight:normal;
+	border-width:1px;
+	border-color:#C0C000;
+	border-style:solid;
+	background:yellow;
+}
+
+/******************/
+/* Footer Styles */
+/****************/
+.stFooter{
+    margin-top:50px;
+	padding:5px;
+	text-align:center;
+	font-family:Times New Roman,Arial;
+	font-size:10pt;
+	font-style:italic;
+	font-weight:normal;
+	border-width:1px;
+	border-color:#43A4FF;
+	border-style:solid;
+	background:#ADD7FF;
+	color:black;
+}
+

@@ -1,0 +1,35 @@
+class TimeDateTests extends Application
+	public func new()
+	end
+	
+	public func int run()
+		var TimeDate td = TimeDate.new()
+		System.print( "new: " + td + "\n" )
+		
+		td = TimeDate.new(2020, 2, 15, 20, 45, 10)
+		System.print( "new(...) should [2020-03-15 20:45:10] is " + td + "\n" )
+		System.print( "new(...).getYear() should 2020 is " + td.getYear() + "\n" )
+		System.print( "new(...).getMonth() should 2 is " + td.getMonth() + "\n" )
+		System.print( "new(...).getDay() should 15 is " + td.getDay() + "\n" )
+		System.print( "new(...).getDayOfWeek() should 0 is " + td.getDayOfWeek() + "\n" )
+		System.print( "new(...).getDayOfYear() should 74 is " + td.getDayOfYear() + "\n" )
+		System.print( "new(...).getHour() should 20 is " + td.getHour() + "\n" )
+		System.print( "new(...).getMinute() should 20 is " + td.getMinute() + "\n" )
+		System.print( "new(...).getSecond() should 10 is " + td.getSecond() + "\n" )
+		
+		var TimeDate td2 = TimeDate.new(2020, 2, 15, 20, 45, 10)
+		var TimeDate td3 = TimeDate.new(2020, 2, 16, 20, 45, 10)
+		System.print( "td.equals(td2) should true is " + (td.equals(td2)) + "\n" )
+		System.print( "td.equals(td3) should false is " + (td.equals(td3)) + "\n" )
+		System.print( "td2.equals(td3) should false is " + (td2.equals(td3)) + "\n" )
+		
+		td2 = td.add( 0, 0, 100, 10 )
+		System.print( "td.add(0,0,100,10) should [2020-03-15 22:25:20] is " + td2 + "\n" )
+		td2 = td2.add( 0, 0, 0, -30 )
+		System.print( "td.add(0,0,0,-30) should [2020-03-15 22:24:50] is " + td2 + "\n" )
+		
+		System.print( "td.format('%H-%M-%S') should [22-24-50] is " + td2.format("%H-%M-%S") + "\n" )
+		
+		return 0
+	end
+end

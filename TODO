@@ -1,0 +1,224 @@
+add support for class variable definitions to have different access
+permission for reading and modifying the value. syntax looks like this:
+
+public var int property; // public read, public modify
+public protected var int property; // public read, protected modify
+public private var int property; // public read, private modify
+protected private var int property; // protected read, private modify
+
+or
+
+public var int property; // public read, public modify
+public- var int property; // public read, protected modify
+public-- var int property; // public read, private modify
+protected- var int property; // protected read, private modify
+
+this would add a new property to dsClassVariable taking DSTM_PUBLIC,
+DSTM_PROTECTED, DSTM_PRIVATE or 0 (no split access permissions).
+
+open question: how to handle this with additional access rights like
+fixed and static? first notation could have these keywords mixed in
+between. does any second public/protected/private be considered the
+secondary permission? most probably the only way. the second syntax has
+the problem where the -/-- is placed. it could be public static -. would
+this not be confusing?
+
+first syntax most probably the best solution
+
+
+
+modify string native class to work similar to decUnicodeString. the reason is to support utf8 and unicode string with one class to avoid the mess that the current solution produces more and more. this requires the following changes:
+- change string class to have a fixed length. this allows 0 characters to exist inside the string
+- a unicode decoder string class is not required. the string class handles this internally.
+- add a method to the string class to obtain the utf8 wide of a character. this can be required by some use cases although it is not required now
+- add a method toUtf8() which returns the unicode string converted to a utf8 string. works since utf8 string is equivalent to a unicode string with wide 1byte. memory consumption is equal
+- add a method newFromUtf8() which takes a utf8 encoded string and returns a new regular string with the necessary character wide
+- change all methods using byte right now to use int instead (for example getAt or setAt)
+
+also add some convenience method missing from string:
+- add forEach(Block) visiting all characters in the string. the block has one parameter of type int
+- add find(Block) returning the index of the first character for which the block returns true. the block has one parameter of type int
+- add similar Block enhanced versions of the other find type methods
+
+
+
+- function argument is 'Object' type and a local variable is 'XYZ' type. the parser
+  refers to the argument instead of the local variable shadowing the argument
+
+- placing in an enumeration block a couple of comments after the last item causes the
+  parser to fail. thinks that there should follow another definition although only
+  comments are specified.
+
+!!! If a string is not terminated the parser ends up in an infinite loop
+
+- finding classes through namespace lookup should not bail out if a class can not be
+  found in one search branch. for example the namespaces A.B and A.C.B with class
+  A.B.MyClass . Now we are in A.C.D.E and looking for class B.MyClass . the looking
+  ends up first in A.C.B where MyClass does not exist. the current code reports here
+  already an error although travelling down more would end up with A.B where MyClass
+  does exist. hence the error has to be delayed until there is really no other
+  possible way to reach the class.
+
+!!! Math.sqrt in negative value results in dead-lock on windows machine. a check
+    with exception thrown is required to catch this problem.
+
+!!! for block does not transport the "missing return" like it should. the following
+  compiles as valid although it is not ( missing return after for before end of function ):
+		for i = 0 to this.pKeyStringCount
+			if name.equals( this.pKeyStrings.getAt( i ) )
+				return i
+			end
+		end
+		
+!!! sometimes static variables ( constants ) are found although not defined in
+  the calling class but some included one. how this works?
+  
+  
+  
+
+- replace function 'fnmatch' with a self written one. windows does not support
+  this function nor the header file it appears in but POSIX allows it.
+
+!!!
+- errors in an interior class does NOT result in an error. the code in Parser
+  has to be adapted to not ignore such errors. most probably the lazy error
+  check there is the cause of the problem.
+  
+function call bug in parser. function with same name but different arguments called
+  in a way it is clear what function to take it still uses the wrong one.
+
+Change Exception Throwing to recognize more typical errors like InvalidSignature,
+  InvalidParam and such by implementing a Exception-Class conversion table inited
+  with exception based classes provided by the engine.
+
+- an open function witout end tag does not cause a compile error but makes
+  the class not available to the script.
+
+RunFunction(obj,name,count) allows to call functions if the arguments on the stack are
+  castable to the found function signature. this can cause errors in certain situations.
+  a cast is needed for those values on the stack.
+
+improvement:
+  turn 'public func void destructor()' into a real destructor function too. currently
+  only 'public func destructor()' is turned into a real destructor function which is
+  a bit problematic in the long run.
+  
+improvement:
+  add a real garbage collector.
+
+improvement:
+  new call on interfaces should already be captured by the 'abstract' check and not
+  by the 'function-not-found' check. this is just a confusing error otherwise.
+  
+
+(done) using Array.find() the block has to return a boolean value. if this is not the
+  case a cast exception had to be thrown which is not the case.
+  
+(done) BUG:
+  class variables and constants had not been able to shadow base class variables and
+  constants. modified the checks to allow shadowing.
+
+(done) - IMPORTANT:
+  bool ? expr : expr
+  is no more possible because : is a newline. we have to find a new way for
+  expressing inline if-else constructions
+
+(done) BUG:
+  function-overload check broken. ParserCheckClass:470 breakes if classes are inited
+  in the wrong order. ParserCheck:189 location of problem. it has to be made sure that
+  all classes are inited in the correct order.
+
+(done) reductions:
+   done:
+      CONSTANTS,
+      unary operation, binary operation, cast, castable, typeof,
+      inline if, logical and/or
+      if-else, 
+   pending:
+
+compile-optimizations:
+   while: do not check if true or ignore if false always
+
+
+(done) check code has to remeber the maximum number of local variables used to store
+   this value later on in the dsFunction object.
+
+if <byte> <= <int> then... : cast byte to int first. type cast left side if right
+   side cannot be casted
+
+(done) interfaces should not be usable in 'extends'
+
+
+
+add dsEngine::GetClassByPath(const char *) taking a string in the form of "class1.class2.class3"
+   returning the given subclass by parsing the string.
+
+modify dsPackage.AddHostClass() the way that a class can be added to an existing class.
+
+dspParser.cpp: do a clean up (delete scripts) after package has been parsed.
+
+335 (dspParser.cpp): strange skip statement. needs check.
+
+
+
+(done) !! problematic function call possible.
+   a.someobj.somefunc => changes someobj and continues.
+   if someobj reaches zero refcount during chnge it gets destroyed
+   and the function continues on a null object. solution: increase
+   refcount before function execution and decrease refcount after
+   execution (including destruction check).
+
+(done) dspNodeSetEnumVar: ebcEnumA exists no more. has to be replaced by a constant.
+
+(done) ebcACall has to be created. separation of Calls and ACalls.
+   
+(done) run_script_function: change to real cp. before main loop point cp at first bytecode
+   instruction. incrementing the cp directly after each instruction (directly read
+   value from cp). every code executed ends with either a RET or RETV.
+   for debugging purpose calculate last instruction adress before loop and check in
+   the loop if the cp passes beyond this limit (should never happen or RET(V) has
+   been forgotten.
+
+(done) dspNodeInitConstrCall is missing CompileCode !
+
+(done) add compilecode for dspNodeSetEnumVar
+
+(done) add compilecode for case statement
+
+(done) ebcCStr has to be implemented. Needs implementation of string table in dsEngine first.
+
+(done) unary operations on primitives is missing const check.
+
+(done) post increment/decrement problem to solve. solution pending.
+
+(done) [!!] dspParserCheckClass takes a ParentType on construction which it does store and
+   not delete on destruction (not like the BaseType which gets deleted). A namespace
+   change generates a Type that is deleted afterwards. Solution: duplicate ParentType
+   and store this duplicate (and destroy it in the end).
+
+(done) add direct operator converions to parser (int-node '+' int-node replace by a
+  single int-node).
+
+(done) set option statement in script-scope.
+
+(done) add try/catch/throw nodes (+ checks).
+
+(done) add special cast from int to byte. if an int-byte involves an int-node convert
+  it to a byte node if <255.
+
+(done) finish statement checks
+
+(done) Parsing Class Variable Declaration needs check for missing init value with const
+  variables. Best is to add a bool in the parser function indicating if a init
+  value has to be present or not.
+
+(done) Augment parsing and checking of member class type modifiers. Usage of a
+  seperate class to handle building of type modifiers would be nice.
+  Should also manage the line and char numbers.
+  
+(done) Change DSTM_ABSTRACT to DSTM_INTERFACE and DSTM_STATIC to DSTM_NAMESPACE
+  in class initialisation to make things more clear.
+
+(done) operator/( float k ): if used with an integer the cast is not done to float
+  resulting in an int beeing read as a float.
+

@@ -1,0 +1,81 @@
+
+requires "Collections"
+
+pin Collections
+
+
+
+class TestApp extends Application
+
+	class Options
+		public var int value
+		public func new(): end
+	end
+
+	func new()
+	end
+	
+	func int run()
+		var EditableList testArrayList
+		var float start, elapsed
+		var int loops = 100000
+		var int i, count, sum
+		var Object obj
+		var Block codeBlock, codeBlock2
+		var Options opts = Options.new()
+		var Iterator iter
+
+		// prepare two arrays
+		testArrayList = ArrayList.new(loops)
+		for i = 0 to loops
+			testArrayList.add(i)
+		end
+		
+		// create a code blocks
+		codeBlock = block int item
+			//System.print("item '" + item + "'\n")
+			item * 2
+		end
+		codeBlock2 = block int item, Options result
+			result.value += item
+		end
+		
+		// determine the speed for executing a for each directly
+		start = System.getTickTime()
+		iter = testArrayList.getIterator()
+		while iter.hasNext()
+			obj = iter.getNext()
+			(obj cast int) * 2
+		end
+		elapsed = System.getTickTime() - start
+		System.print("Conventional for loop: " + elapsed + "\n")
+
+		// test forEach
+		start = System.getTickTime()
+		testArrayList.forEach(codeBlock)
+		elapsed = System.getTickTime() - start
+		System.print("Code-Block forEach: " + elapsed + "\n")
+
+		// determine the speed for executing a for each directly
+		start = System.getTickTime()
+		iter = testArrayList.getIterator()
+		sum = 0
+		while iter.hasNext()
+			obj = iter.getNext()
+			sum += obj cast int
+		end
+		elapsed = System.getTickTime() - start
+		System.print("Conventional for loop: " + elapsed + " (sum " + sum + ")\n")
+
+		// test forEach
+		start = System.getTickTime()
+		opts.value = 0
+		testArrayList.forEach(codeBlock2, opts)
+		elapsed = System.getTickTime() - start
+		System.print("Code-Block forEach: " + elapsed + " (sum " + sum + ")\n")
+		
+		// finished
+		return 0
+	end
+	
+end

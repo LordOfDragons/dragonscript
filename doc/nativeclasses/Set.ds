@@ -1,0 +1,175 @@
+//////////////////////////////////////////////////////////////////////////////////
+//                                                                              //
+//                 This is a native class documentation                         //
+//                                                                              //
+//                  This file is used only for DoxyGen                          //
+//                                                                              //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * \brief Linear set of objects containing each object at most once.
+ * 
+ * This is a native class. It can not be subclassed.
+ */
+fixed class Set
+	/** \name Constructors */
+	/*@{*/
+	/** \brief Create empty set. */
+	public func new()
+	end
+	
+	/** \brief Create copy of another set. */
+	public func new( Set set )
+	end
+	
+	/** \brief Create set with values added from array. */
+	public func new( Array array )
+	end
+	
+	
+	
+	/** \brief Create set with one object added. */
+	public static func Set newWith( Object obj )
+	end
+	
+	/** \brief Create set with two object added. */
+	public static func Set newWith( Object obj1, Object obj2 )
+	end
+	
+	/** \brief Create set with three object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3 )
+	end
+	
+	/** \brief Create set with four object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4 )
+	end
+	
+	/** \brief Create set with five object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5 )
+	end
+	/*@}*/
+	
+	
+	
+	/** \name Management */
+	/*@{*/
+	/** \brief Count of elements. */
+	public func int getCount()
+	end
+	
+	/** \brief Add object if absent. */
+	public func void add( Object obj )
+	end
+	
+	/** \brief Object is present. */
+	public func bool has( Object obj )
+	end
+	
+	/** \brief Remove object if present. */
+	public func void remove( Object obj )
+	end
+	
+	/** \brief Remove all objects. */
+	public func void removeAll()
+	end
+	
+	/**
+	 * \brief Apply block to each element.
+	 * 
+	 * Block receives \ref Object as argument.
+	 */
+	public func void forEach( Block ablock )
+	end
+	
+	/**
+	 * \brief Apply block to each element until the blocks returns false for the first time.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref bool .
+	 */
+	public func void forEachWhile( Block ablock )
+	end
+	
+	/**
+	 * \brief Apply block to each element assembling the result of the block into a new set.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref Object .
+	 */
+	public func Set map( Block ablock )
+	end
+	
+	/**
+	 * \brief Collect all elements into a new set for which the block returns true.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref bool .
+	 */
+	public func Set collect( Block ablock )
+	end
+	
+	/**
+	 * \brief Fold the set values using block.
+	 * 
+	 * If there is no element in the set null is returned. If there is one element
+	 * in the set this element is returned. Otherwise the first two values are send
+	 * as arguments to the block. The return value is then send together with the next
+	 * value as arguments to the block. The last return value is returned as the
+	 * folded value.
+	 */
+	public func Object fold( Block ablock )
+	end
+	
+	/**
+	 * \brief Fold set values using block and injected value.
+	 * 
+	 * Each element in turn is send to block using the last result. For the first element the
+	 * injected value is used as result. The return value is then send together with the next
+	 * value to block. The last return value is returned.
+	 * 
+	 * Block receives as first argument Object injectValue and as second argument Object entry.
+	 */
+	public func Object inject( Object injectValue, Block ablock )
+	end
+	
+	/**
+	 * \brief Number of elements for which the block returns true.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref bool .
+	 */
+	public func int count( Block ablock )
+	end
+	
+	/**
+	 * \brief First element for which the block evaluates to true or null otherwise.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref bool .
+	 */
+	public func Object find( Block ablock )
+	end
+	
+	/**
+	 * \brief Remove elements for which a block returns true.
+	 * 
+	 * Block receives \ref Object as argument and has to return \ref bool .
+	 */
+	public func void removeIf( Block ablock )
+	end
+	
+	
+	
+	/**
+	 * \brief Random element.
+	 * \details throws EInvalidParam Set is empty.
+	 */
+	public func Object random()
+	end
+	
+	
+	
+	/** \brief String representation of set. */
+	public func String toString()
+	end
+	
+	/** \brief Array with content of set. */
+	public func Array toArray()
+	end
+	/*@}*/
+end

@@ -1,0 +1,68 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Requires Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="script.htm">Script and Compilation Settings</a> / Requires Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>Requires Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+If your script needs certain other script packages, files or classes that need to be loaded before the script can be parsed you use the requires statement to load those packages before the parsing of the script takes place.
+The statement takes a string identifying the package to load.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>requires</span> <span id=italic>"package-name"</span> ';'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>package-name</div>
+<div class=stText>
+A string specifying the name of the package to load before parsing the script.
+All packages mentioned this way no matter where the statement resides in the script will be loaded before anything gets parsed.
+What string you have to specify there depends on the implementation of the host application.
+Usually this string indicates the name of a script package to load.
+Please refer to the documantion of that application to learn about howe this string is interpreted.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Most applications and the compiler use package names as the way to identify needed script packages.
+This example will load the OpenGL package if the host application provides those.<br>
+<table border=0><tr><td><pre class=stCode>
+requires "OpenGL";
+</pre></td></tr></table>
+Certain applications support loading packages from different sources.
+In this example we want to load a package from the internet to provide OpenGL functionalities.
+That kind of source independent package management can come in handy for scripts not bound to a certain PC.
+<table border=0><tr><td><pre class=stCode>
+requires "http://my.domain.ch/packages/OpenGl";
+</pre></td></tr></table>
+Like states above the possible ways of including a package depends on the host application.
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

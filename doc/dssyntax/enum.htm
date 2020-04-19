@@ -1,0 +1,92 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Enumeration Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Enumeration Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Enumeration Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Enumerations are a short way for declaring constant variables or short constants.
+Each enumeration entry creates a constant variable of type <span id=italic>int</span> having the value of the previous enumeration entry plus 1 or 0 if it is the first entry in the list.
+You can also overwrite this behaviour and specify your own value for certain or all entries.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>enum</span> <span id=italic>enum-name</span>
+'{'
+   <span id=italic>constant1</span> [ '=' <span id=italic>value</span> ] ',' ...
+'}'
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>enum-name</div>
+<div class=stText>
+Is the identifier name of the enumeration.
+Up to now this is merly a informative value having no influence on the script itself.
+It can be used by editors to group enumeration constants.
+</div>
+<div id=bold>constant1</div>
+<div class=stText>
+The name of one constant in the enumeration.
+This name has to be unique in the class this enumeration appears in.
+</div>
+<div id=bold>value</div>
+<div class=stText>
+If you specify no value the constant will be assigned the value of the precedor entry plus 1 or 0 if it is the first entry in the list.
+The value has to be a constant integral value meaning it has to be an <span id=italic>int</span> value.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Simple enumeration declaring a few colors.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   enum eColors{
+      ecRed, // will be 0
+      ecGreen, // will be 1
+      ecBlue // will be 2
+   }
+   // member declarations
+}
+</pre></td></tr></table>
+This time we change the values of the constants.
+<table border=0><tr><td><pre class=stCode>
+class MyScript{
+   enum eColors{
+      ecRed, // will be 0
+      ecGreen, // will be 1
+      ecBlue, // will be 2
+      ecBlack = 10, // will be 10
+      ecWhite // will be 11
+   }
+   // member declarations
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

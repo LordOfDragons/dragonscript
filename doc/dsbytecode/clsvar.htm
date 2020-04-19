@@ -1,0 +1,53 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - CLSVAR</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / CLSVAR(dsByteCode::ebcClsVar,10)
+</div>
+
+<div class=stContent>
+<div class=stTitle>CLSVAR(dsByteCode::ebcClsVar,10) - Load Class Variable</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Loads a class variable of the current execution object and stores it back into the execution object.
+The class variable must exists.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte]        </span><span id=bold>dsByteCode::ebcClsVar</span>
+<span id=italic>[dsVariable*] </span>variable
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>variable</div>
+<div class=stText>
+	Specifies the pointer to the class variable to load on the current execution object.
+	The variable specified here must exists in the class (either direct or in one of the base classes).
+	Only variable pointers returned by one of the
+	<br><span id=italic>dsVariable *dsClass::FindVariable(...)</span><br>
+	functions are considered beeing safe to use here.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Class Function Declaration</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="classes.htm">Classes and Interfaces</a> / Class Function Declaration
+</div>
+
+<div class=stContent>
+<div class=stTitle>Class Function Declaration</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Class functions define the behaviour of objects created from this class.
+Each function belongs to a certain type of functions.
+A function can only be called on an object or the class itself.
+Only static functions can be called on both the object and the class itself.
+All other functions have to be used on objects only.
+The following function types exist.</div>
+<div id=bold>Constructors</div>
+<div class=stText>
+A Constructor Function is a special function as it does not have a return value and the name has to be 'new'.
+The parameters can be anything. The most time you need the to do a default constructor which has no parameters.
+Such a function can be used to create new instances of an object. The function is then called on the newly
+created object so you can initialize it easily. An object can only be created if at last one such function
+is present. Constructors can not be static or abstract.
+</div>
+<div id=bold>Destructor</div>
+<div class=stText>
+The destructor function is an optional function called before the object is freed from memory. There can only
+be one such function which has to of name 'destructor' with no return value specified and no parameters.
+Such functions are usually only used in native classes to clean up memory properly. For scripted classes there
+is usually no need for such a function. Destructor function can not be static or abstract.
+</div>
+<div id=bold>Operators</div>
+<div class=stText>
+Operators are special functions as they work slightly different than other functions. An Operator Function takes
+the name of an operator that you can use later. This way you can defined special behaviour for operators like '+'
+for example. In this situation you can then use two objects together with '+' like you would do it with primitive
+datatypes like 'int'. Such Operator Functions must have no parameter if they are unary operators like '~' or
+exactly one parameter if they are binary operators like '*'. Operators can not be static or abstract.
+</div>
+<div id=bold>Functions</div>
+<div class=stText>
+All other functions are normal functions. They have a return type, a function name and a set of parameters.
+Those functions can be static if they are meant to be called without the need for an object instance (thus called
+on the class itself), can be abstract if you do not want to provide an implementation of this function or normal
+otherwise.
+</div>
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>type-modifiers</span> <span id=bold>func</span> 
+{ <span id=italic>new</span> | 
+  <span id=italic>destructor</span> |
+  <span id=italic>type</span> { <span id=italic>name</span> | <span id=italic>operator</span> }
+}
+'('
+   [ <span id=italic>arg-type</span> <span id=italic>arg-name</span> [ ',' ... ] ]
+')'
+'newline'
+{
+   <span id=italic>statement</span>
+'end'
+}
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>type-modifiers</div>
+<div class=stText>
+All <a href="typemods.htm">Type Modifiers</a> are allowed on function declarations.<br>
+<span id=italic>static:</span> Functions can be accessed using the class name.
+They are usefull if you have functions that do not require an actual object to work on.
+These are usually functions like mathematical functions or other ones where all the work can be done using only the arguments passed.<br>
+<span id=italic>abstract:</span> The function has no function body. This is usefull if you do not want
+to provide an implementation for a function because no reasonable implementation is possible at that point.
+Classes with such functions have to be abstratc themselves.
+</div>
+<div id=bold>type</div>
+<div class=stText>
+Declares the type of the return value.
+All classes and interfaces are allowed as types including <span id=italic>void</span> which designates a function return no value.
+</div>
+<div id=bold>name</div>
+<div class=stText>
+The name of the function.
+This one has to be unique in the class the definition appears in concerning it's signature.
+A function segnature is defined as beeing the name and the parameter types.
+More than one function can have the same name as long as their parameter types differ.
+</div>
+<div id=bold>operator</div>
+<div class=stText>
+The Operator the function stands for.
+</div>
+<div id=bold>arg-type</div>
+<div class=stText>
+The type of the argument to pass to the function.
+All classes and interfaces are allowed as types except <span id=italic>void</span>.
+</div>
+<div id=bold>arg-name</div>
+<div class=stText>
+The name of the argument passed to the function.
+You can refer to this parameter using this name in the function.
+If parameter names and variable names are the same function names have priority.
+It's a good idea to make those parameter names unique compared to the class members and local variables to avoid a lot of hazzles.
+</div>
+<div id=bold>statement</div>
+<div class=stText>
+Each function has to define a function body consisting of a statement if not declared abstract
+A statement can be either a single statement or it can be a block of statements.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+A simple function doing nothing else than returning always 0.
+<table border=0><tr><td><pre class=stCode>
+class MyScript
+   public func int SomeFunc()
+      return 0
+   end
+end
+</pre></td></tr></table>
+Two constructor functions. In the comment the way how you would call them.
+<table border=0><tr><td><pre class=stCode>
+class Color
+   private var int pVal
+   public func new()
+      pVal = 0
+   end
+   public func new(int Arg)
+      pVal = 20 - Arg
+   end
+   /* Color.new() */
+   /* Color.new(7) */
+end
+</pre></td></tr></table>
+A destructor function. You can not call them directly
+<table border=0><tr><td><pre class=stCode>
+class Color
+   public func destructor()
+   end
+end
+</pre></td></tr></table>
+Two operators, one unary and one binary. In comments how you use them.
+<table border=0><tr><td><pre class=stCode>
+class Color
+   /* ... */
+   public func Color -()
+      return Color.new( -pVal )
+   end
+   /* result = -myColor */
+   public func Color *(Color other)
+      return Color.new( pVal * other.pVal )
+   end
+   /* result = myColor * otherColor */
+end
+</pre></td></tr></table>
+Class functions are threaded by default as public class members.
+Thus the following two functions are both public.
+<table border=0><tr><td><pre class=stCode>
+class MyScript
+   public func int SomeFunc()
+      return 0
+   end
+   func int SomeOtherFunc()
+      return 1
+   end
+end
+</pre></td></tr></table>
+</div>
+
+<div class=stHeader>Tip</div>
+<div class=stText>
+DragonScript is capable of doing internal castings of arguments passed to functions if it cannot find a matching function to call.
+If there is more than one function that could be made to match using internal casting the Compiler will throw an error message during compilation.
+It's usually a good practice to have only one signature for a given function name and not multiple functions with same names but different parameters.
+This will make searching and using functions in big classes a lot easier.
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

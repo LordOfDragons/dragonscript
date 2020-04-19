@@ -1,0 +1,101 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - If-Else Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / If-Else Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>If-Else Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The If-Else Construct executes different code blocks depending on a condition.
+If the condition specified in the Statement turns out to be <span id=italic>true</span> then the If-Statement-Block is executed.
+Otherwiese the Else-Statement-Block is executed if present and if not the If-Statement-Block is just skipped.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>if</span> <span id=italic>condtion</span> <span id=bold>then</span>
+   <span id=italic>if-statement-block</span>
+[ <span id=bold>else</span>
+   <span id=italic>else-statement-block</span> ]
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>condition</div>
+<div class=stText>
+Is an expression beeing of type or castable to <span id=italic>bool</span>.
+</div>
+<div id=bold>if-statement-block</div>
+<div class=stText>
+This statement is executed in the case the condition equals <span id=italic>true</span> otherwise it is skipped.
+</div>
+<div id=bold>else-statement-block</div>
+<div class=stText>
+This statement is executed in the case the condition equals <span id=italic>false</span> otherwise it is skipped.
+If not specifed the if-statement-block is just skipped in this case.
+</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+Simple If-Construct executing the code only if a condition is satisfied otherwise it is skipped.
+<table border=0><tr><td><pre class=stCode>
+if vOperator2 != 0 then
+   vResult = vOperator1 / vOperator2;
+</pre></td></tr></table>
+The same situation but this time if the divider is 0 we execute another code branch.
+<table border=0><tr><td><pre class=stCode>
+if vOperator2 != 0 then
+   vResult = vOperator1 / vOperator2;
+else
+   vResult = 0;
+</pre></td></tr></table>
+If-Else Constructs can be nested to any deep. Just use an If-Else-Statement in the else clause.
+This example conducts different operations based on an input value.
+<table border=0><tr><td><pre class=stCode>
+if vOperator = '+' then
+   vResult = vOp1 + vOp2;
+else if vOperator = '-' then
+   vResult = vOp1 - vOp2;
+else if vOperator = '*' then
+   vResult = vOp1 * vOp2;
+else
+   vResult = 0;
+</pre></td></tr></table>
+Statements can also be statement blocks. This are the first two examples using statement blocks this time.
+<table border=0><tr><td><pre class=stCode>
+if vOperator2 != 0 then{
+   vResult = vOperator1 / vOperator2;
+}
+if vOperator2 != 0 then{
+   vResult = vOperator1 / vOperator2;
+}else{
+   vResult = 0;
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

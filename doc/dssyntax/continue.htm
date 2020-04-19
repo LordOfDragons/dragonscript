@@ -1,0 +1,59 @@
+<html>
+<head>
+
+<title>DragonScript Syntax - Continue Statement</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, Syntax">
+<link rel=stylesheet type="text/css" href="dsscript.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / <a href="controlflow.htm">Control Flow</a> / Continue Statement
+</div>
+
+<div class=stContent>
+<div class=stTitle>Break Statement</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+The Continue Statement causes the innermost For or While Statement to skip over the code following the Continue Statement and to check the conditions for another loop.
+In a For Statement this causes the counter variable to be increased before the check is done.
+In a While Statement the condition is directly checked after invokation.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=bold>continue</span>
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>none</div>
+</div>
+
+<div class=stHeader>Example</div>
+<div class=stText>
+In this example we count from 0 to 10 and sum up the values except the value 5.
+If we get there we skip the rest of the code and go for the next round.
+<table border=0><tr><td><pre class=stCode>
+for i = 0 to 10 do{
+   if i == 5 then continue;
+   vResult += i;
+}
+</pre></td></tr></table>
+</div>
+
+</div>
+
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dssyntax/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

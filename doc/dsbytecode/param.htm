@@ -1,0 +1,54 @@
+<html>
+<head>
+
+<title>DragonScript ByteCode - PARAM</title>
+<meta name="author" content="Roland Pl&uuml;ss (The Dragon)">
+<meta name="date" content="161003">
+<meta name="description" content="DragonScript Syntax">
+<meta name="keywords" content="DragonScript, ByteCode">
+<link rel=stylesheet type="text/css" href="dsbytecode.css">
+</head>
+
+<body>
+
+<div class=stNavigation>
+<a href="index.html">Main</a> / PARAM(dsByteCode::ebcParam,11)
+</div>
+
+<div class=stContent>
+<div class=stTitle>PARAM(dsByteCode::ebcParam,11) - Load Function Parameter</div>
+
+<div class=stHeader>Description</div>
+<div class=stText>
+Loads an argument passed to the current function in process and stores it into the execution object.
+The argument index has to be in the range defined by the function in process.
+</div>
+
+<div class=stHeader>Syntax</div>
+<table border=0><tr><td><pre class=stCode>
+<span id=italic>[byte] </span><span id=bold>dsByteCode::ebcParam</span>
+<span id=italic>[byte] </span>index
+</pre></td></tr></table>
+
+<div class=stHeader>Parameters</div>
+<div class=stText>
+<div id=bold>index</div>
+<div class=stText>
+	Specifies the index of the argument to load. The Index is in the range from 0 to Count-1
+	with Count beeing the maximum number of arguments specified by the function definition.
+	The first argument is the index 0. Thus if a function has three arguments defined:
+	<br><span id=italic>MyFunction(int arg1, byte arg2, int arg3)</span><br>
+	arg1 is the argument with index 0 and arg3 the last argument with index 2.<br>
+	A function can only have a maximum of 256 arguments.
+</div>
+</div>
+
+</div>
+
+<div class=stFooter>
+This documentation you can also find on <a href="http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html">http://rptd.dnsalias.net/epsylon/dragonscript/documentation/dsbytecode/index.html</a>.<br>
+For questions or other input mail me at <a href="mailto:rptd@gmx.net">rptd@gmx.net</a>.
+</div>
+
+</body>
+</html>

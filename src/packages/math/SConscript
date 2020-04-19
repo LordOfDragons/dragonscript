@@ -1,0 +1,34 @@
+from glob_files import globFiles
+import os
+
+Import('globalEnv')
+
+envPackage = globalEnv.Clone()
+
+globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
+
+pathPackage = envPackage.subst('${libdir}/dragonscript/Math')
+
+# setup the builders
+targetPackage = globalEnv.targetManager.TargetLibrary('Package Math')
+globalEnv.targetManager.add('pak_math', targetPackage)
+
+sources = []
+headers = []
+scripts = []
+globFiles(envPackage, 'src', '*.cpp', sources)
+globFiles(envPackage, 'src', '*.h', headers)
+globFiles(envPackage, 'src', '*.ds', scripts)
+
+objects = [envPackage.SharedObject(s) for s in sources]
+
+library = envPackage.SharedLibrary(target='Math', source=objects, SHLIBPREFIX='')
+targetPackage.build.extend(library)
+targetPackage.aliasBuild(envPackage, 'pak_math_build')
+
+targetPackage.installCutDirs(envPackage, pathPackage, scripts, 1)
+targetPackage.install.extend(envPackage.Install(pathPackage, library[0])) # only first target in case clutter exists
+targetPackage.aliasInstall(envPackage, 'pak_math')
+
+targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)
+targetPackage.archiveLibrary(envPackage, pathPackage, library[0:1])

@@ -1,0 +1,43 @@
+interface Addable
+   func void add(Object o)
+end
+
+class Add implements Addable
+   func new()
+   end
+
+   func void add(Object o)
+   end
+   
+   func void add(Addable s)
+   end
+end
+
+
+class POC extends Application
+   func new()
+   end
+   
+   func int run()
+      var String s = "w007"
+      var Add a = Add.new()
+      a.add(s)
+//	  a.add(Add.new())
+      var bool equal = (s != null)
+      return 0
+   end
+end
+
+
+class StaticStuff
+   var String s
+
+   func new()
+      s = "initialzed"
+   end
+
+   public static func void message1()
+      System.print("StaticStuff.message1()\n")
+      System.print(this.s+"\n")
+   end
+end

@@ -1,0 +1,25 @@
+requires "Utils"
+
+pin Utils
+
+
+class MyApp extends Application
+	
+	public func new()
+	end
+		
+	public func int run()
+		System.print( TerminalColorizer.setColor( TerminalColorizer.RED ) \
+			+ "red, default" + TerminalColorizer.reset() + "\n" )
+		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, true ) \
+			+ "red bold, default" + TerminalColorizer.reset() + "\n" )
+		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, TerminalColorizer.BLUE, true ) \
+			+ "red bold, blue" + TerminalColorizer.reset() + "\n" )
+		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, TerminalColorizer.BLUE ) \
+			+ "red, blue" + TerminalColorizer.reset() + "\n" )
+		System.print( TerminalColorizer.setColor( TerminalColorizer.BLUE ) \
+			+ "blue, default" + TerminalColorizer.reset() + "\n" )
+		return 0
+	end
+	
+end

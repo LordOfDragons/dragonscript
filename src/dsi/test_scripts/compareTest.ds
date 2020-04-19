@@ -1,0 +1,63 @@
+class TestScript extends Application
+	func new()
+	end
+	
+	func int run()
+		System.print( "compare(2.3, 2.3): " + (2.3).compare(2.3) + "\n" )
+		System.print( "compare(2.3, 2.31): " + (2.3).compare(2.31) + "\n" )
+		System.print( "compare(2.3, 2.29): " + (2.3).compare(2.29) + "\n" )
+		System.print( "compare(2.0, 2.0): " + (2.0).compare(2.0) + "\n" )
+		System.print( "compare(2.0, 2): " + (2.0).compare(2) + "\n" )
+		System.print( "compare(2.01, 2): " + (2.01).compare(2) + "\n" )
+		System.print( "compare(1.99, 2): " + (1.99).compare(2) + "\n" )
+		System.print( "compare(1.0, 0h1): " + (1.0).compare(0h1) + "\n" )
+		System.print( "compare(1.0, true): " + (1.0).compare(true) + "\n" )
+		System.print( "compare(1.01, 0h1): " + (1.01).compare(0h1) + "\n" )
+		System.print( "compare(1.01, true): " + (1.01).compare(true) + "\n" )
+		System.print( "compare(0.99, 0h1): " + (0.99).compare(0h1) + "\n" )
+		System.print( "compare(0.99, true): " + (0.99).compare(true) + "\n" )
+		/*
+		System.print( "bool compare bool: " + ( b cast bool ) + "\n" )
+		System.print( "bool compare byte: " + ( b cast byte ) + "\n" )
+		System.print( "bool compare int: " + ( b cast int ) + "\n" )
+		System.print( "bool compare float: " + ( b cast float ) + "\n" )
+		
+		System.print( "byte compare bool: " + ( y cast bool ) + "\n" )
+		System.print( "byte compare byte: " + ( y cast byte ) + "\n" )
+		System.print( "byte compare int: " + ( y cast int ) + "\n" )
+		System.print( "byte compare float: " + ( y cast float ) + "\n" )
+		
+		System.print( "int compare bool: " + ( i cast bool ) + "\n" )
+		System.print( "int compare byte: " + ( i cast byte ) + "\n" )
+		System.print( "int compare int: " + ( i cast int ) + "\n" )
+		System.print( "int compare float: " + ( i cast float ) + "\n" )
+		
+		System.print( "float compare bool: " + ( f cast bool ) + "\n" )
+		System.print( "float compare byte: " + ( f cast byte ) + "\n" )
+		System.print( "float compare int: " + ( f cast int ) + "\n" )
+		System.print( "float compare float: " + ( f cast float ) + "\n" )
+		
+		System.print( "object bool compare bool: " + ( ob cast bool ) + "\n" )
+		System.print( "object bool compare byte: " + ( ob cast byte ) + "\n" )
+		System.print( "object bool compare int: " + ( ob cast int ) + "\n" )
+		System.print( "object bool compare float: " + ( ob cast float ) + "\n" )
+		
+		System.print( "object byte compare bool: " + ( oy cast bool ) + "\n" )
+		System.print( "object byte compare byte: " + ( oy cast byte ) + "\n" )
+		System.print( "object byte compare int: " + ( oy cast int ) + "\n" )
+		System.print( "object byte compare float: " + ( oy cast float ) + "\n" )
+		
+		System.print( "object int compare bool: " + ( oi cast bool ) + "\n" )
+		System.print( "object int compare byte: " + ( oi cast byte ) + "\n" )
+		System.print( "object int compare int: " + ( oi cast int ) + "\n" )
+		System.print( "object int compare float: " + ( oi cast float ) + "\n" )
+		
+		System.print( "object float compare bool: " + ( of cast bool ) + "\n" )
+		System.print( "object float compare byte: " + ( of cast byte ) + "\n" )
+		System.print( "object float compare int: " + ( of cast int ) + "\n" )
+		System.print( "object float compare float: " + ( of cast float ) + "\n" )
+		*/
+		
+		return 0
+	end
+end

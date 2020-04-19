@@ -1,0 +1,229 @@
+class SetTests extends Application
+	class RemoveTracker
+		var int pValue
+		public func new( int value )
+			this.pValue = value
+		end
+		public func destructor()
+			System.print( "RemoveTracker(" + this.pValue + ") destroy\n" )
+		end
+		public func String toString()
+			return "" + this.pValue
+		end
+		public func bool is( int value )
+			return this.pValue == value
+		end
+	end
+	
+	public func new()
+	end
+	
+	public func int run()
+		this.testBasics()
+		this.testFold()
+		this.testInject()
+		this.testRemoveIf()
+		this.testToString()
+		this.testHas()
+		this.testForEach()
+		this.testEquals()
+		this.iterateModifyProtection()
+		return 0
+	end
+	
+	public func void testBasics()
+		var Set set1
+		var int i
+		
+		set1 = Set.new()
+		for i = 0 to 10
+			set1.add( i )
+		end
+		System.print( "initial set: " + set1 + "\n" )
+		
+		for i = 0 to 10
+			set1.add( i )
+		end
+		System.print( "add duplicates set: " + set1 + "\n" )
+		
+		set1 -= Set.newWith( 2, 5, 8 )
+		System.print( "-= [2,5,8]: " + set1 + "\n" )
+		
+		set1 += Set.newWith( 6, 2, 5, 9, 8 )
+		System.print( "+= [6,2,5,9,8]: " + set1 + "\n" )
+		
+		set1 = set1 - Set.newWith( 1, 2, 6 )
+		System.print( "- [1,2,6]: " + set1 + "\n" )
+		
+		set1 = set1 + Set.newWith( 6, 1, 2, 9, 5 )
+		System.print( "+ [6,1,2,9,5]: " + set1 + "\n" )
+		
+		var Array array = set1.toArray().sorted()
+		System.print( "toArray(sorted): " + array + "\n" )
+		
+		set1 = Set.newFrom( array )
+		System.print( "set from array: " + set1 + "\n" )
+		
+		var String a = "Hallo"
+		var float b = 8.0
+		var Set c = Set.new()
+		System.print( "test " + ( a castable String ) + "\n" )
+		System.print( "test " + ( not a castable String ) + "\n" )
+		System.print( "test " + ( a castable Object ) + "\n" )
+		System.print( "test " + ( not a castable Object ) + "\n" )
+		System.print( "test " + ( a typeof String ) + "\n" )
+		System.print( "test " + ( a typeof Object ) + "\n" )
+	end
+	
+	public func void testFold()
+		
+	end
+	
+	public func void testInject()
+		var Block ablock = block String injected, int each
+			return injected + each
+		end
+		var Set arr = Set.new()
+		
+		// empty set
+		System.print( "0 inject should X is " + arr.inject( "X", ablock ) + "\n" )
+		
+		// one entry
+		arr.add( 0 )
+		System.print( "1 inject should X0 is " + arr.inject( "X", ablock ) + "\n" )
+		
+		// two entries
+		arr.add( 1 )
+		System.print( "2 inject should X01 is " + arr.inject( "X", ablock ) + "\n" )
+		
+		// three entries
+		arr.add( 2 )
+		System.print( "3 inject should X012 is " + arr.inject( "X", ablock ) + "\n" )
+		
+		// 10 entries
+		arr.add( 3 )
+		arr.add( 4 )
+		arr.add( 5 )
+		arr.add( 6 )
+		arr.add( 7 )
+		arr.add( 8 )
+		arr.add( 9 )
+		System.print( "10 inject should X0123456789 is " + arr.inject( "X", ablock ) + "\n" )
+	end
+	
+	public func void testRemoveIf()
+		var Set arr, arrInit
+		var int i
+		
+		arrInit = Set.new()
+		for i = 0 to 10
+			arrInit.add( i )
+		end
+		
+		arr = Set.new( arrInit )
+		arr.removeIf( block int each
+			return false
+		end )
+		System.print( "[0..9] removeIf(false) should [0..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIf( block int each
+			return each == 2
+		end )
+		System.print( "[0..9] removeIf(==2) should [0,1,3..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIf( block int each
+			return each > 4
+		end )
+		System.print( "[0..9] removeIf(>4) should [5..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIf( block int each
+			return true
+		end )
+		System.print( "[0..9] removeIf(true) should [] is " + arr + "\n" )
+		
+		arr = Set.new()
+		for i = 0 to 10
+			arr.add( RemoveTracker.new( i ) )
+		end
+		arr.removeIf( block RemoveTracker each
+			return each.is( 2 ) or each.is( 4 )
+		end )
+		System.print( "[0..9] removeIf(=={2,4}) should [0,1,3,5..9] is " + arr + "\n" )
+	end
+	
+	public func void testToString()
+		System.print( "toString: " + Set.newWith( 8, null, "test" ) + "\n" )
+	end
+	
+	public func void testHas()
+		var Set arr = Set.newWith( "hallo", "Welt", 8, null, "noPe" )
+		System.print( "has('Welt') should true is " + arr.has( "Welt" ) + "\n" )
+		System.print( "has('welt') should false is " + arr.has( "welt" ) + "\n" )
+		System.print( "has('8') should false is " + arr.has( "8" ) + "\n" )
+		System.print( "has(8) should true is " + arr.has( 8 ) + "\n" )
+		System.print( "has(null) should true is " + arr.has( null ) + "\n" )
+	end
+	
+	public func void testForEach()
+		var Set arr = Set.newWith( 0, 1, 2 )
+		arr.forEach( block int each
+			System.print( "forEach(block): " + each + "\n" )
+		end )
+	end
+	
+	public func void testEquals()
+		System.print( "equals (0,1,2) (0,1,2) is " + \
+			Set.newWith(0,1,2).equals(Set.newWith(0,1,2)) + "\n" )
+		System.print( "equals (0,1,2) (2,1,0) is " + \
+			Set.newWith(0,1,2).equals(Set.newWith(2,1,0)) + "\n" )
+		System.print( "equals (0,1,2) (0,1) is " + \
+			Set.newWith(0,1,2).equals(Set.newWith(0,1)) + "\n" )
+		System.print( "equals (0,1,2) (0,1,2,3) is " + \
+			Set.newWith(0,1,2).equals(Set.newWith(0,1,2,3)) + "\n" )
+		
+		System.print( "equals ('aA','bB','cC') ('aA','bB','cC') is " + \
+			Set.newWith("aA","bB","cC").equals(Set.newWith("aA","bB","cC")) + "\n" )
+		System.print( "equals ('aA','bB','cC') ('Aa','bB','cC') is " + \
+			Set.newWith("aA","bB","cC").equals(Set.newWith("Aa","bB","cC")) + "\n" )
+		System.print( "equals ('aA','bB','cC') ('cC','bB','aA') is " + \
+			Set.newWith("aA","bB","cC").equals(Set.newWith("cC","bB","aA")) + "\n" )
+		
+		System.print( "equals ('aA','bB','cC') ('aA','bB') is " + \
+			Set.newWith("aA","bB","cC").equals(Set.newWith("aA","bB")) + "\n" )
+		System.print( "equals ('aA','bB','cC') ('aA','bB','cC','dD') is " + \
+			Set.newWith("aA","bB","cC").equals(Set.newWith("aA","bB","cC","dD")) + "\n" )
+	end
+	
+	public func void iterateModifyProtection()
+		var Set list = Set.new()
+		var bool failed = false
+		
+		list.add( "hallo" )
+		list.add( "welt" )
+		
+		// removeFrom inside forEach should fail
+		try
+			list.forEach( block String value
+				list.remove( "hallo" )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "removeFrom inside forEach: should fail true is " + failed + "\n" )
+		
+		// add inside forEach should fail
+		try
+			list.forEach( block String value
+				list.add( "oops" )
+			end )
+			failed = false
+		catch Exception e
+			failed = true
+		end
+		System.print( "add inside forEach: should fail true is " + failed + "\n" )
+	end
+end
