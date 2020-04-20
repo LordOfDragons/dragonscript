@@ -74,7 +74,21 @@ dsNativePackage::dsNativePackage(const char *filename){
 		pHandle = load_add_on( pFilename );
 		if( ! pHandle ) DSTHROW_INFO( dueInvalidAction, "load_add_on" );
 #elif defined OS_W32
-		pHandle = LoadLibrary(pFilename);
+		const int widePathLen = MultiByteToWideChar( CP_UTF8,
+			MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, filename, -1, NULL, 0 );
+		if( widePathLen == 0 ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		wchar_t *const widePath = new wchar_t[ widePathLen ];
+		if( ! MultiByteToWideChar( CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+		filename, -1, widePath, widePathLen ) ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		pHandle = LoadLibraryW( widePath );
+		delete [] widePath;
+		
 		if(!pHandle){
 			int err = GetLastError();
 			LPVOID lpMsgBuf;
@@ -90,7 +104,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 			    NULL 
 			);
 			// Display the string.
-			printf( "[error loadlib] %i: %s\n", err, (LPCSTR)lpMsgBuf);
+			printf( "[error loadlib] %i: %s\n", err, (LPCSTR)lpMsgBuf );
 			// Free the buffer.
 			LocalFree( lpMsgBuf );
 

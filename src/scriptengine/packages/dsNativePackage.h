@@ -33,6 +33,10 @@
 #elif defined(OS_BEOS)
 #	include <kernel/image.h>
 #elif defined(OS_W32)
+#	ifdef _WIN32_WINNT
+#		undef _WIN32_WINNT
+#	endif
+#	define _WIN32_WINNT _WIN32_WINNT_WIN7
 #	include <windows.h>
 #else
 #	error No usable module headers found

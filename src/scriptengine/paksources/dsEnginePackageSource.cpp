@@ -42,6 +42,10 @@
 #	include <unistd.h>
 #	include <dirent.h>
 #elif defined OS_W32
+#	ifdef _WIN32_WINNT
+#		undef _WIN32_WINNT
+#	endif
+#	define _WIN32_WINNT _WIN32_WINNT_WIN7
 #	include <windows.h>
 #else
 #	error "No valid OS_* symbol defined!"
@@ -145,26 +149,60 @@ const char *dsEnginePackageSource::p_FindPackage(const char *name){
 }
 #elif defined OS_W32
 const char *dsEnginePackageSource::p_FindPackage(const char *name){
-	const char *sharedPath;
-	char *buffer=NULL;
-	bool found=false;
-	DWORD attribs;
+	const int count = pEngine->GetSharedPathCount();
+	bool found = false;
+	int i;
+	
 	// look in all shared path to find a directory with the given name
-	for(int i=0; i<pEngine->GetSharedPathCount(); i++){
-		sharedPath = pEngine->GetSharedPath(i);
+	for( i=0; i<count; i++ ){
+		const char * const sharedPath = pEngine->GetSharedPath( i );
+		wchar_t *widePath = NULL;
+		char *buffer = NULL;
+		
 		try{
-			buffer = new char[strlen(sharedPath)+strlen(name)+1];
-			if(!buffer) DSTHROW(dueOutOfMemory);
-			sprintf(buffer, "%s%s", sharedPath, name);
-			attribs = GetFileAttributes(buffer);
-			found = (attribs != INVALID_FILE_ATTRIBUTES) && (attribs & FILE_ATTRIBUTE_DIRECTORY);
-			delete [] buffer; buffer = NULL;
+			buffer = new char[ strlen( sharedPath ) + strlen( name ) + 1 ];
+			sprintf( buffer, "%s%s", sharedPath, name );
+			
+			const int widePathLen = MultiByteToWideChar( CP_UTF8,
+				MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, buffer, -1, NULL, 0 );
+			if( widePathLen == 0 ){
+				DSTHROW( dueInvalidParam );
+			}
+			
+			widePath = new wchar_t[ widePathLen ];
+			if( ! MultiByteToWideChar( CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+			buffer, -1, widePath, widePathLen ) ){
+				DSTHROW( dueInvalidParam );
+			}
+			
+			WIN32_FILE_ATTRIBUTE_DATA fa;
+			if( ! GetFileAttributesExW( widePath, GetFileExInfoStandard, &fa ) ){
+				DSTHROW( dueInvalidParam );
+			}
+			
+			found = ( fa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY;
+			
+			delete [] widePath;
+			widePath = NULL;
+			
+			delete [] buffer;
+			buffer = NULL;
+			
 		}catch( ... ){
-			if(buffer) delete [] buffer;
+			if( widePath ){
+				delete [] widePath;
+			}
+			if( buffer ){
+				delete [] buffer;
+			}
 			throw;
 		}
-		if(found) return sharedPath;
+		
+		if( found ){
+			return sharedPath;
+		}
 	}
+	
 	// nothing found
 	return NULL;
 }
@@ -237,29 +275,59 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 	const char *searchPattern="*.*";
 	const char *matchPattern="ds";
 	char *newPath=NULL, *buffer=NULL;
+	wchar_t *widePath = NULL;
+	char *utf8 = NULL;
 	HANDLE searchHandle=INVALID_HANDLE_VALUE;
-	WIN32_FIND_DATA dirEntry;
+	WIN32_FIND_DATAW dirEntry;
 	try{
 		// start search in directory
 		newPath = new char[strlen(path)+strlen(searchPattern)+1];
 		if(!newPath) DSTHROW(dueOutOfMemory);
 		sprintf(newPath, "%s%s", path, searchPattern);
-		searchHandle = FindFirstFile(newPath, &dirEntry);
+		
+		const int widePathLen = MultiByteToWideChar( CP_UTF8,
+			MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, newPath, -1, NULL, 0 );
+		if( widePathLen == 0 ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		widePath = new wchar_t[ widePathLen ];
+		if( ! MultiByteToWideChar( CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+		newPath, -1, widePath, widePathLen ) ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		searchHandle = FindFirstFileW( widePath, &dirEntry );
+		
+		delete [] widePath;
+		widePath = NULL;
+		
 		delete [] newPath; newPath = NULL;
 		if(searchHandle == INVALID_HANDLE_VALUE){
 		    if(GetLastError() != ERROR_NO_MORE_FILES) DSTHROW(dseDirectoryRead);
 		}
 		// do the search
 		while(true){
+			const int utf8Len = WideCharToMultiByte( CP_UTF8, WC_ERR_INVALID_CHARS,
+				dirEntry.cFileName, -1, NULL, 0, NULL, NULL );
+			if( utf8Len == 0 ){
+				DSTHROW( dueInvalidParam );
+			}
+			
+			utf8 = new char[ utf8Len ];
+			if( ! WideCharToMultiByte( CP_UTF8, WC_ERR_INVALID_CHARS,
+			dirEntry.cFileName, -1, utf8, utf8Len, NULL, NULL ) ){
+				DSTHROW( dueInvalidParam );
+			}
+			
 			// skip '.' and '..'
-			if( (strcmp(dirEntry.cFileName, ".") != 0)
-			&& (strcmp(dirEntry.cFileName, "..") != 0) ){
+			if( strcmp( utf8, "." ) != 0  && strcmp( utf8, ".." ) != 0 ){
 				// check if the file is a directory
 				if(dirEntry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 					// build pathname
-					newPath = new char[strlen(path)+strlen(dirEntry.cFileName)+2];
+					newPath = new char[strlen(path)+strlen(utf8)+2];
 					if(!newPath) DSTHROW(dueOutOfMemory);
-					sprintf(newPath, "%s%s%c", path, dirEntry.cFileName, PATH_SEPARATOR);
+					sprintf(newPath, "%s%s%c", path, utf8, PATH_SEPARATOR);
 					// descent into directory recursively
 					p_AddScripts(pak, newPath);
 					// clean up
@@ -267,11 +335,11 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 				// otherwise it is a common file of the correct extension
 				}else{
 					// build pathname
-					newPath = new char[strlen(path)+strlen(dirEntry.cFileName)+1];
+					newPath = new char[strlen(path)+strlen(utf8)+1];
 					if(!newPath) DSTHROW(dueOutOfMemory);
-					sprintf(newPath, "%s%s", path, dirEntry.cFileName);
+					sprintf(newPath, "%s%s", path, utf8);
 					// check if this a valid script file '*.ds'
-					if(p_MatchesExt(dirEntry.cFileName, matchPattern)){
+					if(p_MatchesExt(utf8, matchPattern)){
 						// add script to package
 						scriptSource = new dsFile(newPath);
 						if(!scriptSource) DSTHROW(dueOutOfMemory);
@@ -281,8 +349,12 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 					delete [] newPath; newPath = NULL;
 				}
 			}
+			
+			delete [] utf8;
+			utf8 = NULL;
+			
 			// read next entry
-			if(!FindNextFile(searchHandle, &dirEntry)){
+			if(!FindNextFileW(searchHandle, &dirEntry)){
 			    if(GetLastError() == ERROR_NO_MORE_FILES) break;
 			    DSTHROW(dseDirectoryRead);
 			}
@@ -291,6 +363,12 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 		FindClose(searchHandle); searchHandle=INVALID_HANDLE_VALUE;
 	}catch( ... ){
 		if(scriptSource) delete scriptSource;
+		if( widePath ){
+			delete [] widePath;
+		}
+		if( utf8 ){
+			delete [] utf8;
+		}
 		if(newPath) delete [] newPath;
 		if(buffer) delete [] buffer;
 		if(searchHandle==INVALID_HANDLE_VALUE) FindClose(searchHandle);
@@ -338,32 +416,59 @@ void dsEnginePackageSource::p_AddNativeLib(dsPackage *pak, const char *path){
 #elif defined OS_W32
 void dsEnginePackageSource::p_AddNativeLib(dsPackage *pak, const char *path){
 	// library has to be named 'pak-name.dll', for example, 'Math.dll'
-	dsEnginePackages *engPkg = pEngine->GetEnginePackages();
-	dsNativePackage *natPak;
-	const char *libName = pak->GetName();
-	char *newPath=NULL;
-	DWORD attribs;
+	dsEnginePackages &engPkg = *pEngine->GetEnginePackages();
+	const char * const libName = pak->GetName();
+	wchar_t *widePath = NULL;
+	char *newPath = NULL;
+	
 	try{
 		// build name of library. it is fixed so we know what to look for.
-		newPath = new char[strlen(path)+strlen(libName)+5];
-		if(!newPath) DSTHROW(dueOutOfMemory);
-		sprintf(newPath, "%s%s.dll", path, libName);
-		// check if file exists
-		attribs = GetFileAttributes(newPath);
-		if( (attribs!=INVALID_FILE_ATTRIBUTES) && !(attribs&FILE_ATTRIBUTE_DIRECTORY) ){
-			// try to load file
-			natPak = engPkg->GetNativePackage(newPath);
-			if(!natPak){
-				natPak = new dsNativePackage(newPath);
-				if(!natPak) DSTHROW(dueOutOfMemory);
-			}
-			// add native classes to package
-			natPak->LoadIntoPackage(pEngine, pak);
+		newPath = new char[ strlen( path ) + strlen( libName ) + 5 ];
+		sprintf( newPath, "%s%s.dll", path, libName );
+		
+		const int widePathLen = MultiByteToWideChar( CP_UTF8,
+			MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, newPath, -1, NULL, 0 );
+		if( widePathLen == 0 ){
+			DSTHROW( dueInvalidParam );
 		}
+		
+		widePath = new wchar_t[ widePathLen ];
+		if( ! MultiByteToWideChar( CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS,
+		newPath, -1, widePath, widePathLen ) ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		// check if file exists
+		WIN32_FILE_ATTRIBUTE_DATA fa;
+		if( ! GetFileAttributesExW( widePath, GetFileExInfoStandard, &fa ) ){
+			DSTHROW( dueInvalidParam );
+		}
+		
+		if( ( fa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) != FILE_ATTRIBUTE_DIRECTORY ){
+			// try to load file
+			dsNativePackage *natPak = engPkg.GetNativePackage( newPath );
+			if( ! natPak ){
+				natPak = new dsNativePackage(newPath);
+			}
+			
+			// add native classes to package
+			natPak->LoadIntoPackage( pEngine, pak );
+		}
+		
 		// clean up
-		delete [] newPath; newPath = NULL;
+		delete [] widePath;
+		widePath = NULL;
+		
+		delete [] newPath;
+		newPath = NULL;
+		
 	}catch( ... ){
-		if(newPath) delete [] newPath;
+		if( widePath ){
+			delete [] widePath;
+		}
+		if( newPath ){
+			delete [] newPath;
+		}
 		throw;
 	}
 }
