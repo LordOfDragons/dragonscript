@@ -40,6 +40,12 @@ if targetPlatform == 'windows':
 	globalEnv['WINDOWS_INSERT_DEF'] = 1 # generated .def file if dll is build
 	globalEnv.Append(SHLINKFLAGS = ['-Wl,--export-all-symbols']) # windows requires this
 
+# Haiku: The PATH found by SCons are wrong in many ways causing binaries to be not found.
+#        Replace them with sane values. This is not a 'good' solution but should work.
+if sys.platform == 'haiku1':
+	import os
+	globalEnv['ENV']['PATH'] = os.environ['PATH']
+
 # parameters
 params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
 params.Add(BoolVariable('with_debug', 'Build with debug symbols for GDB usage', False))
