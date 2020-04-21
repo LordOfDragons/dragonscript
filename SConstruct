@@ -1,5 +1,7 @@
 from ternary_variable import TernaryVariable
 from glob_files import globFiles
+import os
+import sys
 
 # create parent environment and load tools
 globalEnv = Environment()
@@ -20,9 +22,6 @@ globalEnv.configReport.add('Target platform', 'target_platform')
 
 targetPlatform = globalEnv['target_platform']
 if targetPlatform == 'auto':
-	import os
-	import sys
-	
 	if sys.platform == 'haiku1':
 		targetPlatform = 'beos'
 	elif os.name == 'win32' or sys.platform == 'win32':
