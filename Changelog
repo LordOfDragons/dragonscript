@@ -9,3 +9,6 @@ Initial Release
 - Dictionary: added setAll(Dictionary) and +(Dictionary)
 - Set: added newWith() method for up to 10 objects
 - Set: added addAll(Set) and removeAll(Set)
+- String: added startsWith(String), startsWithNoCase(String), endsWith(String) and endsWithNoCase(String)
+- String: changed getAt(int) to accept negative index counting from the end 
+
