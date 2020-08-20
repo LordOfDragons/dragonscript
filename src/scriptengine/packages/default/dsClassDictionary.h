@@ -85,6 +85,7 @@ private:
 	DEF_NATFUNC( nfGetAt );
 	DEF_NATFUNC( nfGetAt2 );
 	DEF_NATFUNC( nfSetAt );
+	DEF_NATFUNC( nfSetAll );
 	DEF_NATFUNC( nfRemove );
 	DEF_NATFUNC( nfRemoveIfExisting );
 	DEF_NATFUNC( nfRemoveAll );
@@ -104,6 +105,8 @@ private:
 	DEF_NATFUNC( nfInject );
 	DEF_NATFUNC( nfInjectKey );
 	DEF_NATFUNC( nfInjectValue );
+	
+	DEF_NATFUNC( nfOpAdd );
 	
 	DEF_NATFUNC( nfEquals );
 	DEF_NATFUNC( nfToString );

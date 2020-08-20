@@ -275,6 +275,32 @@ void dsClassDictionary::nfSetAt::RunFunction( dsRunTime *rt, dsValue *myself ){
 	clsDict.SetValue( rt, myself->GetRealObject(), rt->GetValue( 0 ), rt->GetValue( 1 ) );
 }
 
+// public func void setAll( Dictionary dictionary )
+dsClassDictionary::nfSetAll::nfSetAll( const sInitData &init ) :
+dsFunction( init.clsDict, "setAll", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsDict ); // dictionary
+}
+void dsClassDictionary::nfSetAll::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsClassDictionary &clsDict = *( ( dsClassDictionary* )GetOwnerClass() );
+	
+	dsValue * const dict = rt->GetValue( 0 );
+	if( ! dict->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "dictionary" );
+	}
+	
+	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( dict ) );
+	sDictEntry *entry;
+	int i;
+	for( i=0; i<nd2.bucketCount; i++ ){
+		entry = nd2.buckets[ i ];
+		while( entry ){
+			clsDict.SetValue( rt, myself->GetRealObject(), entry->key, entry->value );
+			entry = entry->next;
+		}
+	}
+}
+
 // public func void remove( Object key )
 dsClassDictionary::nfRemove::nfRemove( const sInitData &init ) : dsFunction( init.clsDict,
 "remove", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -1009,6 +1035,55 @@ void dsClassDictionary::nfInjectValue::RunFunction( dsRunTime *rt, dsValue *myse
 
 
 
+// public func Dictionary +( Dictionary array )
+dsClassDictionary::nfOpAdd::nfOpAdd( const sInitData &init ) :
+dsFunction( init.clsDict, "+", DSFT_OPERATOR,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsDict ){
+	p_AddParameter( init.clsDict ); // array
+}
+void dsClassDictionary::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	dsClassDictionary &clsDict = *( ( dsClassDictionary* )GetOwnerClass() );
+	
+	dsValue * const dict = rt->GetValue( 0 );
+	if( ! dict->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "dictionary" );
+	}
+	
+	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( dict ) );
+	
+	dsValue * const newDictionary = clsDict.CreateDictionary( rt );
+	sDictEntry *entry;
+	int i;
+	try{
+		for( i=0; i<nd.bucketCount; i++ ){
+			entry = nd.buckets[ i ];
+			while( entry ){
+				clsDict.SetValue( rt, newDictionary->GetRealObject(), entry->key, entry->value );
+				entry = entry->next;
+			}
+		}
+		for( i=0; i<nd2.bucketCount; i++ ){
+			entry = nd2.buckets[ i ];
+			while( entry ){
+				clsDict.SetValue( rt, newDictionary->GetRealObject(), entry->key, entry->value );
+				entry = entry->next;
+			}
+		}
+		
+		rt->PushValue( newDictionary );
+		rt->FreeValue( newDictionary );
+		
+	}catch( ... ){
+		if( newDictionary ){
+			rt->FreeValue( newDictionary );
+		}
+		throw;
+	}
+}
+
+
+
 // public func bool equals( Object object )
 dsClassDictionary::nfEquals::nfEquals( const sInitData &init ) :
 dsFunction(init.clsDict, "equals", DSFT_FUNCTION,
@@ -1203,6 +1278,7 @@ void dsClassDictionary::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfGetAt( init ) );
 	AddFunction( new nfGetAt2( init ) );
 	AddFunction( new nfSetAt( init ) );
+	AddFunction( new nfSetAll( init ) );
 	AddFunction( new nfRemove( init ) );
 	AddFunction( new nfRemoveIfExisting( init ) );
 	AddFunction( new nfRemoveAll( init ) );
@@ -1222,6 +1298,8 @@ void dsClassDictionary::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfInject( init ) );
 	AddFunction( new nfInjectKey( init ) );
 	AddFunction( new nfInjectValue( init ) );
+	
+	AddFunction( new nfOpAdd( init ) );
 	
 	AddFunction( new nfEquals( init ) );
 	AddFunction( new nfToString( init ) );

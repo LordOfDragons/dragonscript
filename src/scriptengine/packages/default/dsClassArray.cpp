@@ -349,21 +349,9 @@ dsClassArray::nfNewWith1::nfNewWith1(const sInitData &init) : dsFunction( init.c
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
 	p_AddParameter( init.clsObj ); // obj
 }
-void dsClassArray::nfNewWith1::RunFunction( dsRunTime *rt, dsValue *myself ){
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass * const clsObj = clsArr->GetClassObject();
-	
-	dsValue *newArray = NULL;
-	sArrNatData *nd = NULL;
-	
+void dsClassArray::nfNewWith1::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 1 );
 	try{
-		newArray = clsArr->CreateArray( rt );
-		nd = ( sArrNatData* )p_GetNativeData( newArray );
-		
-		nd->SetSize( 1, rt, clsObj );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
 		rt->PushValue( newArray );
 		rt->FreeValue( newArray );
 		
@@ -381,22 +369,9 @@ dsClassArray::nfNewWith2::nfNewWith2(const sInitData &init) : dsFunction( init.c
 	p_AddParameter( init.clsObj ); // obj1
 	p_AddParameter( init.clsObj ); // obj2
 }
-void dsClassArray::nfNewWith2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass * const clsObj = clsArr->GetClassObject();
-	
-	dsValue *newArray = NULL;
-	sArrNatData *nd = NULL;
-	
+void dsClassArray::nfNewWith2::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 2 );
 	try{
-		newArray = clsArr->CreateArray( rt );
-		nd = ( sArrNatData* )p_GetNativeData( newArray );
-		
-		nd->SetSize( 2, rt, clsObj );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		rt->CopyValue( rt->GetValue( 1 ), nd->values[ 1 ] );
-		nd->count = 2;
-		
 		rt->PushValue( newArray );
 		rt->FreeValue( newArray );
 		
@@ -415,23 +390,9 @@ dsClassArray::nfNewWith3::nfNewWith3(const sInitData &init) : dsFunction( init.c
 	p_AddParameter( init.clsObj ); // obj2
 	p_AddParameter( init.clsObj ); // obj3
 }
-void dsClassArray::nfNewWith3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass * const clsObj = clsArr->GetClassObject();
-	
-	dsValue *newArray = NULL;
-	sArrNatData *nd = NULL;
-	
+void dsClassArray::nfNewWith3::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 3 );
 	try{
-		newArray = clsArr->CreateArray( rt );
-		nd = ( sArrNatData* )p_GetNativeData( newArray );
-		
-		nd->SetSize( 3, rt, clsObj );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		rt->CopyValue( rt->GetValue( 1 ), nd->values[ 1 ] );
-		rt->CopyValue( rt->GetValue( 2 ), nd->values[ 2 ] );
-		nd->count = 3;
-		
 		rt->PushValue( newArray );
 		rt->FreeValue( newArray );
 		
@@ -451,24 +412,9 @@ dsClassArray::nfNewWith4::nfNewWith4(const sInitData &init) : dsFunction( init.c
 	p_AddParameter( init.clsObj ); // obj3
 	p_AddParameter( init.clsObj ); // obj4
 }
-void dsClassArray::nfNewWith4::RunFunction( dsRunTime *rt, dsValue *myself ){
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass * const clsObj = clsArr->GetClassObject();
-	
-	dsValue *newArray = NULL;
-	sArrNatData *nd = NULL;
-	
+void dsClassArray::nfNewWith4::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 4 );
 	try{
-		newArray = clsArr->CreateArray( rt );
-		nd = ( sArrNatData* )p_GetNativeData( newArray );
-		
-		nd->SetSize( 4, rt, clsObj );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		rt->CopyValue( rt->GetValue( 1 ), nd->values[ 1 ] );
-		rt->CopyValue( rt->GetValue( 2 ), nd->values[ 2 ] );
-		rt->CopyValue( rt->GetValue( 3 ), nd->values[ 3 ] );
-		nd->count = 4;
-		
 		rt->PushValue( newArray );
 		rt->FreeValue( newArray );
 		
@@ -489,25 +435,144 @@ dsClassArray::nfNewWith5::nfNewWith5(const sInitData &init) : dsFunction( init.c
 	p_AddParameter( init.clsObj ); // obj4
 	p_AddParameter( init.clsObj ); // obj5
 }
-void dsClassArray::nfNewWith5::RunFunction( dsRunTime *rt, dsValue *myself ){
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass * const clsObj = clsArr->GetClassObject();
-	
-	dsValue *newArray = NULL;
-	sArrNatData *nd = NULL;
-	
+void dsClassArray::nfNewWith5::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 5 );
 	try{
-		newArray = clsArr->CreateArray( rt );
-		nd = ( sArrNatData* )p_GetNativeData( newArray );
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
 		
-		nd->SetSize( 5, rt, clsObj );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		rt->CopyValue( rt->GetValue( 1 ), nd->values[ 1 ] );
-		rt->CopyValue( rt->GetValue( 2 ), nd->values[ 2 ] );
-		rt->CopyValue( rt->GetValue( 3 ), nd->values[ 3 ] );
-		rt->CopyValue( rt->GetValue( 4 ), nd->values[ 4 ] );
-		nd->count = 5;
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+// public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6 )
+dsClassArray::nfNewWith6::nfNewWith6(const sInitData &init) : dsFunction( init.clsArr,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsObj ); // obj1
+	p_AddParameter( init.clsObj ); // obj2
+	p_AddParameter( init.clsObj ); // obj3
+	p_AddParameter( init.clsObj ); // obj4
+	p_AddParameter( init.clsObj ); // obj5
+	p_AddParameter( init.clsObj ); // obj6
+}
+void dsClassArray::nfNewWith6::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 6 );
+	try{
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
 		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+// public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7 )
+dsClassArray::nfNewWith7::nfNewWith7(const sInitData &init) : dsFunction( init.clsArr,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsObj ); // obj1
+	p_AddParameter( init.clsObj ); // obj2
+	p_AddParameter( init.clsObj ); // obj3
+	p_AddParameter( init.clsObj ); // obj4
+	p_AddParameter( init.clsObj ); // obj5
+	p_AddParameter( init.clsObj ); // obj6
+	p_AddParameter( init.clsObj ); // obj7
+}
+void dsClassArray::nfNewWith7::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 7 );
+	try{
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
+		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+// public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8 )
+dsClassArray::nfNewWith8::nfNewWith8(const sInitData &init) : dsFunction( init.clsArr,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsObj ); // obj1
+	p_AddParameter( init.clsObj ); // obj2
+	p_AddParameter( init.clsObj ); // obj3
+	p_AddParameter( init.clsObj ); // obj4
+	p_AddParameter( init.clsObj ); // obj5
+	p_AddParameter( init.clsObj ); // obj6
+	p_AddParameter( init.clsObj ); // obj7
+	p_AddParameter( init.clsObj ); // obj8
+}
+void dsClassArray::nfNewWith8::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 8 );
+	try{
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
+		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+// public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
+dsClassArray::nfNewWith9::nfNewWith9(const sInitData &init) : dsFunction( init.clsArr,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsObj ); // obj1
+	p_AddParameter( init.clsObj ); // obj2
+	p_AddParameter( init.clsObj ); // obj3
+	p_AddParameter( init.clsObj ); // obj4
+	p_AddParameter( init.clsObj ); // obj5
+	p_AddParameter( init.clsObj ); // obj6
+	p_AddParameter( init.clsObj ); // obj7
+	p_AddParameter( init.clsObj ); // obj8
+	p_AddParameter( init.clsObj ); // obj9
+}
+void dsClassArray::nfNewWith9::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 9 );
+	try{
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
+		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+// public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
+dsClassArray::nfNewWith10::nfNewWith10(const sInitData &init) : dsFunction( init.clsArr,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsObj ); // obj1
+	p_AddParameter( init.clsObj ); // obj2
+	p_AddParameter( init.clsObj ); // obj3
+	p_AddParameter( init.clsObj ); // obj4
+	p_AddParameter( init.clsObj ); // obj5
+	p_AddParameter( init.clsObj ); // obj6
+	p_AddParameter( init.clsObj ); // obj7
+	p_AddParameter( init.clsObj ); // obj8
+	p_AddParameter( init.clsObj ); // obj9
+	p_AddParameter( init.clsObj ); // obj10
+}
+void dsClassArray::nfNewWith10::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 10 );
+	try{
 		rt->PushValue( newArray );
 		rt->FreeValue( newArray );
 		
@@ -595,6 +660,44 @@ void dsClassArray::nfAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 	nd->count++;
 }
 
+// function void AddAll( Array array )
+dsClassArray::nfAddAll::nfAddAll( const sInitData &init ) :
+dsFunction( init.clsArr, "addAll", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsArr ); // array
+}
+void dsClassArray::nfAddAll::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	dsClassArray &clsArray = *( ( dsClassArray* )GetOwnerClass() );
+	dsValue * const array = rt->GetValue( 0 );
+	if( ! array->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "array" );
+	}
+	
+	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
+	if( nd2.count == 0 ){
+		return;
+	}
+	
+	const int requiredCount = nd.count + nd2.count;
+	int newSize = nd.size;
+	while( requiredCount > newSize ){
+		newSize = newSize * 3 / 2 + 1;
+	}
+	if( newSize > nd.size ){
+		nd.SetSize( newSize, rt, clsArray.GetClassObject() );
+	}
+	
+	int i;
+	for( i=0; i<nd2.count; i++ ){
+		rt->CopyValue( nd2.values[ i ], nd.values[ nd.count + i ] );
+	}
+	nd.count += nd2.count;
+}
+
 // function void Insert(int Position, Object Obj)
 dsClassArray::nfInsert::nfInsert(const sInitData &init) : dsFunction(init.clsArr, "insert",
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
@@ -622,6 +725,58 @@ void dsClassArray::nfInsert::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	rt->CopyValue(rt->GetValue(1), nd->values[vPos]);
 	nd->count++;
+}
+
+// function void InsertAll( int position, Array array )
+dsClassArray::nfInsertAll::nfInsertAll( const sInitData &init ) :
+dsFunction( init.clsArr, "insertAll", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsInt ); // position
+	p_AddParameter( init.clsArr ); // array
+}
+void dsClassArray::nfInsertAll::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	const int position = rt->GetValue( 0 )->GetInt();
+	if( position < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "position(%d) < 0", position );
+	}
+	if( position > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "position(%d) > count(%d)", position, nd.count );
+	}
+	
+	dsClassArray &clsArray = *( ( dsClassArray* )GetOwnerClass() );
+	dsValue * const array = rt->GetValue( 1 );
+	if( ! array->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "array" );
+	}
+	
+	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
+	if( nd2.count == 0 ){
+		return;
+	}
+	
+	const int requiredCount = nd.count + nd2.count;
+	int newSize = nd.size;
+	while( requiredCount > newSize ){
+		newSize = newSize * 3 / 2 + 1;
+	}
+	if( newSize > nd.size ){
+		nd.SetSize( newSize, rt, clsArray.GetClassObject() );
+	}
+	
+	const int last = position + nd2.count - 1;
+	int i;
+	for( i=nd.count + nd2.count - 1; i>last; i-- ){
+		rt->MoveValue( nd.values[ i - nd2.count ], nd.values[ i ] );
+	}
+	for( i=0; i<nd2.count; i++ ){
+		rt->CopyValue( nd2.values[ i ], nd.values[ position + i ] );
+	}
+	nd.count += nd2.count;
 }
 
 // const function int indexOf(Object obj)
@@ -3261,6 +3416,49 @@ void dsClassArray::nfRandom::RunFunction( dsRunTime *rt, dsValue *myself ){
 
 
 
+// public func Array +( Array array )
+dsClassArray::nfOpAdd::nfOpAdd( const sInitData &init ) :
+dsFunction( init.clsArr, "+", DSFT_OPERATOR,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsArr ); // array
+}
+void dsClassArray::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	dsClassArray &clsArray = *( ( dsClassArray* )GetOwnerClass() );
+	
+	dsValue * const array = rt->GetValue( 0 );
+	if( ! array->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "array" );
+	}
+	
+	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
+	
+	dsValue * const newArray = clsArray.CreateArray( rt );
+	int i;
+	try{
+		sArrNatData &nd3 = *( ( sArrNatData* )p_GetNativeData( newArray ) );
+		nd3.SetSize( nd.count + nd2.count, rt, clsArray.GetClassObject() );
+		for( i=0; i<nd.count; i++ ){
+			rt->CopyValue( nd.values[ i ], nd3.values[ i ] );
+		}
+		for( i=0; i<nd2.count; i++ ){
+			rt->CopyValue( nd2.values[ i ], nd3.values[ nd.count + i ] );
+		}
+		nd3.count = nd.count + nd2.count;
+		
+		rt->PushValue( newArray );
+		rt->FreeValue( newArray );
+		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+}
+
+
+
 // public func String toString()
 dsClassArray::nfToString::nfToString( const sInitData &init ) : dsFunction( init.clsArr,
 "toString", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
@@ -3370,13 +3568,20 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfNewWith3( init ) );
 	AddFunction( new nfNewWith4( init ) );
 	AddFunction( new nfNewWith5( init ) );
+	AddFunction( new nfNewWith6( init ) );
+	AddFunction( new nfNewWith7( init ) );
+	AddFunction( new nfNewWith8( init ) );
+	AddFunction( new nfNewWith9( init ) );
+	AddFunction( new nfNewWith10( init ) );
 	
 	AddFunction( new nfLength( init ) );
 	AddFunction( new nfSize( init ) );
 	AddFunction( new nfSetSize( init ) );
 	AddFunction( new nfResize( init ) );
 	AddFunction( new nfAdd( init ) );
+	AddFunction( new nfAddAll( init ) );
 	AddFunction( new nfInsert( init ) );
+	AddFunction( new nfInsertAll( init ) );
 	AddFunction( new nfIndexOf( init ) );
 	AddFunction( new nfHas( init ) );
 	AddFunction( new nfRemove( init ) );
@@ -3431,6 +3636,8 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	
 	AddFunction( new nfRandom( init ) );
 	
+	AddFunction( new nfOpAdd( init ) );
+	
 	AddFunction( new nfEquals( init ) );
 	AddFunction( new nfToString( init ) );
 }
@@ -3449,6 +3656,34 @@ dsValue *dsClassArray::CreateArray( dsRunTime *rt ){
 		nd->count = 0;
 		nd->size = 0;
 		nd->lockModify = 0;
+		
+	}catch( ... ){
+		if( newArray ){
+			rt->FreeValue( newArray );
+		}
+		throw;
+	}
+	
+	return newArray;
+}
+
+dsValue *dsClassArray::CreateArray( dsRunTime *rt, int argumentCount ){
+	if( argumentCount < 0 ){
+		DSTHROW_INFO( dueInvalidParam, "argumentCount < 0" );
+	}
+	
+	dsValue *newArray = NULL;
+	int i;
+	
+	try{
+		newArray = CreateArray( rt );
+		sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( newArray->GetRealObject()->GetBuffer() ) );
+		
+		nd.SetSize( argumentCount, rt, p_ClsObj );
+		for( i=0; i<argumentCount; i++ ){
+			rt->CopyValue( rt->GetValue( i ), nd.values[ i ] );
+		}
+		nd.count = argumentCount;
 		
 	}catch( ... ){
 		if( newArray ){

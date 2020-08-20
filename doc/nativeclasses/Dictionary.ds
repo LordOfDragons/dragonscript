@@ -32,10 +32,12 @@ fixed class Dictionary
 	/*@{*/
 	/** \brief Number of keys. */
 	public func int getCount()
+		return 0
 	end
 	
 	/** \brief Key is present. */
 	public func bool has( Object key )
+		return false
 	end
 	
 	/**
@@ -43,10 +45,12 @@ fixed class Dictionary
 	 * \throws EInvalidParam Key is absent.
 	 */
 	public func Object getAt( Object key )
+		return null
 	end
 	
 	/** \brief Value of key or default value if absent. */
 	public func Object getAt( Object key, Object valueIfMissing )
+		return null
 	end
 	
 	/**
@@ -54,6 +58,13 @@ fixed class Dictionary
 	 * \details If key is missing it is added otherwise the new value set.
 	 */
 	public func void setAt( Object key, Object value )
+	end
+	
+	/**
+	 * \brief Set all values from dictionary.
+	 * \details If keys are missing they are added otherwise the new values set.
+	 */
+	public func void setAll( Dictionary dictionary )
 	end
 	
 	/**
@@ -75,10 +86,12 @@ fixed class Dictionary
 	
 	/** \brief Array with all keys. */
 	public func Array getKeys()
+		return null
 	end
 	
 	/** \brief Array with all values. */
 	public func Array getValues()
+		return null
 	end
 	
 	
@@ -105,6 +118,7 @@ fixed class Dictionary
 	 * if no value matches.
 	 */
 	public func Object find( Block ablock )
+		return null
 	end
 	
 	/**
@@ -114,6 +128,7 @@ fixed class Dictionary
 	 * if no value matches.
 	 */
 	public func Object findKey( Block ablock )
+		return null
 	end
 	
 	/**
@@ -122,6 +137,7 @@ fixed class Dictionary
 	 *          to the result dictionary composes of the key send to the block and the block return value.
 	 */
 	public func Dictionary map( Block ablock )
+		return null
 	end
 	
 	/**
@@ -130,6 +146,7 @@ fixed class Dictionary
 	 *          to the result dictionary composes of the key send to the block and the block return value.
 	 */
 	public func Dictionary collect( Block ablock )
+		return null
 	end
 	
 	/**
@@ -137,6 +154,7 @@ fixed class Dictionary
 	 * \details Block is called with key as first argument and value as second.
 	 */
 	public func int count( Block ablock )
+		return 0
 	end
 	
 	/**
@@ -159,6 +177,7 @@ fixed class Dictionary
 	 * and as third argument Object value.
 	 */
 	public func Object inject( Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -171,6 +190,7 @@ fixed class Dictionary
 	 * Block receives as first argument Object injectValue and as second argument Object key.
 	 */
 	public func Object injectKey( Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -183,12 +203,21 @@ fixed class Dictionary
 	 * Block receives as first argument Object injectValue and as second argument Object value.
 	 */
 	public func Object injectValue( Object injectValue, Block ablock )
+		return null
 	end
 	
 	
 	
 	/** \brief String representation of dictionary. */
 	public func String toString()
+		return null
+	end
+	
+	
+	
+	/** \brief Create dictionary with content of \em dictionary appended to content of this dictionary. */
+	public func Dictionary +( Dictionary dictionary )
+		return null
 	end
 	/*@}*/
 end

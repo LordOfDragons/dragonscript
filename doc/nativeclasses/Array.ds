@@ -37,22 +37,57 @@ fixed class Array
 	
 	/** \brief Create array with one object added. */
 	public static func Array newWith( Object obj )
+		return null
 	end
 	
 	/** \brief Create array with two object added. */
 	public static func Array newWith( Object obj1, Object obj2 )
+		return null
 	end
 	
 	/** \brief Create array with three object added. */
 	public static func Array newWith( Object obj1, Object obj2, Object obj3 )
+		return null
 	end
 	
 	/** \brief Create array with four object added. */
 	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4 )
+		return null
 	end
 	
 	/** \brief Create array with five object added. */
 	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5 )
+		return null
+	end
+	
+	/** \brief Create array with six object added. */
+	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6 )
+		return null
+	end
+	
+	/** \brief Create array with seven object added. */
+	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7 )
+		return null
+	end
+	
+	/** \brief Create array with eight object added. */
+	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8 )
+		return null
+	end
+	
+	/** \brief Create array with nine object added. */
+	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
+		return null
+	end
+	
+	/** \brief Create array with ten object added. */
+	public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
+		return null
 	end
 	/*@}*/
 	
@@ -62,10 +97,12 @@ fixed class Array
 	/*@{*/
 	/** \brief Number of elements. */
 	public func int getCount()
+		return 0
 	end
 	
 	/** \brief Capacity of array before growing. */
 	public func int getSize()
+		return 0
 	end
 	
 	/** \brief Set capacity of array. The capacity can not be less than the current count of elements. */
@@ -80,6 +117,10 @@ fixed class Array
 	public func void add( Object obj )
 	end
 	
+	/** \brief Add all objects from array to the end of this array. */
+	public func void addAll( Array array )
+	end
+	
 	/**
 	 * \brief Insert object at index.
 	 * \throws EOutOfBoundary \em index is less than 0 or greater than getCount().
@@ -87,12 +128,21 @@ fixed class Array
 	public func void insert( int index, Object obj )
 	end
 	
+	/**
+	 * \brief Insert all objects from array at index.
+	 * \throws EOutOfBoundary \em index is less than 0 or greater than getCount().
+	 */
+	public func void insertAll( int index, Array array )
+	end
+	
 	/** \brief Object is present one or more times. */
 	public func bool has( Object obj )
+		return false
 	end
 	
 	/** \brief Index of first appearance of object or -1 if not found. */
 	public func int indexOf( Object obj )
+		return 0
 	end
 	
 	/**
@@ -119,6 +169,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em index is less than -getCount() or greater than or equal to getCount().
 	 */
 	public func Object getAt( int index )
+		return null
 	end
 	
 	/**
@@ -191,6 +242,7 @@ fixed class Array
 	
 	/** \brief Apply block to each element assembling the result of the block into a new array. */
 	public func Array map( Block ablock )
+		return null
 	end
 	
 	/**
@@ -199,6 +251,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func Array map( int indexFrom, int indexTo, Block ablock )
+		return null
 	end
 	
 	/**
@@ -208,14 +261,17 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func Array map( int indexFrom, int indexTo, int indexStep, Block ablock )
+		return null
 	end
 	
 	/** \brief Apply block to each element in reverse the result of the block into a new array. */
 	public func Array mapReverse( Block ablock )
+		return null
 	end
 	
 	/** \brief Collect all elements into a new array for which the block returns true. */
 	public func Array collect( Block ablock )
+		return null
 	end
 	
 	/**
@@ -224,6 +280,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func Array collect( int indexFrom, int indexTo, Block ablock )
+		return null
 	end
 	
 	/**
@@ -233,10 +290,12 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func Array collect( int indexFrom, int indexTo, int indexStep, Block ablock )
+		return null
 	end
 	
 	/** \brief Collect all elements in reverse into a new array for which the block returns true. */
 	public func Array collectReverse( Block ablock )
+		return null
 	end
 	
 	/**
@@ -248,6 +307,7 @@ fixed class Array
 	 *          folded value.
 	 */
 	public func Object fold( Block ablock )
+		return null
 	end
 	
 	/**
@@ -262,6 +322,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func Object fold( int indexFrom, int indexTo, Block ablock )
+		return null
 	end
 	
 	/**
@@ -277,6 +338,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func Object fold( int indexFrom, int indexTo, int indexStep, Block ablock )
+		return null
 	end
 	
 	/**
@@ -289,6 +351,7 @@ fixed class Array
 	 *          being the last one.
 	 */
 	public func Object foldReverse( Block ablock )
+		return null
 	end
 	
 	/**
@@ -301,6 +364,7 @@ fixed class Array
 	 * Block receives as first argument Object injectValue and as second argument Object entry.
 	 */
 	public func Object inject( Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -318,6 +382,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func Object inject( int indexFrom, int indexTo, Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -336,6 +401,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func Object inject( int indexFrom, int indexTo, int indexStep, Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -350,10 +416,12 @@ fixed class Array
 	 * Block receives as first argument Object injectValue and as second argument Object entry.
 	 */
 	public func Object injectReverse( Object injectValue, Block ablock )
+		return null
 	end
 	
 	/** \brief Number of elements for which the block returns true. */
 	public func int count( Block ablock )
+		return 0
 	end
 	
 	/**
@@ -362,6 +430,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func int count( int indexFrom, int indexTo, Block ablock )
+		return 0
 	end
 	
 	/**
@@ -371,14 +440,17 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func int count( int indexFrom, int indexTo, int indexStep, Block ablock )
+		return 0
 	end
 	
 	/** \brief Number of elements in the given range for which the block returns true. */
 	public func int countReverse( Block ablock )
+		return 0
 	end
 	
 	/** \brief First element for which the block evaluates to true or null otherwise. */
 	public func Object find( Block ablock )
+		return null
 	end
 	
 	/**
@@ -387,6 +459,7 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexTo is less than 0 or greater than getCount().
 	 */
 	public func Object find( int indexFrom, int indexTo, Block ablock )
+		return null
 	end
 	
 	/**
@@ -396,10 +469,12 @@ fixed class Array
 	 * \throws EOutOfBoundary \em indexStep is less than 1.
 	 */
 	public func Object find( int indexFrom, int indexTo, int indexStep, Block ablock )
+		return null
 	end
 	
 	/** \brief First element for which the block evaluates to true or null otherwise. */
 	public func Object findReverse( Block ablock )
+		return null
 	end
 	
 	/** \brief Remove elements for which a block returns true. */
@@ -412,6 +487,7 @@ fixed class Array
 	 *          starting point is clamped to be inside the array.
 	 */
 	public func Array slice( int indexFrom )
+		return null
 	end
 	
 	/**
@@ -421,6 +497,7 @@ fixed class Array
 	 *          larger than the end point an empty array is returned.
 	 */
 	public func Array slice( int indexFrom, int indexTo )
+		return null
 	end
 	
 	/**
@@ -431,6 +508,7 @@ fixed class Array
 	 *          an empty array is returned.
 	 */
 	public func Array slice( int indexFrom, int indexTo, int indexStep )
+		return null
 	end
 	
 	/** \brief Sort array using the order operators of the stored objects. */
@@ -449,6 +527,7 @@ fixed class Array
 	
 	/** \brief Sorted copy of array using the order operators of the stored objects. */
 	public func Array sorted()
+		return null
 	end
 	
 	/**
@@ -459,6 +538,7 @@ fixed class Array
 	 *          object is after the second >0 is returned.
 	 */
 	public func Array sorted( Block ablock )
+		return null
 	end
 	
 	
@@ -468,12 +548,21 @@ fixed class Array
 	 * \details throws EInvalidParam Array is empty.
 	 */
 	public func Object random()
+		return null
 	end
 	
 	
 	
 	/** \brief String representation of array. */
 	public func String toString()
+		return null
+	end
+	
+	
+	
+	/** \brief Create array with content of \em array appended to content of this array. */
+	public func Array +( Array array )
+		return null
 	end
 	/*@}*/
 end

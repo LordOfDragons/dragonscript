@@ -47,11 +47,20 @@ public:
 	inline dsClass *GetClassObject() const{ return p_ClsObj; }
 	
 	/**
-	 * \brief Creates a new array object.
+	 * \brief Create new array object.
 	 * 
 	 * For direct access by native classes.
 	 */
 	dsValue *CreateArray( dsRunTime *rt );
+	
+	/**
+	 * \brief Create new array object with arguments from stack as initial content.
+	 * 
+	 * For direct access by native classes.
+	 * 
+	 * \param[in] argumentCount Count of arguments to consume.
+	 */
+	dsValue *CreateArray( dsRunTime *rt, int argumentCount );
 	
 	/**
 	 * \brief Adds an object to the array.
@@ -108,13 +117,20 @@ private:
 	DEF_NATFUNC( nfNewWith3 );
 	DEF_NATFUNC( nfNewWith4 );
 	DEF_NATFUNC( nfNewWith5 );
+	DEF_NATFUNC( nfNewWith6 );
+	DEF_NATFUNC( nfNewWith7 );
+	DEF_NATFUNC( nfNewWith8 );
+	DEF_NATFUNC( nfNewWith9 );
+	DEF_NATFUNC( nfNewWith10 );
 	
 	DEF_NATFUNC(nfLength);
 	DEF_NATFUNC(nfSize);
 	DEF_NATFUNC(nfSetSize);
 	DEF_NATFUNC(nfResize);
-	DEF_NATFUNC(nfAdd);
-	DEF_NATFUNC(nfInsert);
+	DEF_NATFUNC( nfAdd );
+	DEF_NATFUNC( nfAddAll );
+	DEF_NATFUNC( nfInsert );
+	DEF_NATFUNC( nfInsertAll );
 	DEF_NATFUNC( nfIndexOf );
 	DEF_NATFUNC( nfHas );
 	DEF_NATFUNC(nfRemove);
@@ -168,6 +184,8 @@ private:
 	DEF_NATFUNC( nfSorted2 );
 	
 	DEF_NATFUNC( nfRandom );
+	
+	DEF_NATFUNC( nfOpAdd );
 	
 	DEF_NATFUNC( nfEquals );
 	DEF_NATFUNC( nfToString );
