@@ -43,6 +43,36 @@ class StringTests extends Application
 		var String str3 = "this_--X_is-_-aXXXXtest__-X"
 		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
 		
+		var String str4 = "string"
+		System.print( "getAt: should 's' is " + str4.getAt(0) + "\n" )
+		System.print( "getAt: should 'g' is " + str4.getAt(5) + "\n" )
+		System.print( "getAt: should 'g' is " + str4.getAt(-1) + "\n" )
+		System.print( "getAt: should 's' is " + str4.getAt(-6) + "\n" )
+		
+		System.print( "startsWith: should true is " + str1.startsWith("this") + "\n" )
+		System.print( "startsWith: should false is " + str1.startsWith("This") + "\n" )
+		System.print( "startsWith: should true is " + str1.startsWith(str1) + "\n" )
+		System.print( "startsWith: should false is " + str1.startsWith(str1 + "x") + "\n" )
+		
+		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase("this") + "\n" )
+		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase("This") + "\n" )
+		System.print( "startsWithNoCase: should false is " + str1.startsWithNoCase("That") + "\n" )
+		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1) + "\n" )
+		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1.toUpper()) + "\n" )
+		System.print( "startsWithNoCase: should false is " + str1.startsWithNoCase(str1 + "x") + "\n" )
+		
+		System.print( "endsWith: should true is " + str1.endsWith("test") + "\n" )
+		System.print( "endsWith: should false is " + str1.endsWith("Test") + "\n" )
+		System.print( "endsWith: should true is " + str1.endsWith(str1) + "\n" )
+		System.print( "endsWith: should false is " + str1.endsWith("x" + str1) + "\n" )
+		
+		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase("test") + "\n" )
+		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase("Test") + "\n" )
+		System.print( "endsWithNoCase: should false is " + str1.endsWithNoCase("That") + "\n" )
+		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase(str1) + "\n" )
+		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase(str1.toUpper()) + "\n" )
+		System.print( "endsWithNoCase: should false is " + str1.endsWithNoCase("x" + str1) + "\n" )
+		
 		return 0
 	end
 end

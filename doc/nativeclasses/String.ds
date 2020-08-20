@@ -43,7 +43,10 @@ fixed class String
 	
 	/**
 	 * \brief Character at index.
-	 * \throws EOutOfBoundary \em index is less than 0 or largen than or equal to getLength().
+	 * 
+	 * If \em index is negative the position is counted from the end of the string.
+	 * 
+	 * \throws EOutOfBoundary \em index is less than -getLength() or largen than or equal to getLength().
 	 */
 	public func byte getAt( int index )
 	end
@@ -276,6 +279,30 @@ fixed class String
 	 * \retval >0 First different character is larger than in \em other.
 	 */
 	public func int compareNoCase( String other )
+	end
+	
+	/**
+	 * \brief Determine if string starts with another string.
+	 */
+	public func bool startsWith( String string )
+	end
+	
+	/**
+	 * \brief Determine if string starts with another string case insensitive.
+	 */
+	public func bool startsWithNoCase( String string )
+	end
+	
+	/**
+	 * \brief Determine if string ends with another string.
+	 */
+	public func bool endsWith( String string )
+	end
+	
+	/**
+	 * \brief Determine if string ends with another string case insensitive.
+	 */
+	public func bool endsWithNoCase( String string )
 	end
 	
 	

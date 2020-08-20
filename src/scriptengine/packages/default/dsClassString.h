@@ -117,6 +117,10 @@ private:
 	
 	DEF_NATFUNC( nfCompare );
 	DEF_NATFUNC( nfCompareNoCase );
+	DEF_NATFUNC( nfStartsWith );
+	DEF_NATFUNC( nfStartsWithNoCase );
+	DEF_NATFUNC( nfEndsWith );
+	DEF_NATFUNC( nfEndsWithNoCase );
 	
 	DEF_NATFUNC( nfHashCode );
 	DEF_NATFUNC( nfEquals );

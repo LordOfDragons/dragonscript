@@ -131,9 +131,12 @@ dsClassString::nfGetAt::nfGetAt( const sInitData &init ) : dsFunction( init.clsS
 }
 void dsClassString::nfGetAt::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int index = rt->GetValue( 0 )->GetInt();
+	int index = rt->GetValue( 0 )->GetInt();
 	const int len = strlen( str );
 	
+	if( index < 0 ){
+		index += len;
+	}
 	if( ( index < 0 ) || ( index >= len ) ){
 		DSTHROW( dueOutOfBoundary );
 	}
@@ -1177,6 +1180,105 @@ void dsClassString::nfCompareNoCase::RunFunction( dsRunTime *rt, dsValue *myself
 	rt->PushInt( 0 );
 }
 
+// public func bool startsWith( String string )
+dsClassString::nfStartsWith::nfStartsWith( const sInitData &init ) :
+dsFunction( init.clsStr, "startsWith", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
+	p_AddParameter( init.clsStr ); // string
+}
+void dsClassString::nfStartsWith::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	dsValue * const valother = rt->GetValue( 0 );
+	if( ! valother->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "string" );
+	}
+	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	
+	const size_t lenOther = strlen( otherstr );
+	rt->PushBool( lenOther <= strlen( str ) && strncmp( str, otherstr, lenOther ) == 0 );
+}
+
+// public func bool startsWithNoCase( String string )
+dsClassString::nfStartsWithNoCase::nfStartsWithNoCase( const sInitData &init ) :
+dsFunction( init.clsStr, "startsWithNoCase", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
+	p_AddParameter( init.clsStr ); // string
+}
+void dsClassString::nfStartsWithNoCase::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	dsValue * const valother = rt->GetValue( 0 );
+	if( ! valother->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "string" );
+	}
+	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	
+	const size_t lenOther = strlen( otherstr );
+	if( lenOther > strlen( str ) ){
+		rt->PushBool( false );
+		return;
+	}
+	
+	size_t i;
+	for( i=0; i<lenOther; i++ ){
+		if( tolower( str[ i ] ) != tolower( otherstr[ i ] ) ){
+			rt->PushBool( false );
+			return;
+		}
+	}
+	rt->PushBool( true );
+}
+
+// public func bool endsWith( String string )
+dsClassString::nfEndsWith::nfEndsWith( const sInitData &init ) :
+dsFunction( init.clsStr, "endsWith", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
+	p_AddParameter( init.clsStr ); // string
+}
+void dsClassString::nfEndsWith::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	dsValue * const valother = rt->GetValue( 0 );
+	if( ! valother->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "string" );
+	}
+	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	
+	const size_t lenOther = strlen( otherstr );
+	const size_t lenStr = strlen( str );
+	rt->PushBool( lenOther <= lenStr && strcmp( str + ( lenStr - lenOther ), otherstr ) == 0 );
+}
+
+// public func bool endsWithNoCase( String string )
+dsClassString::nfEndsWithNoCase::nfEndsWithNoCase( const sInitData &init ) :
+dsFunction( init.clsStr, "endsWithNoCase", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
+	p_AddParameter( init.clsStr ); // string
+}
+void dsClassString::nfEndsWithNoCase::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const char *str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	dsValue * const valother = rt->GetValue( 0 );
+	if( ! valother->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "string" );
+	}
+	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	
+	const size_t lenOther = strlen( otherstr );
+	const size_t lenStr = strlen( str );
+	if( lenOther > lenStr ){
+		rt->PushBool( false );
+		return;
+	}
+	
+	size_t i;
+	str += lenStr - lenOther;
+	for( i=0; i<lenOther; i++ ){
+		if( tolower( str[ i ] ) != tolower( otherstr[ i ] ) ){
+			rt->PushBool( false );
+			return;
+		}
+	}
+	rt->PushBool( true );
+}
+
 
 
 // public func int hashCode()
@@ -1484,6 +1586,10 @@ void dsClassString::CreateClassMembers( dsEngine *engine ){
 	
 	AddFunction( new nfCompare( init ) );
 	AddFunction( new nfCompareNoCase( init ) );
+	AddFunction( new nfStartsWith( init ) );
+	AddFunction( new nfStartsWithNoCase( init ) );
+	AddFunction( new nfEndsWith( init ) );
+	AddFunction( new nfEndsWithNoCase( init ) );
 	
 	AddFunction( new nfHashCode( init ) );
 	AddFunction( new nfEquals( init ) );
