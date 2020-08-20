@@ -334,7 +334,7 @@ dsValue *dsClassBlock::GetContextVariableAt( dsRealObject *myself, int index ) c
 	return nd.contextVariables[ index ];
 }
 
-const dsSignature &dsClassBlock::GetSignature( dsRealObject *myself ){
+const dsSignature &dsClassBlock::GetSignature( dsRealObject *myself ) const{
 	if( ! myself ){
 		DSTHROW( dueNullPointer );
 	}

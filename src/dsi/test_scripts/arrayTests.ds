@@ -106,7 +106,7 @@ class ArrayTests extends Application
 		System.print( "1 inject should X0 is " + arr.inject( "X", ablock ) + "\n" )
 		System.print( "1 inject should X0 is " + arr.inject( 0, 1, "X", ablock ) + "\n" )
 		System.print( "1 injectStep should X0 is " + arr.inject( 0, 1, 2, "X", ablock ) + "\n" )
-		System.print( "1 injectStep should X0 is " + arr.inject( 0, -1, -2, "X", ablock ) + "\n" )
+		System.print( "1 injectStep should X0 is " + arr.inject( 0, 0, -2, "X", ablock ) + "\n" )
 		System.print( "1 injectReverse should X0 is " + arr.injectReverse( "X", ablock ) + "\n" )
 		
 		// two entries
@@ -114,7 +114,7 @@ class ArrayTests extends Application
 		System.print( "2 inject should X01 is " + arr.inject( "X", ablock ) + "\n" )
 		System.print( "2 injectRange should X1 is " + arr.inject( 1, 2, "X", ablock ) + "\n" )
 		System.print( "2 injectStep should X0 is " + arr.inject( 0, 2, 2, "X", ablock ) + "\n" )
-		System.print( "2 injectStep should X1 is " + arr.inject( 1, -1, -2, "X", ablock ) + "\n" )
+		System.print( "2 injectStep should X1 is " + arr.inject( 1, 0, -2, "X", ablock ) + "\n" )
 		System.print( "2 injectReverse should X10 is " + arr.injectReverse( "X", ablock ) + "\n" )
 		
 		// three entries
@@ -122,7 +122,7 @@ class ArrayTests extends Application
 		System.print( "3 inject should X012 is " + arr.inject( "X", ablock ) + "\n" )
 		System.print( "3 injectRange should X1 is " + arr.inject( 1, 2, "X", ablock ) + "\n" )
 		System.print( "3 injectStep should X02 is " + arr.inject( 0, 3, 2, "X", ablock ) + "\n" )
-		System.print( "3 injectStep should X20 is " + arr.inject( 2, -1, -2, "X", ablock ) + "\n" )
+		System.print( "3 injectStep should X20 is " + arr.inject( 2, 0, -2, "X", ablock ) + "\n" )
 		System.print( "3 injectReverse should X210 is " + arr.injectReverse( "X", ablock ) + "\n" )
 		
 		// 10 entries
@@ -136,7 +136,7 @@ class ArrayTests extends Application
 		System.print( "10 inject should X0123456789 is " + arr.inject( "X", ablock ) + "\n" )
 		System.print( "10 injectRange should X234567 is " + arr.inject( 2, 8, "X", ablock ) + "\n" )
 		System.print( "10 injectStep should X02468 is " + arr.inject( 0, 10, 2, "X", ablock ) + "\n" )
-		System.print( "10 injectStep should X97531 is " + arr.inject( 9, -1, -2, "X", ablock ) + "\n" )
+		System.print( "10 injectStep should X97531 is " + arr.inject( 9, 0, -2, "X", ablock ) + "\n" )
 		System.print( "10 injectReverse should X9876543210 is " + arr.injectReverse( "X", ablock ) + "\n" )
 	end
 	
@@ -165,7 +165,7 @@ class ArrayTests extends Application
 		arr.removeIf( block int each
 			return each > 4
 		end )
-		System.print( "[0..9] removeIf(>4) should [5..9] is " + arr + "\n" )
+		System.print( "[0..9] removeIf(>4) should [0..4] is " + arr + "\n" )
 		
 		arr = Array.new( arrInit )
 		arr.removeIf( block int each
@@ -197,12 +197,84 @@ class ArrayTests extends Application
 	end
 	
 	public func void testForEach()
-		var Array arr = Array.newWith( 0, 1, 2 )
-		arr.forEach( block int each
+		var Array arr = Array.newWith( "a", "b", "c" )
+		arr.forEach( block String each
 			System.print( "forEach(block): " + each + "\n" )
 		end )
-		arr.forEach( 0, 3, block int each
+		arr.forEach( 0, 3, block String each
 			System.print( "forEach(i,i,block): " + each + "\n" )
+		end )
+		arr.forEach( block int index, String value
+			System.print( "forEach2(block): " + index + " => " + value + "\n" )
+		end )
+		arr.forEach( 0, 3, block int index, String value
+			System.print( "forEach2(i,i,block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr = Array.newWith( "a", "b", "c", "d", "e" )
+		arr.forEach( 0, 5, 2, block String each
+			System.print( "forEach(i,i,i,block): " + each + "\n" )
+		end )
+		arr.forEach( 4, 0, -2, block String each
+			System.print( "forEach(i,i,-i,block): " + each + "\n" )
+		end )
+		arr.forEach( 0, 5, 2, block int index, String value
+			System.print( "forEach2(i,i,i,block): " + index + " => " + value + "\n" )
+		end )
+		arr.forEach( 4, 0, -2, block int index, String value
+			System.print( "forEach2(i,i,-i,block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr = Array.newWith( "a", "b", "c" )
+		arr.forEachReverse( block String each
+			System.print( "forEachReverse(block): " + each + "\n" )
+		end )
+		arr.forEachReverse( block int index, String value
+			System.print( "forEachReverse2(block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr.forEachWhile( block String each
+			System.print( "forEachWhile(block): " + each + "\n" )
+			return not each.equals( "b" )
+		end )
+		arr.forEachWhile( block int index, String value
+			System.print( "forEachWhile2(block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhile( 0, 3, block String each
+			System.print( "forEachWhile(i,i,block): " + each + "\n" )
+			return not each.equals( "b" )
+		end )
+		arr.forEachWhile( 0, 3, block int index, String value
+			System.print( "forEachWhile2(i,i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhile( 0, 3, 2, block String each
+			System.print( "forEachWhile(i,i,i,block): " + each + "\n" )
+			return not each.equals( "b" )
+		end )
+		arr.forEachWhile( 2, 0, -2, block String each
+			System.print( "forEachWhile(i,i,-i,block): " + each + "\n" )
+			return not each.equals( "b" )
+		end )
+		arr.forEachWhile( 0, 3, 2, block int index, String value
+			System.print( "forEachWhile2(i,i,i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		arr.forEachWhile( 2, 0, -2, block int index, String value
+			System.print( "forEachWhile2(i,i,-i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhileReverse( block String each
+			System.print( "forEachWhileReverse(block): " + each + "\n" )
+			return not each.equals( "b" )
+		end )
+			arr.forEachWhileReverse( block int index, String value
+			System.print( "forEachWhileReverse2(block): " + index + " => " + value + "\n" )
+			return index > 1
 		end )
 	end
 	

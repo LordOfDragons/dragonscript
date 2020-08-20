@@ -52,7 +52,7 @@ public:
 	dsValue *GetContextVariableAt( dsRealObject *myself, int index ) const;
 	
 	/** \brief Get function signature of block. */
-	const dsSignature &GetSignature( dsRealObject *myself );
+	const dsSignature &GetSignature( dsRealObject *myself ) const ;
 	
 	// internal functions
 	void CreateBlock( dsRunTime *rt, dsRealObject *owner, dsFunction *func, dsValue *value, int contextVariableCount );
