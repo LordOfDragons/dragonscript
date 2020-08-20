@@ -51,6 +51,9 @@ public:
 	/** Retrieves a context variable. */
 	dsValue *GetContextVariableAt( dsRealObject *myself, int index ) const;
 	
+	/** \brief Get function signature of block. */
+	const dsSignature &GetSignature( dsRealObject *myself );
+	
 	// internal functions
 	void CreateBlock( dsRunTime *rt, dsRealObject *owner, dsFunction *func, dsValue *value, int contextVariableCount );
 	void CastArguments(dsRunTime *rt, dsSignature *funcSig, int argCount);

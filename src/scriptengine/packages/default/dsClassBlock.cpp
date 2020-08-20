@@ -307,23 +307,38 @@ void dsClassBlock::CreateClassMembers(dsEngine *engine){
 }
 
 dsRealObject *dsClassBlock::GetOwner( dsRealObject *myself ) const{
-	const sBlockNatData &nd = *( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) );
-	
-	return nd.owner->GetRealObject();
+	if( ! myself ){
+		DSTHROW( dueNullPointer );
+	}
+	return ( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) )->owner->GetRealObject();
 }
 
 int dsClassBlock::GetContextVariableCount( dsRealObject *myself ) const{
-	const sBlockNatData &nd = *( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) );
-	
-	return nd.contextVariableCount;
+	if( ! myself ){
+		DSTHROW( dueNullPointer );
+	}
+	return ( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) )->contextVariableCount;
 }
 
 dsValue *dsClassBlock::GetContextVariableAt( dsRealObject *myself, int index ) const{
-	sBlockNatData *nd = (sBlockNatData*)p_GetNativeData( myself->GetBuffer() );
+	if( ! myself ){
+		DSTHROW( dueNullPointer );
+	}
 	
-	if( index < 0 || index >= nd->contextVariableCount ) DSTHROW( dueOutOfBoundary );
+	const sBlockNatData &nd = *( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) );
 	
-	return nd->contextVariables[ index ];
+	if( index < 0 || index >= nd.contextVariableCount ){
+		DSTHROW( dueOutOfBoundary );
+	}
+	
+	return nd.contextVariables[ index ];
+}
+
+const dsSignature &dsClassBlock::GetSignature( dsRealObject *myself ){
+	if( ! myself ){
+		DSTHROW( dueNullPointer );
+	}
+	return *( ( sBlockNatData* )p_GetNativeData( myself->GetBuffer() ) )->function->GetSignature();
 }
 
 void dsClassBlock::CreateBlock( dsRunTime *rt, dsRealObject *owner, dsFunction *func, dsValue *value, int contextVariableCount ){

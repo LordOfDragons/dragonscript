@@ -64,6 +64,15 @@ public:
 	dsValue *CreateSet( dsRunTime *rt );
 	
 	/**
+	 * \brief Create new set object with arguments from stack as initial content.
+	 * 
+	 * For direct access by native classes.
+	 * 
+	 * \param[in] argumentCount Count of arguments to consume.
+	 */
+	dsValue *CreateSet( dsRunTime *rt, int argumentCount );
+	
+	/**
 	 * \brief Add object to set.
 	 * 
 	 * For direct access by native classes.
@@ -125,13 +134,20 @@ private:
 	DEF_NATFUNC( nfNewWith3 );
 	DEF_NATFUNC( nfNewWith4 );
 	DEF_NATFUNC( nfNewWith5 );
+	DEF_NATFUNC( nfNewWith6 );
+	DEF_NATFUNC( nfNewWith7 );
+	DEF_NATFUNC( nfNewWith8 );
+	DEF_NATFUNC( nfNewWith9 );
+	DEF_NATFUNC( nfNewWith10 );
 	DEF_NATFUNC( nfNewFromArray );
 	
 	DEF_NATFUNC( nfGetCount );
 	DEF_NATFUNC( nfAdd );
+	DEF_NATFUNC( nfAddAll );
 	DEF_NATFUNC( nfHas );
 	DEF_NATFUNC( nfRemove );
 	DEF_NATFUNC( nfRemoveAll );
+	DEF_NATFUNC( nfRemoveAll2 );
 	
 	DEF_NATFUNC( nfForEach );
 	DEF_NATFUNC( nfForEachWhile );

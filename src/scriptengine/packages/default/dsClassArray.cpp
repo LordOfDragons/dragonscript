@@ -676,6 +676,9 @@ void dsClassArray::nfAddAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( ! array->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "array" );
 	}
+	if( array == myself ){
+		DSTHROW_INFO( dueNullPointer, "array == this" );
+	}
 	
 	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
 	if( nd2.count == 0 ){
@@ -752,6 +755,9 @@ void dsClassArray::nfInsertAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsValue * const array = rt->GetValue( 1 );
 	if( ! array->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "array" );
+	}
+	if( array == myself ){
+		DSTHROW_INFO( dueNullPointer, "array == this" );
 	}
 	
 	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
@@ -3457,6 +3463,50 @@ void dsClassArray::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 }
 
+// public func Array +=( Array array )
+dsClassArray::nfOpAddAssign::nfOpAddAssign( const sInitData &init ) :
+dsFunction( init.clsArr, "+=", DSFT_OPERATOR,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsArr ); // array
+}
+void dsClassArray::nfOpAddAssign::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	dsClassArray &clsArray = *( ( dsClassArray* )GetOwnerClass() );
+	dsValue * const array = rt->GetValue( 0 );
+	if( ! array->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "array" );
+	}
+	if( array == myself ){
+		DSTHROW_INFO( dueNullPointer, "array == this" );
+	}
+	
+	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
+	if( nd2.count == 0 ){
+		rt->PushValue( myself );
+		return;
+	}
+	
+	const int requiredCount = nd.count + nd2.count;
+	int newSize = nd.size;
+	while( requiredCount > newSize ){
+		newSize = newSize * 3 / 2 + 1;
+	}
+	if( newSize > nd.size ){
+		nd.SetSize( newSize, rt, clsArray.GetClassObject() );
+	}
+	
+	int i;
+	for( i=0; i<nd2.count; i++ ){
+		rt->CopyValue( nd2.values[ i ], nd.values[ nd.count + i ] );
+	}
+	nd.count += nd2.count;
+	
+	rt->PushValue( myself );
+}
+
 
 
 // public func String toString()
@@ -3637,6 +3687,7 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfRandom( init ) );
 	
 	AddFunction( new nfOpAdd( init ) );
+	AddFunction( new nfOpAddAssign( init ) );
 	
 	AddFunction( new nfEquals( init ) );
 	AddFunction( new nfToString( init ) );

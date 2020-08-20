@@ -186,6 +186,7 @@ private:
 	DEF_NATFUNC( nfRandom );
 	
 	DEF_NATFUNC( nfOpAdd );
+	DEF_NATFUNC( nfOpAddAssign );
 	
 	DEF_NATFUNC( nfEquals );
 	DEF_NATFUNC( nfToString );

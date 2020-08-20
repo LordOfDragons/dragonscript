@@ -288,6 +288,9 @@ void dsClassDictionary::nfSetAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( ! dict->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "dictionary" );
 	}
+	if( dict == myself ){
+		return;
+	}
 	
 	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( dict ) );
 	sDictEntry *entry;

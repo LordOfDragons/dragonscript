@@ -180,20 +180,8 @@ dsClassSet::nfNewWith1::nfNewWith1(const sInitData &init) : dsFunction( init.cls
 	p_AddParameter( init.clsObject ); // obj
 }
 void dsClassSet::nfNewWith1::RunFunction( dsRunTime *rt, dsValue* ){
-	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
-	dsClass * const clsObject = clsSet->GetClassObject();
-	
-	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
-	
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 1 );
 	try{
-		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
-		
-		nd->SetSize( 1, rt, clsObject );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
 		rt->PushValue( newSet );
 		rt->FreeValue( newSet );
 		
@@ -212,25 +200,8 @@ dsClassSet::nfNewWith2::nfNewWith2(const sInitData &init) : dsFunction( init.cls
 	p_AddParameter( init.clsObject ); // obj2
 }
 void dsClassSet::nfNewWith2::RunFunction( dsRunTime *rt, dsValue* ){
-	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
-	dsClass * const clsObject = clsSet->GetClassObject();
-	
-	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
-	
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 2 );
 	try{
-		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
-		
-		nd->SetSize( 2, rt, clsObject );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
-		if( ! nd->Has( *rt, *rt->GetValue( 1 ) ) ){
-			rt->CopyValue( rt->GetValue( 1 ), nd->values[ 1 ] );
-			nd->count++;
-		}
-		
 		rt->PushValue( newSet );
 		rt->FreeValue( newSet );
 		
@@ -250,27 +221,8 @@ dsClassSet::nfNewWith3::nfNewWith3(const sInitData &init) : dsFunction( init.cls
 	p_AddParameter( init.clsObject ); // obj3
 }
 void dsClassSet::nfNewWith3::RunFunction( dsRunTime *rt, dsValue* ){
-	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
-	dsClass * const clsObject = clsSet->GetClassObject();
-	
-	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
-	
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 3 );
 	try{
-		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
-		
-		nd->SetSize( 3, rt, clsObject );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
-		for( int i=1; i<=2; i++ ){
-			if( ! nd->Has( *rt, *rt->GetValue( i ) ) ){
-				rt->CopyValue( rt->GetValue( i ), nd->values[ nd->count ] );
-				nd->count++;
-			}
-		}
-		
 		rt->PushValue( newSet );
 		rt->FreeValue( newSet );
 		
@@ -291,27 +243,8 @@ dsClassSet::nfNewWith4::nfNewWith4(const sInitData &init) : dsFunction( init.cls
 	p_AddParameter( init.clsObject ); // obj4
 }
 void dsClassSet::nfNewWith4::RunFunction( dsRunTime *rt, dsValue* ){
-	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
-	dsClass * const clsObject = clsSet->GetClassObject();
-	
-	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
-	
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 4 );
 	try{
-		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
-		
-		nd->SetSize( 4, rt, clsObject );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
-		for( int i=1; i<=3; i++ ){
-			if( ! nd->Has( *rt, *rt->GetValue( i ) ) ){
-				rt->CopyValue( rt->GetValue( i ), nd->values[ nd->count ] );
-				nd->count++;
-			}
-		}
-		
 		rt->PushValue( newSet );
 		rt->FreeValue( newSet );
 		
@@ -333,27 +266,143 @@ dsClassSet::nfNewWith5::nfNewWith5(const sInitData &init) : dsFunction( init.cls
 	p_AddParameter( init.clsObject ); // obj5
 }
 void dsClassSet::nfNewWith5::RunFunction( dsRunTime *rt, dsValue* ){
-	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
-	dsClass * const clsObject = clsSet->GetClassObject();
-	
-	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
-	
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 5 );
 	try{
-		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
+		rt->PushValue( newSet );
+		rt->FreeValue( newSet );
 		
-		nd->SetSize( 5, rt, clsObject );
-		rt->CopyValue( rt->GetValue( 0 ), nd->values[ 0 ] );
-		nd->count = 1;
-		
-		for( int i=1; i<=4; i++ ){
-			if( ! nd->Has( *rt, *rt->GetValue( i ) ) ){
-				rt->CopyValue( rt->GetValue( i ), nd->values[ nd->count ] );
-				nd->count++;
-			}
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
 		}
+		throw;
+	}
+}
+
+// public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6 )
+dsClassSet::nfNewWith6::nfNewWith6(const sInitData &init) : dsFunction( init.clsSet,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsObject ); // obj1
+	p_AddParameter( init.clsObject ); // obj2
+	p_AddParameter( init.clsObject ); // obj3
+	p_AddParameter( init.clsObject ); // obj4
+	p_AddParameter( init.clsObject ); // obj5
+	p_AddParameter( init.clsObject ); // obj6
+}
+void dsClassSet::nfNewWith6::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 6 );
+	try{
+		rt->PushValue( newSet );
+		rt->FreeValue( newSet );
 		
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
+		}
+		throw;
+	}
+}
+
+// public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7 )
+dsClassSet::nfNewWith7::nfNewWith7(const sInitData &init) : dsFunction( init.clsSet,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsObject ); // obj1
+	p_AddParameter( init.clsObject ); // obj2
+	p_AddParameter( init.clsObject ); // obj3
+	p_AddParameter( init.clsObject ); // obj4
+	p_AddParameter( init.clsObject ); // obj5
+	p_AddParameter( init.clsObject ); // obj6
+	p_AddParameter( init.clsObject ); // obj7
+}
+void dsClassSet::nfNewWith7::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 7 );
+	try{
+		rt->PushValue( newSet );
+		rt->FreeValue( newSet );
+		
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
+		}
+		throw;
+	}
+}
+
+// public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8 )
+dsClassSet::nfNewWith8::nfNewWith8(const sInitData &init) : dsFunction( init.clsSet,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsObject ); // obj1
+	p_AddParameter( init.clsObject ); // obj2
+	p_AddParameter( init.clsObject ); // obj3
+	p_AddParameter( init.clsObject ); // obj4
+	p_AddParameter( init.clsObject ); // obj5
+	p_AddParameter( init.clsObject ); // obj6
+	p_AddParameter( init.clsObject ); // obj7
+	p_AddParameter( init.clsObject ); // obj8
+}
+void dsClassSet::nfNewWith8::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 8 );
+	try{
+		rt->PushValue( newSet );
+		rt->FreeValue( newSet );
+		
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
+		}
+		throw;
+	}
+}
+
+// public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
+dsClassSet::nfNewWith9::nfNewWith9(const sInitData &init) : dsFunction( init.clsSet,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsObject ); // obj1
+	p_AddParameter( init.clsObject ); // obj2
+	p_AddParameter( init.clsObject ); // obj3
+	p_AddParameter( init.clsObject ); // obj4
+	p_AddParameter( init.clsObject ); // obj5
+	p_AddParameter( init.clsObject ); // obj6
+	p_AddParameter( init.clsObject ); // obj7
+	p_AddParameter( init.clsObject ); // obj8
+	p_AddParameter( init.clsObject ); // obj9
+}
+void dsClassSet::nfNewWith9::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 9 );
+	try{
+		rt->PushValue( newSet );
+		rt->FreeValue( newSet );
+		
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
+		}
+		throw;
+	}
+}
+
+// public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4,
+// Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
+dsClassSet::nfNewWith10::nfNewWith10(const sInitData &init) : dsFunction( init.clsSet,
+"newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsObject ); // obj1
+	p_AddParameter( init.clsObject ); // obj2
+	p_AddParameter( init.clsObject ); // obj3
+	p_AddParameter( init.clsObject ); // obj4
+	p_AddParameter( init.clsObject ); // obj5
+	p_AddParameter( init.clsObject ); // obj6
+	p_AddParameter( init.clsObject ); // obj7
+	p_AddParameter( init.clsObject ); // obj8
+	p_AddParameter( init.clsObject ); // obj9
+	p_AddParameter( init.clsObject ); // obj10
+}
+void dsClassSet::nfNewWith10::RunFunction( dsRunTime *rt, dsValue* ){
+	dsValue * const newSet = ( ( dsClassSet* )GetOwnerClass() )->CreateSet( rt, 10 );
+	try{
 		rt->PushValue( newSet );
 		rt->FreeValue( newSet );
 		
@@ -438,6 +487,46 @@ void dsClassSet::nfAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 	nd->count++;
 }
 
+// function void addAll( Set set )
+dsClassSet::nfAddAll::nfAddAll( const sInitData &init ) :
+dsFunction( init.clsSet, "addAll", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsSet ); // set
+}
+void dsClassSet::nfAddAll::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	dsClassSet &clsSet = *( ( dsClassSet* )GetOwnerClass() );
+	dsValue * const set = rt->GetValue( 0 );
+	if( ! set->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "set" );
+	}
+	if( set == myself ){
+		return;
+	}
+	
+	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( set ) );
+	if( nd2.count == 0 ){
+		return;
+	}
+	
+	int i;
+	for( i=0; i<nd2.count; i++ ){
+		if( nd.Has( *rt, *nd2.values[ i ] ) ){
+			continue;
+		}
+		
+		if( nd.count == nd.size ){
+			nd.SetSize( nd.size * 3 / 2 + 1, rt, clsSet.GetClassObject() );
+		}
+		rt->CopyValue( nd2.values[ i ], nd.values[ nd.count ] );
+		nd.count++;
+	}
+}
+
 // const function bool has( Object obj )
 dsClassSet::nfHas::nfHas( const sInitData &init ) : dsFunction( init.clsSet, "has",
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
@@ -489,6 +578,49 @@ void dsClassSet::nfRemoveAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 		rt->ClearValue(nd->values[i]);
 	}
 	nd->count = 0;
+}
+
+// function void removeAll( Set set )
+dsClassSet::nfRemoveAll2::nfRemoveAll2( const sInitData &init ) :
+dsFunction( init.clsSet, "removeAll", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsSet ); // set
+}
+void dsClassSet::nfRemoveAll2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	dsValue * const set = rt->GetValue( 0 );
+	if( ! set->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "set" );
+	}
+	if( set == myself ){
+		DSTHROW_INFO( dueNullPointer, "set == this" );
+	}
+	
+	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( set ) );
+	if( nd2.count == 0 ){
+		return;
+	}
+	
+	int i;
+	for( i=0; i<nd2.count; i++ ){
+		const int index = nd.IndexOf( *rt, *nd2.values[ i ] );
+		if( index == -1 ){
+			continue;
+		}
+		
+		cSetNatDatLockModifyGuard lock( nd.lockModify );
+		if( index < nd.count - 1 ){
+			rt->MoveValue( nd.values[ nd.count - 1 ], nd.values[ index ] );
+			
+		}else{
+			rt->ClearValue( nd.values[ index ] );
+		}
+		nd.count--;
+	}
 }
 
 
@@ -1208,13 +1340,20 @@ void dsClassSet::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfNewWith3( init ) );
 	AddFunction( new nfNewWith4( init ) );
 	AddFunction( new nfNewWith5( init ) );
+	AddFunction( new nfNewWith6( init ) );
+	AddFunction( new nfNewWith7( init ) );
+	AddFunction( new nfNewWith8( init ) );
+	AddFunction( new nfNewWith9( init ) );
+	AddFunction( new nfNewWith10( init ) );
 	AddFunction( new nfNewFromArray( init ) );
 	
 	AddFunction( new nfGetCount( init ) );
 	AddFunction( new nfAdd( init ) );
+	AddFunction( new nfAddAll( init ) );
 	AddFunction( new nfHas( init ) );
 	AddFunction( new nfRemove( init ) );
 	AddFunction( new nfRemoveAll( init ) );
+	AddFunction( new nfRemoveAll2( init ) );
 	AddFunction( new nfForEach( init ) );
 	AddFunction( new nfForEachWhile( init ) );
 	AddFunction( new nfMap( init ) );
@@ -1251,6 +1390,36 @@ dsValue *dsClassSet::CreateSet( dsRunTime *rt ){
 		nd->count = 0;
 		nd->size = 0;
 		nd->lockModify = 0;
+		
+	}catch( ... ){
+		if( newSet ){
+			rt->FreeValue( newSet );
+		}
+		throw;
+	}
+	
+	return newSet;
+}
+
+dsValue *dsClassSet::CreateSet( dsRunTime *rt, int argumentCount ){
+	if( argumentCount < 0 ){
+		DSTHROW_INFO( dueInvalidParam, "argumentCount < 0" );
+	}
+	
+	dsValue *newSet = NULL;
+	int i;
+	
+	try{
+		newSet = CreateSet( rt );
+		sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( newSet->GetRealObject()->GetBuffer() ) );
+		
+		nd.SetSize( argumentCount, rt, p_ClsObj );
+		for( i=0; i<argumentCount; i++ ){
+			if( ! nd.Has( *rt, *rt->GetValue( i ) ) ){
+				rt->CopyValue( rt->GetValue( i ), nd.values[ nd.count ] );
+				nd.count++;
+			}
+		}
 		
 	}catch( ... ){
 		if( newSet ){

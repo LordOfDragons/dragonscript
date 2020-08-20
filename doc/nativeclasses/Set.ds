@@ -47,6 +47,36 @@ fixed class Set
 	/** \brief Create set with five object added. */
 	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5 )
 	end
+	
+	/** \brief Create set with six object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6 )
+		return null
+	end
+	
+	/** \brief Create set with seven object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7 )
+		return null
+	end
+	
+	/** \brief Create set with eight object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8 )
+		return null
+	end
+	
+	/** \brief Create set with nine object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
+		return null
+	end
+	
+	/** \brief Create set with ten object added. */
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
+	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
+		return null
+	end
 	/*@}*/
 	
 	
@@ -61,6 +91,10 @@ fixed class Set
 	public func void add( Object obj )
 	end
 	
+	/** \brief Add all objects from \em set to set if absent. */
+	public func void addAll( Set set )
+	end
+	
 	/** \brief Object is present. */
 	public func bool has( Object obj )
 	end
@@ -71,6 +105,10 @@ fixed class Set
 	
 	/** \brief Remove all objects. */
 	public func void removeAll()
+	end
+	
+	/** \brief Remove all objects from set if present. */
+	public func void removeAll( Set set )
 	end
 	
 	/**
@@ -170,6 +208,13 @@ fixed class Set
 	
 	/** \brief Array with content of set. */
 	public func Array toArray()
+	end
+	
+	
+	
+	/** \brief Create set with content of \em set appended to content of this set. */
+	public func Set +( Set set )
+		return null
 	end
 	/*@}*/
 end

@@ -5,5 +5,7 @@ Initial Release
 1.1
 ---
 - Array: added newWith() method for up to 10 objects
-- Array: added addAll(Array), insertAll(int,Array) and +(Array)
+- Array: added addAll(Array), insertAll(int,Array), +(Array) and +=(Array)
 - Dictionary: added setAll(Dictionary) and +(Dictionary)
+- Set: added newWith() method for up to 10 objects
+- Set: added addAll(Set) and removeAll(Set)

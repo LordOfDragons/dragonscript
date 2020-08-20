@@ -28,6 +28,9 @@ class SetTests extends Application
 		this.testForEach()
 		this.testEquals()
 		this.iterateModifyProtection()
+		this.testNewWith()
+		this.testAddAll()
+		this.testRemoveAll()
 		return 0
 	end
 	
@@ -225,5 +228,54 @@ class SetTests extends Application
 			failed = true
 		end
 		System.print( "add inside forEach: should fail true is " + failed + "\n" )
+	end
+	
+	public func void testNewWith()
+		System.print( "newWith (0) is " + Set.newWith(0) + "\n" )
+		System.print( "newWith (0,1) is " + Set.newWith(0,1) + "\n" )
+		System.print( "newWith (0,1,2) is " + Set.newWith(0,1,2) + "\n" )
+		System.print( "newWith (0,1,2,3) is " + Set.newWith(0,1,2,3) + "\n" )
+		System.print( "newWith (0,1,2,3,4) is " + Set.newWith(0,1,2,3,4) + "\n" )
+		System.print( "newWith (0,1,2,3,4,5) is " + Set.newWith(0,1,2,3,4,5) + "\n" )
+		System.print( "newWith (0,1,2,3,4,5,6) is " + Set.newWith(0,1,2,3,4,5,6) + "\n" )
+		System.print( "newWith (0,1,2,3,4,5,6,7) is " + Set.newWith(0,1,2,3,4,5,6,7) + "\n" )
+		System.print( "newWith (0,1,2,3,4,5,6,7,8) is " + Set.newWith(0,1,2,3,4,5,6,7,8) + "\n" )
+		System.print( "newWith (0,1,2,3,4,5,6,7,8,9) is " + Set.newWith(0,1,2,3,4,5,6,7,8,9) + "\n" )
+		System.print( "newWith (0,1,2,0,1,2,0,1,2) is " + Set.newWith(0,1,2) + "\n" )
+	end
+	
+	public func void testAddAll()
+		var Set set = Set.newWith(0,1,2)
+		set.addAll( Set.new() )
+		System.print( "addAll: should be (0,1,2) is " + set + "\n" )
+		
+		set = Set.newWith(0,1,2)
+		set.addAll( Set.newWith(3) )
+		set.addAll( Set.newWith(1) )
+		System.print( "addAll: should be (0,1,2,3) is " + set + "\n" )
+		
+		set = Set.newWith(0,1,2)
+		set.addAll( Set.newWith(3,4) )
+		set.addAll( Set.newWith(1,4) )
+		System.print( "addAll: should be (0,1,2,3,4) is " + set + "\n" )
+		
+		set = Set.newWith(0,1,2)
+		set.addAll( Set.newWith(3,4,5,6,7,8) )
+		set.addAll( Set.newWith(1,2,5,6,0,1) )
+		System.print( "addAll: should be (0,1,2,3,4,5,6,7,8) is " + set + "\n" )
+	end
+	
+	public func void testRemoveAll()
+		var Set set = Set.newWith(0,1,2,3,4,5,6)
+		set.removeAll( Set.new() )
+		System.print( "removeAll: should be (0,1,2,3,4,5,6) is " + set + "\n" )
+		
+		set = Set.newWith(0,1,2,3,4,5,6)
+		set.removeAll( Set.newWith(3,6,8) )
+		System.print( "removeAll: should be (0,1,2,4,5) is " + set + "\n" )
+		
+		set = Set.newWith(0,1,2,3,4,5,6)
+		set.removeAll( Set.newWith(0,1,2,3,4,5,6) )
+		System.print( "removeAll: should be () is " + set + "\n" )
 	end
 end
