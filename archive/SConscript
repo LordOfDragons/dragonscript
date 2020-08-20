@@ -3,7 +3,7 @@ from SCons.Script import ARGUMENTS
 Import('globalEnv')
 
 params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
-params.Add(('version', 'Release version', '1.0'))
+params.Add(('version', 'Release version', '1.1'))
 params.Update(globalEnv)
 
 globalEnv.configReport.add('Target platform', 'target_platform')

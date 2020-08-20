@@ -1,0 +1,9 @@
+1.0
+---
+Initial Release
+
+1.1
+---
+- Array: added newWith() method for up to 10 objects
+- Array: added addAll(Array), insertAll(int,Array) and +(Array)
+- Dictionary: added setAll(Dictionary) and +(Dictionary)
