@@ -11,4 +11,4 @@ Initial Release
 - Set: added addAll(Set) and removeAll(Set)
 - String: added startsWith(String), startsWithNoCase(String), endsWith(String) and endsWithNoCase(String)
 - String: changed getAt(int) to accept negative index counting from the end 
-
+- String: added format(Array)
