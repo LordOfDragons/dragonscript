@@ -39,16 +39,42 @@
 static const char * const errorModifyWhileLocked = "modify while locked";
 
 // native data structure
-class cArrNatDatLockModifyGuard{
+class dsClassArray_LockModifyGuard{
 	int &pLockModify;
 	
 public:
-	cArrNatDatLockModifyGuard( int &lockModify ) : pLockModify( lockModify ){
+	dsClassArray_LockModifyGuard( int &lockModify ) : pLockModify( lockModify ){
 		pLockModify++;
 	}
 	
-	~cArrNatDatLockModifyGuard(){
+	~dsClassArray_LockModifyGuard(){
 		pLockModify--;
+	}
+};
+
+class dsClassArray_NewFinally{
+	dsRunTime &pRT;
+	dsValue *pValue;
+	
+public:
+	dsClassArray_NewFinally( dsRunTime &rt, dsClass &cls, int argumentCount = 0 ) :
+	pRT( rt ), pValue( NULL ){
+		dsClassArray &clsArr = ( dsClassArray& )cls;
+		if( argumentCount == 0 ){
+			pValue = clsArr.CreateArray( &rt );
+			
+		}else{
+			pValue = clsArr.CreateArray( &rt, argumentCount );
+		}
+	}
+	
+	inline dsValue *Value() const{ return pValue; }
+	inline void Push() const{ pRT.PushValue( pValue ); }
+	
+	~dsClassArray_NewFinally(){
+		if( pValue ){
+			pRT.FreeValue( pValue );
+		}
 	}
 };
 
@@ -227,7 +253,7 @@ struct sArrNatData{
 dsClassArray::nfCreate::nfCreate(const sInitData &init) : dsFunction(init.clsArr,
 "new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 }
-void dsClassArray::nfCreate::RunFunction( dsRunTime *rt, dsValue *myself ){
+void dsClassArray::nfCreate::RunFunction( dsRunTime*, dsValue *myself ){
 	sArrNatData *nd = (sArrNatData*)p_GetNativeData(myself);
 	nd->values = NULL;
 	nd->count = 0;
@@ -350,238 +376,93 @@ dsClassArray::nfNewWith1::nfNewWith1(const sInitData &init) : dsFunction( init.c
 	p_AddParameter( init.clsObj ); // obj
 }
 void dsClassArray::nfNewWith1::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 1 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 1 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2 )
 dsClassArray::nfNewWith2::nfNewWith2(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
+	for( int i=0; i<2; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith2::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 2 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 2 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3 )
 dsClassArray::nfNewWith3::nfNewWith3(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
+	for( int i=0; i<3; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith3::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 3 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 3 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4 )
 dsClassArray::nfNewWith4::nfNewWith4(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
+	for( int i=0; i<4; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith4::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 4 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 4 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5 )
 dsClassArray::nfNewWith5::nfNewWith5(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
+	for( int i=0; i<5; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith5::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 5 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 5 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
 // Object obj5, Object obj6 )
 dsClassArray::nfNewWith6::nfNewWith6(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
-	p_AddParameter( init.clsObj ); // obj6
+	for( int i=0; i<6; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith6::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 6 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 6 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
 // Object obj5, Object obj6, Object obj7 )
 dsClassArray::nfNewWith7::nfNewWith7(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
-	p_AddParameter( init.clsObj ); // obj6
-	p_AddParameter( init.clsObj ); // obj7
+	for( int i=0; i<7; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith7::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 7 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 7 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
 // Object obj5, Object obj6, Object obj7, Object obj8 )
 dsClassArray::nfNewWith8::nfNewWith8(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
-	p_AddParameter( init.clsObj ); // obj6
-	p_AddParameter( init.clsObj ); // obj7
-	p_AddParameter( init.clsObj ); // obj8
+	for( int i=0; i<8; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith8::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 8 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 8 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
 // Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
 dsClassArray::nfNewWith9::nfNewWith9(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
-	p_AddParameter( init.clsObj ); // obj6
-	p_AddParameter( init.clsObj ); // obj7
-	p_AddParameter( init.clsObj ); // obj8
-	p_AddParameter( init.clsObj ); // obj9
+	for( int i=0; i<9; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith9::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 9 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 9 ).Push();
 }
 
 // public static func Array newWith( Object obj1, Object obj2, Object obj3, Object obj4,
 // Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
 dsClassArray::nfNewWith10::nfNewWith10(const sInitData &init) : dsFunction( init.clsArr,
 "newWith", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_STATIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsObj ); // obj1
-	p_AddParameter( init.clsObj ); // obj2
-	p_AddParameter( init.clsObj ); // obj3
-	p_AddParameter( init.clsObj ); // obj4
-	p_AddParameter( init.clsObj ); // obj5
-	p_AddParameter( init.clsObj ); // obj6
-	p_AddParameter( init.clsObj ); // obj7
-	p_AddParameter( init.clsObj ); // obj8
-	p_AddParameter( init.clsObj ); // obj9
-	p_AddParameter( init.clsObj ); // obj10
+	for( int i=0; i<10; i++ ) p_AddParameter( init.clsObj );
 }
 void dsClassArray::nfNewWith10::RunFunction( dsRunTime *rt, dsValue* ){
-	dsValue * const newArray = ( ( dsClassArray* )GetOwnerClass() )->CreateArray( rt, 10 );
-	try{
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
-	}
+	dsClassArray_NewFinally( *rt, *GetOwnerClass(), 10 ).Push();
 }
 
 
@@ -872,7 +753,7 @@ void dsClassArray::nfRemove::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if(vPos >= nd->count){
 		DSTHROW_INFO_FMT(dueInvalidParam, "position(%d) >= count(%d)", vPos, nd->count);
 	}
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for(i=vPos; i<nd->count-1; i++){
 		rt->MoveValue( nd->values[i+1], nd->values[i] );
 	}
@@ -921,7 +802,7 @@ void dsClassArray::nfRemove2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	// remove object from list
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	for( i=p; i<nd.count-1; i++ ){
 		rt->MoveValue( nd.values[ i + 1 ], nd.values[ i ] );
 	}
@@ -949,7 +830,7 @@ void dsClassArray::nfRemoveFrom::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "position(%d) >= count(%d)", position, nd->count );
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=position; i<nd->count-1; i++ ){
 		rt->MoveValue( nd->values[ i + 1 ], nd->values[ i ] );
 	}
@@ -967,7 +848,7 @@ void dsClassArray::nfRemoveAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for(int i=0; i<nd->count; i++){
 		rt->ClearValue(nd->values[i]);
 	}
@@ -1055,7 +936,7 @@ void dsClassArray::nfMove::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	if( from == to ) return;
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	rt->PushValue( nd->values[ from ] );
 	if( from < to ){
 		for( i=from; i<to; i++ ){
@@ -1115,7 +996,7 @@ void dsClassArray::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=0; i<nd->count; i++ ){
 		rt->PushValue( nd->values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -1158,7 +1039,7 @@ void dsClassArray::nfForEach2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=fromIndex; i<toIndex; i++ ){
 		if( i >= nd->count ) break;
 		rt->PushValue( nd->values[ i ] );
@@ -1207,7 +1088,7 @@ void dsClassArray::nfForEach3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
 			if( i >= nd->count ){
@@ -1251,7 +1132,7 @@ void dsClassArray::nfForEachReverse::RunFunction( dsRunTime *rt, dsValue *myself
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=nd->count-1; i>=0; i-- ){
 		if( i >= nd->count ){
 			continue;
@@ -1282,7 +1163,7 @@ void dsClassArray::nfForEachWhile::RunFunction( dsRunTime *rt, dsValue *myself )
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=0; i<nd->count; i++ ){
 		rt->PushValue( nd->values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -1333,7 +1214,7 @@ void dsClassArray::nfForEachWhile2::RunFunction( dsRunTime *rt, dsValue *myself 
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=fromIndex; i<toIndex; i++ ){
 		if( i >= nd->count ){
 			break;
@@ -1393,7 +1274,7 @@ void dsClassArray::nfForEachWhile3::RunFunction( dsRunTime *rt, dsValue *myself 
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
 			if( i >= nd->count ){
@@ -1454,7 +1335,7 @@ void dsClassArray::nfForEachWhileReverse::RunFunction( dsRunTime *rt, dsValue *m
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=nd->count-1; i>=0; i-- ){
 		if( i >= nd->count ){
 			continue;
@@ -1482,10 +1363,7 @@ dsClassArray::nfMap::nfMap( const sInitData &init ) : dsFunction( init.clsArr,
 }
 void dsClassArray::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -1496,38 +1374,25 @@ void dsClassArray::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
-	try{
-		// create the new array of the same capacity as this array
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		ndnew->SetSize( nd->count, rt, clsObj );
-		
-		// do the mapping
-		for( i=0; i<nd->count; i++ ){
-			rt->PushValue( nd->values[ i ] );
-			if( signature.GetCount() == 2 ){
-				rt->PushInt( i );
-			}
-			rt->RunFunctionFast( block, funcIndexRun );
-			rt->CopyValue( rt->GetReturnValue(), ndnew->values[ i ] );
-			ndnew->count++;
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	// create the new array of the same capacity as this array
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	ndnew.SetSize( nd->count, rt, clsObj );
+	
+	// do the mapping
+	for( i=0; i<nd->count; i++ ){
+		rt->PushValue( nd->values[ i ] );
+		if( signature.GetCount() == 2 ){
+			rt->PushInt( i );
 		}
-		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
+		rt->RunFunctionFast( block, funcIndexRun );
+		rt->CopyValue( rt->GetReturnValue(), ndnew.values[ i ] );
+		ndnew.count++;
 	}
+	
+	value.Push();
 }
 
 // public func Array map( int fromIndex, int toIndex, Block ablock )
@@ -1539,10 +1404,7 @@ dsClassArray::nfMap2::nfMap2( const sInitData &init ) : dsFunction( init.clsArr,
 }
 void dsClassArray::nfMap2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i, ncount;
 	
 	int fromIndex = rt->GetValue( 0 )->GetInt();
@@ -1569,38 +1431,25 @@ void dsClassArray::nfMap2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
-	try{
-		// create the new array with the size of ncount
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		ndnew->SetSize( ncount, rt, clsObj );
-		
-		// do the mapping
-		for( i=0; i<ncount; i++ ){
-			rt->PushValue( nd->values[ fromIndex + i ] );
-			if( signature.GetCount() == 2 ){
-				rt->PushInt( fromIndex + i );
-			}
-			rt->RunFunctionFast( block, funcIndexRun );
-			rt->CopyValue( rt->GetReturnValue(), ndnew->values[ i ] );
-			ndnew->count++;
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	// create the new array with the size of ncount
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	ndnew.SetSize( ncount, rt, clsObj );
+	
+	// do the mapping
+	for( i=0; i<ncount; i++ ){
+		rt->PushValue( nd->values[ fromIndex + i ] );
+		if( signature.GetCount() == 2 ){
+			rt->PushInt( fromIndex + i );
 		}
-		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
+		rt->RunFunctionFast( block, funcIndexRun );
+		rt->CopyValue( rt->GetReturnValue(), ndnew.values[ i ] );
+		ndnew.count++;
 	}
+	
+	value.Push();
 }
 
 // public func Array map( int fromIndex, int toIndex, int step, Block ablock )
@@ -1613,10 +1462,7 @@ dsClassArray::nfMap3::nfMap3( const sInitData &init ) : dsFunction( init.clsArr,
 }
 void dsClassArray::nfMap3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i, ncount;
 	
 	int fromIndex = rt->GetValue( 0 )->GetInt();
@@ -1647,54 +1493,41 @@ void dsClassArray::nfMap3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
-	try{
-		// create the new array with the capacity of ncount
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	// create the new array with the capacity of ncount
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	ndnew.SetSize( ncount, rt, clsObj );
+	
+	// do the mapping
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( i >= nd->count ) break;
+			rt->PushValue( nd->values[ i ] );
+			if( signature.GetCount() == 2 ){
+				rt->PushInt( i );
+			}
+			rt->RunFunctionFast( block, funcIndexRun );
+			rt->CopyValue( rt->GetReturnValue(), ndnew.values[ ndnew.count ] );
+			ndnew.count++;
+		}
 		
-		ndnew->SetSize( ncount, rt, clsObj );
-		
-		// do the mapping
-		if( step > 0 ){
-			for( i=fromIndex; i<toIndex; i+=step ){
-				if( i >= nd->count ) break;
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( i < nd->count ){
 				rt->PushValue( nd->values[ i ] );
 				if( signature.GetCount() == 2 ){
 					rt->PushInt( i );
 				}
 				rt->RunFunctionFast( block, funcIndexRun );
-				rt->CopyValue( rt->GetReturnValue(), ndnew->values[ ndnew->count ] );
-				ndnew->count++;
-			}
-			
-		}else{
-			for( i=fromIndex; i>=toIndex; i+=step ){
-				if( i < nd->count ){
-					rt->PushValue( nd->values[ i ] );
-					if( signature.GetCount() == 2 ){
-						rt->PushInt( i );
-					}
-					rt->RunFunctionFast( block, funcIndexRun );
-					rt->CopyValue( rt->GetReturnValue(), ndnew->values[ ndnew->count ] );
-					ndnew->count++;
-				}
+				rt->CopyValue( rt->GetReturnValue(), ndnew.values[ ndnew.count ] );
+				ndnew.count++;
 			}
 		}
-		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
 	}
+	
+	value.Push();
 }
 
 // public func Array mapReverse( Block ablock )
@@ -1704,10 +1537,7 @@ dsClassArray::nfMapReverse::nfMapReverse( const sInitData &init ) : dsFunction( 
 }
 void dsClassArray::nfMapReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -1718,41 +1548,27 @@ void dsClassArray::nfMapReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
 	
-	try{
-		// create the new array with the capacity of ncount
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		ndnew->SetSize( nd->count, rt, clsObj );
-		
-		// do the mapping
-		for( i=nd->count-1; i>=0; i-- ){
-			if( i < nd->count ){
-				rt->PushValue( nd->values[ i ] );
-				if( signature.GetCount() == 2 ){
-					rt->PushInt( i );
-				}
-				rt->RunFunctionFast( block, funcIndexRun );
-				rt->CopyValue( rt->GetReturnValue(), ndnew->values[ ndnew->count ] );
-				ndnew->count++;
+	// create the new array with the capacity of ncount
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	ndnew.SetSize( nd->count, rt, clsObj );
+	
+	// do the mapping
+	for( i=nd->count-1; i>=0; i-- ){
+		if( i < nd->count ){
+			rt->PushValue( nd->values[ i ] );
+			if( signature.GetCount() == 2 ){
+				rt->PushInt( i );
 			}
+			rt->RunFunctionFast( block, funcIndexRun );
+			rt->CopyValue( rt->GetReturnValue(), ndnew.values[ ndnew.count ] );
+			ndnew.count++;
 		}
-		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
 	}
+	
+	value.Push();
 }
 
 // public func Array collect( Block ablock )
@@ -1762,11 +1578,8 @@ dsClassArray::nfCollect::nfCollect( const sInitData &init ) : dsFunction( init.c
 }
 void dsClassArray::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -1777,48 +1590,35 @@ void dsClassArray::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
 	
-	try{
-		// create the new array
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	// create the new array
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	// do the mapping
+	for( i=0; i<nd->count; i++ ){
+		rt->PushValue( nd->values[ i ] );
+		if( signature.GetCount() == 2 ){
+			rt->PushInt( i );
+		}
+		rt->RunFunctionFast( block, funcIndexRun );
 		
-		// do the mapping
-		for( i=0; i<nd->count; i++ ){
-			rt->PushValue( nd->values[ i ] );
-			if( signature.GetCount() == 2 ){
-				rt->PushInt( i );
-			}
-			rt->RunFunctionFast( block, funcIndexRun );
-			
-			if( rt->GetReturnValue()->GetType() != clsBool ){
-				DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
-			}
-			if( ! rt->GetReturnBool() ){
-				continue;
-			}
-			
-			if( ndnew->count == ndnew->size ){
-				ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObj );
-			}
-			rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-			ndnew->count++;
+		if( rt->GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
+		}
+		if( ! rt->GetReturnBool() ){
+			continue;
 		}
 		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
+		if( ndnew.count == ndnew.size ){
+			ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObj );
+		}
+		rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
+		ndnew.count++;
 	}
+	
+	value.Push();
 }
 
 // public func Array collect( int fromIndex, int toIndex, Block ablock )
@@ -1830,11 +1630,8 @@ dsClassArray::nfCollect2::nfCollect2( const sInitData &init ) : dsFunction( init
 }
 void dsClassArray::nfCollect2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	int fromIndex = rt->GetValue( 0 )->GetInt();
@@ -1859,48 +1656,35 @@ void dsClassArray::nfCollect2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
 	
-	try{
-		// create the new array
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	// create the new array
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	// do the mapping
+	for( i=fromIndex; i<toIndex; i++ ){
+		rt->PushValue( nd->values[ i ] );
+		if( signature.GetCount() == 2 ){
+			rt->PushInt( i );
+		}
+		rt->RunFunctionFast( block, funcIndexRun );
 		
-		// do the mapping
-		for( i=fromIndex; i<toIndex; i++ ){
-			rt->PushValue( nd->values[ i ] );
-			if( signature.GetCount() == 2 ){
-				rt->PushInt( i );
-			}
-			rt->RunFunctionFast( block, funcIndexRun );
-			
-			if( rt->GetReturnValue()->GetType() != clsBool ){
-				DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
-			}
-			if( ! rt->GetReturnBool() ){
-				continue;
-			}
-			
-			if( ndnew->count == ndnew->size ){
-				ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObj );
-			}
-			rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-			ndnew->count++;
+		if( rt->GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
+		}
+		if( ! rt->GetReturnBool() ){
+			continue;
 		}
 		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
+		if( ndnew.count == ndnew.size ){
+			ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObj );
+		}
+		rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
+		ndnew.count++;
 	}
+	
+	value.Push();
 }
 
 // public func Array collect( int fromIndex, int toIndex, int step, Block ablock )
@@ -1913,11 +1697,8 @@ dsClassArray::nfCollect3::nfCollect3( const sInitData &init ) : dsFunction( init
 }
 void dsClassArray::nfCollect3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass *clsObj = rt->GetEngine()->GetClassObject();
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	int fromIndex = rt->GetValue( 0 )->GetInt();
@@ -1946,113 +1727,38 @@ void dsClassArray::nfCollect3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
 	
-	try{
-		// create the new array
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		// do the mapping
-		if( step > 0 ){
-			for( i=fromIndex; i<toIndex; i+=step ){
-				if( i >= nd->count ) break;
-				rt->PushValue( nd->values[ i ] );
-				if( signature.GetCount() == 2 ){
-					rt->PushInt( i );
-				}
-				rt->RunFunctionFast( block, funcIndexRun );
-				
-				if( rt->GetReturnValue()->GetType() != clsBool ){
-					DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
-				}
-				if( ! rt->GetReturnBool() ){
-					continue;
-				}
-				
-				if( ndnew->count == ndnew->size ){
-					ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObj );
-				}
-				rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-				ndnew->count++;
+	// create the new array
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	// do the mapping
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( i >= nd->count ) break;
+			rt->PushValue( nd->values[ i ] );
+			if( signature.GetCount() == 2 ){
+				rt->PushInt( i );
+			}
+			rt->RunFunctionFast( block, funcIndexRun );
+			
+			if( rt->GetReturnValue()->GetType() != clsBool ){
+				DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
+			}
+			if( ! rt->GetReturnBool() ){
+				continue;
 			}
 			
-		}else{
-			for( i=fromIndex; i>=toIndex; i+=step ){
-				if( i < nd->count ){
-					rt->PushValue( nd->values[ i ] );
-					if( signature.GetCount() == 2 ){
-						rt->PushInt( i );
-					}
-					rt->RunFunctionFast( block, funcIndexRun );
-					
-					if( rt->GetReturnValue()->GetType() != clsBool ){
-						DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
-					}
-					if( ! rt->GetReturnBool() ){
-						continue;
-					}
-					
-					if( ndnew->count == ndnew->size ){
-						ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObj );
-					}
-					rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-					ndnew->count++;
-				}
+			if( ndnew.count == ndnew.size ){
+				ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObj );
 			}
+			rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
+			ndnew.count++;
 		}
 		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
-	}
-}
-
-// public func Array collectReverse( Block ablock )
-dsClassArray::nfCollectReverse::nfCollectReverse( const sInitData &init ) : dsFunction( init.clsArr,
-"collectReverse", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
-	p_AddParameter( init.clsBlock ); // ablock
-}
-void dsClassArray::nfCollectReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
-	dsClassArray *clsArr = ( dsClassArray* )GetOwnerClass();
-	dsClass *clsObj = rt->GetEngine()->GetClassObject();
-	dsClass *clsBool = rt->GetEngine()->GetClassBool();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
-	int i;
-	
-	dsValue *block = rt->GetValue( 0 );
-	if( ! block->GetRealObject() ){
-		DSTHROW_INFO( dueNullPointer, "ablock" );
-	}
-	
-	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
-	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
-	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
-	
-	try{
-		// create the new array
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		// do the mapping
-		for( i=nd->count-1; i>=0; i-- ){
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
 			if( i < nd->count ){
 				rt->PushValue( nd->values[ i ] );
 				if( signature.GetCount() == 2 ){
@@ -2067,22 +1773,68 @@ void dsClassArray::nfCollectReverse::RunFunction( dsRunTime *rt, dsValue *myself
 					continue;
 				}
 				
-				if( ndnew->count == ndnew->size ){
-					ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObj );
+				if( ndnew.count == ndnew.size ){
+					ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObj );
 				}
-				rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-				ndnew->count++;
+				rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
+				ndnew.count++;
 			}
 		}
-		
-		// push the result and clean up
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ) rt->FreeValue( newArray );
-		throw;
 	}
+	
+	value.Push();
+}
+
+// public func Array collectReverse( Block ablock )
+dsClassArray::nfCollectReverse::nfCollectReverse( const sInitData &init ) : dsFunction( init.clsArr,
+"collectReverse", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCollectReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData *nd = ( sArrNatData* )p_GetNativeData( myself );
+	dsClass *clsObj = rt->GetEngine()->GetClassObject();
+	dsClass *clsBool = rt->GetEngine()->GetClassBool();
+	int i;
+	
+	dsValue *block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
+	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
+	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	// create the new array
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	// do the mapping
+	for( i=nd->count-1; i>=0; i-- ){
+		if( i < nd->count ){
+			rt->PushValue( nd->values[ i ] );
+			if( signature.GetCount() == 2 ){
+				rt->PushInt( i );
+			}
+			rt->RunFunctionFast( block, funcIndexRun );
+			
+			if( rt->GetReturnValue()->GetType() != clsBool ){
+				DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
+			}
+			if( ! rt->GetReturnBool() ){
+				continue;
+			}
+			
+			if( ndnew.count == ndnew.size ){
+				ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObj );
+			}
+			rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
+			ndnew.count++;
+		}
+	}
+	
+	value.Push();
 }
 
 
@@ -2112,7 +1864,7 @@ void dsClassArray::nfFold::RunFunction( dsRunTime *rt, dsValue *myself ){
 		const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 		const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 		const int funcIndexRun = dsClassArray_funcIndexRun2Or3( clsBlock, signature );
-		cArrNatDatLockModifyGuard lock( nd->lockModify );
+		const dsClassArray_LockModifyGuard lock( nd->lockModify );
 		for( i=1; i<nd->count; i++ ){
 			rt->PushValue( nd->values[ i ] );
 			if( signature.GetCount() == 3 ){
@@ -2175,7 +1927,7 @@ void dsClassArray::nfFold2::RunFunction( dsRunTime *rt, dsValue *myself ){
 		const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 		const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 		const int funcIndexRun = dsClassArray_funcIndexRun2Or3( clsBlock, signature );
-		cArrNatDatLockModifyGuard lock( nd->lockModify );
+		const dsClassArray_LockModifyGuard lock( nd->lockModify );
 		
 		fromIndex++;
 		
@@ -2238,7 +1990,7 @@ void dsClassArray::nfFold3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun2Or3( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
@@ -2316,7 +2068,7 @@ void dsClassArray::nfFoldReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	
 	for( i=nd->count-1; i>=0; i-- ){
 		if( i < nd->count ){
@@ -2378,7 +2130,7 @@ void dsClassArray::nfInject::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	int i;
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	for( i=0; i<nd.count; i++ ){
 		rt->PushValue( nd.values[ i ] );
 		if( signature.GetCount() == 3 ){
@@ -2439,7 +2191,7 @@ void dsClassArray::nfInject2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	int i;
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	for( i=fromIndex; i<toIndex; i++ ){
 		rt->PushValue( nd.values[ i ] );
 		if( signature.GetCount() == 3 ){
@@ -2513,7 +2265,7 @@ void dsClassArray::nfInject3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	int i;
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
 			rt->PushValue( nd.values[ i ] );
@@ -2578,7 +2330,7 @@ void dsClassArray::nfInjectReverse::RunFunction( dsRunTime *rt, dsValue *myself 
 	const int first = nd.count - 1;
 	int i;
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	for( i=first; i>=0; i-- ){
 		rt->PushValue( nd.values[ i ] );
 		if( signature.GetCount() == 3 ){
@@ -2619,7 +2371,7 @@ void dsClassArray::nfCount::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=0; i<nd->count; i++ ){
 		rt->PushValue( nd->values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -2673,7 +2425,7 @@ void dsClassArray::nfCount2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=fromIndex; i<toIndex; i++ ){
 		rt->PushValue( nd->values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -2732,7 +2484,7 @@ void dsClassArray::nfCount3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
 			if( i >= nd->count ){
@@ -2796,7 +2548,7 @@ void dsClassArray::nfCountReverse::RunFunction( dsRunTime *rt, dsValue *myself )
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=nd->count-1; i>=0; i-- ){
 		if( i >= nd->count ){
 			continue;
@@ -2839,7 +2591,7 @@ void dsClassArray::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=0; i<nd->count; i++ ){
 		rt->PushValue( nd->values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -2900,7 +2652,7 @@ void dsClassArray::nfFind2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=fromIndex; i<toIndex; i++ ){
 		if( i >= nd->count ){
 			break;
@@ -2969,7 +2721,7 @@ void dsClassArray::nfFind3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	if( step > 0 ){
 		for( i=fromIndex; i<toIndex; i+=step ){
 			if( i >= nd->count ){
@@ -3045,7 +2797,7 @@ void dsClassArray::nfFindReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
-	cArrNatDatLockModifyGuard lock( nd->lockModify );
+	const dsClassArray_LockModifyGuard lock( nd->lockModify );
 	for( i=nd->count-1; i>=0; i-- ){
 		if( i >= nd->count ){
 			continue;
@@ -3097,7 +2849,7 @@ void dsClassArray::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
 	const int funcIndexRun = dsClassArray_funcIndexRun1Or2( clsBlock, signature );
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	for( i=0; i<nd.count; i++ ){
 		rt->PushValue( nd.values[ i ] );
 		if( signature.GetCount() == 2 ){
@@ -3132,10 +2884,7 @@ dsClassArray::nfSlice::nfSlice( const sInitData &init ) : dsFunction( init.clsAr
 }
 void dsClassArray::nfSlice::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	int indexFrom = rt->GetValue( 0 )->GetInt();
@@ -3150,34 +2899,21 @@ void dsClassArray::nfSlice::RunFunction( dsRunTime *rt, dsValue *myself ){
 		indexFrom = nd.count;
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
-	try{
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	if( indexFrom < nd.count ){
+		ndnew.SetSize( nd.count - indexFrom, rt, clsObj );
 		
-		if( indexFrom < nd.count ){
-			ndnew->SetSize( nd.count - indexFrom, rt, clsObj );
-			
-			for( i=indexFrom; i<nd.count; i++ ){
-				rt->CopyValue( nd.values[ i ], ndnew->values[ ndnew->count ] );
-				ndnew->count++;
-			}
+		for( i=indexFrom; i<nd.count; i++ ){
+			rt->CopyValue( nd.values[ i ], ndnew.values[ ndnew.count ] );
+			ndnew.count++;
 		}
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
 	}
+	
+	value.Push();
 }
 
 // public func Array slice( int indexFrom, int indexTo )
@@ -3188,10 +2924,7 @@ dsClassArray::nfSlice2::nfSlice2( const sInitData &init ) : dsFunction( init.cls
 }
 void dsClassArray::nfSlice2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	int indexFrom = rt->GetValue( 0 )->GetInt();
@@ -3217,34 +2950,21 @@ void dsClassArray::nfSlice2::RunFunction( dsRunTime *rt, dsValue *myself ){
 		indexTo = nd.count;
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
-	try{
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	if( indexTo > indexFrom ){
+		ndnew.SetSize( indexTo - indexFrom, rt, clsObj );
 		
-		if( indexTo > indexFrom ){
-			ndnew->SetSize( indexTo - indexFrom, rt, clsObj );
-			
-			for( i=indexFrom; i<indexTo; i++ ){
-				rt->CopyValue( nd.values[ i ], ndnew->values[ ndnew->count ] );
-				ndnew->count++;
-			}
+		for( i=indexFrom; i<indexTo; i++ ){
+			rt->CopyValue( nd.values[ i ], ndnew.values[ ndnew.count ] );
+			ndnew.count++;
 		}
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
 	}
+	
+	value.Push();
 }
 
 // public func Array slice( int indexFrom, int indexTo, int step )
@@ -3256,10 +2976,7 @@ dsClassArray::nfSlice3::nfSlice3( const sInitData &init ) : dsFunction( init.cls
 }
 void dsClassArray::nfSlice3::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
-	dsClassArray * const clsArr = ( dsClassArray* )GetOwnerClass();
 	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
-	dsValue *newArray = NULL;
-	sArrNatData *ndnew;
 	int i;
 	
 	int indexFrom = rt->GetValue( 0 )->GetInt();
@@ -3309,42 +3026,29 @@ void dsClassArray::nfSlice3::RunFunction( dsRunTime *rt, dsValue *myself ){
 		}
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
-	try{
-		newArray = rt->CreateValue( clsArr );
-		rt->CreateObjectNaked( newArray, clsArr );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	if( newCount > 0 ){
+		ndnew.SetSize( newCount, rt, clsObj );
 		
-		if( newCount > 0 ){
-			ndnew->SetSize( newCount, rt, clsObj );
+		if( step > 0 ){
+			for( i=indexFrom; i<indexTo; i+=step ){
+				rt->CopyValue( nd.values[ i ], ndnew.values[ ndnew.count ] );
+				ndnew.count++;
+			}
 			
-			if( step > 0 ){
-				for( i=indexFrom; i<indexTo; i+=step ){
-					rt->CopyValue( nd.values[ i ], ndnew->values[ ndnew->count ] );
-					ndnew->count++;
-				}
-				
-			}else{
-				for( i=indexFrom; i>indexTo; i+=step ){
-					rt->CopyValue( nd.values[ i ], ndnew->values[ ndnew->count ] );
-					ndnew->count++;
-				}
+		}else{
+			for( i=indexFrom; i>indexTo; i+=step ){
+				rt->CopyValue( nd.values[ i ], ndnew.values[ ndnew.count ] );
+				ndnew.count++;
 			}
 		}
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
 	}
+	
+	value.Push();
 }
 
 
@@ -3360,7 +3064,7 @@ void dsClassArray::nfSort::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	// quick-sort
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	nd.Sort( rt );
 	
 	/*
@@ -3404,7 +3108,7 @@ void dsClassArray::nfSort2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	// quick-sort
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	nd.Sort( rt, block );
 	
 	/*
@@ -3441,62 +3145,46 @@ dsClassArray::nfSorted::nfSorted( const sInitData &init ) : dsFunction( init.cls
 }
 void dsClassArray::nfSorted::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
-	dsClass * const clsArray = ( dsClassArray* )GetOwnerClass();
 // 	dsClass * const clsInt = rt->GetEngine()->GetClassInt();
 	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
-	sArrNatData *ndnew = NULL;
-	dsValue *newArray = NULL;
 	int i;
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
-	try{
-		newArray = rt->CreateValue( clsArray );
-		rt->CreateObjectNaked( newArray, clsArray );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	ndnew.SetSize( nd.count, rt, clsObj );
+	ndnew.count = nd.count;
+	
+	for( i=0; i<nd.count; i++ ){
+		rt->CopyValue( nd.values[ i ], ndnew.values[ i ] );
+	}
+	
+	// quick-sort
+	ndnew.Sort( rt );
+	
+	value.Push();
+	
+	/*
+	// ground truth: bubble sort
+	const int funcIndexCompare = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexCompare();
+	
+	for( i=1; i<ndnew->count; i++ ){
+		rt->PushValue( ndnew->values[ i ] );
+		rt->RunFunctionFast( ndnew->values[ i - 1 ], funcIndexCompare ); // int objPrev.compare( objNext )
 		
-		ndnew->SetSize( nd.count, rt, clsObj );
-		ndnew->count = nd.count;
-		
-		for( i=0; i<nd.count; i++ ){
-			rt->CopyValue( nd.values[ i ], ndnew->values[ i ] );
-		}
-		
-		// quick-sort
-		ndnew->Sort( rt );
-		
-		/*
-		// ground truth: bubble sort
-		const int funcIndexCompare = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexCompare();
-		
-		for( i=1; i<ndnew->count; i++ ){
-			rt->PushValue( ndnew->values[ i ] );
-			rt->RunFunctionFast( ndnew->values[ i - 1 ], funcIndexCompare ); // int objPrev.compare( objNext )
+		if( rt->GetReturnInt() > 0 ){ // i > i+1
+			dsValue * const exchange = ndnew->values[ i - 1 ];
+			ndnew->values[ i - 1 ] = ndnew->values[ i ];
+			ndnew->values[ i ] = exchange;
 			
-			if( rt->GetReturnInt() > 0 ){ // i > i+1
-				dsValue * const exchange = ndnew->values[ i - 1 ];
-				ndnew->values[ i - 1 ] = ndnew->values[ i ];
-				ndnew->values[ i ] = exchange;
-				
-				if( i > 1 ){
-					i -= 2;
-				}
+			if( i > 1 ){
+				i -= 2;
 			}
 		}
-		*/
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
 	}
+	*/
 }
 
 // public func Array sorted( Block ablock )
@@ -3506,11 +3194,8 @@ dsClassArray::nfSorted2::nfSorted2( const sInitData &init ) : dsFunction( init.c
 }
 void dsClassArray::nfSorted2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
-	dsClass * const clsArray = ( dsClassArray* )GetOwnerClass();
 // 	dsClass * const clsInt = rt->GetEngine()->GetClassInt();
 	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
-	sArrNatData *ndnew = NULL;
-	dsValue *newArray = NULL;
 	int i;
 	
 	dsValue * const block = rt->GetValue( 0 );
@@ -3518,59 +3203,46 @@ void dsClassArray::nfSorted2::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueNullPointer, "ablock" );
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
-	try{
-		newArray = rt->CreateValue( clsArray );
-		rt->CreateObjectNaked( newArray, clsArray );
-		ndnew = ( sArrNatData* )p_GetNativeData( newArray );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
-		
-		ndnew->SetSize( nd.count, rt, clsObj );
-		ndnew->count = nd.count;
-		
-		for( i=0; i<nd.count; i++ ){
-			rt->CopyValue( nd.values[ i ], ndnew->values[ i ] );
-		}
-		
-		// quick-sort
-		ndnew->Sort( rt, block );
-		
-		/*
-		// ground truth: bubble sort
-		const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun2();
-		
-		for( i=1; i<ndnew->count; i++ ){
-			rt->PushValue( ndnew->values[ i ] );
-			rt->PushValue( ndnew->values[ i - 1 ] );
-			rt->RunFunctionFast( block, funcIndexCompare ); // Object run( objPrev, objNext )
-			if( rt->GetReturnValue()->GetType() != clsInt ){
-				DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsInt ) );
-			}
-			
-			if( rt->GetReturnInt() > 0 ){ // i > i+1
-				dsValue * const exchange = ndnew->values[ i - 1 ];
-				ndnew->values[ i - 1 ] = ndnew->values[ i ];
-				ndnew->values[ i ] = exchange;
-				
-				if( i > 1 ){
-					i -= 2;
-				}
-			}
-		}
-		*/
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	
+	ndnew.SetSize( nd.count, rt, clsObj );
+	ndnew.count = nd.count;
+	
+	for( i=0; i<nd.count; i++ ){
+		rt->CopyValue( nd.values[ i ], ndnew.values[ i ] );
 	}
+	
+	// quick-sort
+	ndnew.Sort( rt, block );
+	
+	value.Push();
+	
+	/*
+	// ground truth: bubble sort
+	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun2();
+	
+	for( i=1; i<ndnew->count; i++ ){
+		rt->PushValue( ndnew->values[ i ] );
+		rt->PushValue( ndnew->values[ i - 1 ] );
+		rt->RunFunctionFast( block, funcIndexCompare ); // Object run( objPrev, objNext )
+		if( rt->GetReturnValue()->GetType() != clsInt ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsInt ) );
+		}
+		
+		if( rt->GetReturnInt() > 0 ){ // i > i+1
+			dsValue * const exchange = ndnew->values[ i - 1 ];
+			ndnew->values[ i - 1 ] = ndnew->values[ i ];
+			ndnew->values[ i ] = exchange;
+			
+			if( i > 1 ){
+				i -= 2;
+			}
+		}
+	}
+	*/
 }
 
 
@@ -3599,7 +3271,7 @@ void dsClassArray::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	dsClass * const clsBool = rt->GetEngine()->GetClassBool();
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	int i;
 	for( i=0; i<nd.count; i++ ){
 		rt->PushValue( nd2.values[ i ] );
@@ -3656,29 +3328,20 @@ void dsClassArray::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const sArrNatData &nd2 = *( ( sArrNatData* )p_GetNativeData( array ) );
-	
-	dsValue * const newArray = clsArray.CreateArray( rt );
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
 	int i;
-	try{
-		sArrNatData &nd3 = *( ( sArrNatData* )p_GetNativeData( newArray ) );
-		nd3.SetSize( nd.count + nd2.count, rt, clsArray.GetClassObject() );
-		for( i=0; i<nd.count; i++ ){
-			rt->CopyValue( nd.values[ i ], nd3.values[ i ] );
-		}
-		for( i=0; i<nd2.count; i++ ){
-			rt->CopyValue( nd2.values[ i ], nd3.values[ nd.count + i ] );
-		}
-		nd3.count = nd.count + nd2.count;
-		
-		rt->PushValue( newArray );
-		rt->FreeValue( newArray );
-		
-	}catch( ... ){
-		if( newArray ){
-			rt->FreeValue( newArray );
-		}
-		throw;
+	
+	sArrNatData &nd3 = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	nd3.SetSize( nd.count + nd2.count, rt, clsArray.GetClassObject() );
+	for( i=0; i<nd.count; i++ ){
+		rt->CopyValue( nd.values[ i ], nd3.values[ i ] );
 	}
+	for( i=0; i<nd2.count; i++ ){
+		rt->CopyValue( nd2.values[ i ], nd3.values[ nd.count + i ] );
+	}
+	nd3.count = nd.count + nd2.count;
+	
+	value.Push();
 }
 
 // public func Array +=( Array array )
@@ -3740,7 +3403,7 @@ void dsClassArray::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	const int funcIndexToString = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexToString();
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	try{
 		buffer = new char[ maxLen + 5 ]; // ] + ... just in case
 		buffer[ 0 ] = '[';
@@ -3999,7 +3662,7 @@ void dsClassArray::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index 
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
 	
-	cArrNatDatLockModifyGuard lock( nd.lockModify );
+	const dsClassArray_LockModifyGuard lock( nd.lockModify );
 	int i;
 	for( i=index; i<nd.count-1; i++ ){
 		rt->MoveValue( nd.values[ i + 1 ], nd.values[ i ] );
