@@ -1339,7 +1339,7 @@ dsValue *dsClassDictionary::CreateDictionary( dsRunTime *rt ){
 	return newDict;
 }
 
-bool dsClassDictionary::GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue **value ){
+bool dsClassDictionary::GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue **value ) const{
 	if( ! rt || ! myself || ! key ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1374,7 +1374,7 @@ bool dsClassDictionary::GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *
 	return false;
 }
 
-void dsClassDictionary::SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue *value ){
+void dsClassDictionary::SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue *value ) const{
 	if( ! rt || ! myself || ! key || ! value ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1452,7 +1452,7 @@ void dsClassDictionary::SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *
 	}
 }
 
-bool dsClassDictionary::RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue *key ){
+bool dsClassDictionary::RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue *key ) const{
 	if( ! rt || ! myself || ! key ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1509,7 +1509,7 @@ bool dsClassDictionary::RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue 
 	return false;
 }
 
-void dsClassDictionary::RemoveAllKeys( dsRunTime *rt, dsRealObject *myself ){
+void dsClassDictionary::RemoveAllKeys( dsRunTime *rt, dsRealObject *myself ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1551,7 +1551,7 @@ void dsClassDictionary::RemoveAllKeys( dsRunTime *rt, dsRealObject *myself ){
 	nd.entryCount = 0;
 }
 
-void dsClassDictionary::CheckLoad( dsRunTime *rt, dsRealObject *myself ){
+void dsClassDictionary::CheckLoad( dsRunTime *rt, dsRealObject *myself ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}

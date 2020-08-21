@@ -68,6 +68,63 @@ fixed class String
 	public func String substring( int start, int last )
 	end
 	
+	/**
+	 * \brief Return formatted string using parameters applied to this string as format.
+	 * 
+	 * Format string has to contain tokens in the form (without blanks)
+	 * "{" "index" ":" "flags" "field width" ".precision" "format" "}".
+	 * 
+	 * "index" indicates the index of the object to use from the parameters provided. Index
+	 * can be omitted to use the occurance number of the token. First token found is index 0,
+	 * second token found index 1 and so forth. Negative index counts from the end \em parameters.
+	 * 
+	 * If nothing or only "index" is present the ":" is not required to be used.
+	 * 
+	 * The character "{" is special. To insert a plain "{" use "{{". There is no need to
+	 * escape "}" since it is special only after a non-escaped "{" is found. In all other
+	 * cases it is inserted plain.
+	 * 
+	 * Flags are optional can be one ore more of these in any order:
+	 * 
+	 * "0": Value is padded with "0" up to the desired length.
+	 * "-": Value is padded with " " on the right side instead of the left side (left aligned).
+	 * " ": Use " " for positive numbers to align with negative numbers.
+	 * "+": Use "+" for positive numbers to align with negative numbers.
+	 * 
+	 * The "field width" defines the minimum field width. Depending on "format" this is used
+	 * to pad up the value to fit into the field width. The value used for "field width"
+	 * has to be a positive integer value.
+	 * 
+	 * The ".precision" indicates the number of digits after the point used for floating
+	 * point values. The value has to be a positive integer value. Using 0 uses the highest
+	 * precision possible.
+	 * 
+	 * The "format" indicates the format to apply to the fetched parameter and can be one
+	 * of these values:
+	 * "d" or "i": Integer value
+	 * "o": Integer value in octal notation.
+	 * "x" or "X": Integer in hexadecimal notation with either lower or upper case letters.
+	 * "e": Floating point value with exponent like 1.2e7 .
+	 * "f": Floating point value of desires precision.
+	 * "g": Behaves like "e" if exponent of value is -4 or greater otherwise behaves like "f".
+	 *      Removes trailing "0" on decimal side.
+	 * "c": Integer value converted to character (0-127).
+	 * "s": String value.
+	 * 
+	 * Examples:
+	 * "{}": Use the next parameter from \em parameters and format it as string.
+	 * "{2}": Always use third parameter from \em parameters.
+	 * "{:.2f}": Use next parameter from \em parameters and format it as floating point value
+	 *           with 2 digits after the period.
+	 * "{1:.2f}": Same as above but always use second parameter from \em parameters.
+	 * "{:04d}": Use next parameter from \em parameters and format it as integer value padded
+	 *           up to 4 digits with "0".
+	 * "{:s}": Use next parameter from \em parameters and format it as string. This calls
+	 *         Object.toString() on the parameter. This is the same as "{}".
+	 */
+	public func String substring( int start, int last )
+	end
+	
 	/** \brief Index of first appearance of character or -1 if not found. */
 	public func int find( byte character )
 	end

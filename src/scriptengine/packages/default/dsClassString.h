@@ -80,6 +80,7 @@ private:
 	DEF_NATFUNC( nfGetAt );
 	DEF_NATFUNC( nfSubString );
 	DEF_NATFUNC( nfSubString2 );
+	DEF_NATFUNC( nfFormat );
 	
 	DEF_NATFUNC( nfFind );
 	DEF_NATFUNC( nfFind2 );

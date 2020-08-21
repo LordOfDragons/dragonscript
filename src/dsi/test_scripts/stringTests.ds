@@ -43,11 +43,16 @@ class StringTests extends Application
 		var String str3 = "this_--X_is-_-aXXXXtest__-X"
 		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
 		
-		var String str4 = "string"
-		System.print( "getAt: should 's' is " + str4.getAt(0) + "\n" )
-		System.print( "getAt: should 'g' is " + str4.getAt(5) + "\n" )
-		System.print( "getAt: should 'g' is " + str4.getAt(-1) + "\n" )
-		System.print( "getAt: should 's' is " + str4.getAt(-6) + "\n" )
+		this.testStartsWith()
+		this.testEndsWith()
+		this.testGetAt()
+		this.testFormat()
+		
+		return 0
+	end
+	
+	protected func void testStartsWith()
+		var String str1 = "this is a test"
 		
 		System.print( "startsWith: should true is " + str1.startsWith("this") + "\n" )
 		System.print( "startsWith: should false is " + str1.startsWith("This") + "\n" )
@@ -60,6 +65,10 @@ class StringTests extends Application
 		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1) + "\n" )
 		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1.toUpper()) + "\n" )
 		System.print( "startsWithNoCase: should false is " + str1.startsWithNoCase(str1 + "x") + "\n" )
+	end
+	
+	protected func void testEndsWith()
+		var String str1 = "this is a test"
 		
 		System.print( "endsWith: should true is " + str1.endsWith("test") + "\n" )
 		System.print( "endsWith: should false is " + str1.endsWith("Test") + "\n" )
@@ -72,8 +81,81 @@ class StringTests extends Application
 		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase(str1) + "\n" )
 		System.print( "endsWithNoCase: should true is " + str1.endsWithNoCase(str1.toUpper()) + "\n" )
 		System.print( "endsWithNoCase: should false is " + str1.endsWithNoCase("x" + str1) + "\n" )
+	end
+	
+	protected func void testGetAt()
+		var String str4 = "string"
 		
-		return 0
+		System.print( "getAt: should 's' is " + str4.getAt(0) + "\n" )
+		System.print( "getAt: should 'g' is " + str4.getAt(5) + "\n" )
+		System.print( "getAt: should 'g' is " + str4.getAt(-1) + "\n" )
+		System.print( "getAt: should 's' is " + str4.getAt(-6) + "\n" )
+	end
+	
+	protected func void testFormat()
+		// no format
+		System.print( "format: should 'this is a test' is: " + "this is a test".format(Array.new()) + "\n" )
+		System.print( "format: should 'this {} test' is: " + "this {{} test".format(Array.new()) + "\n" )
+		
+		// empty token
+		System.print( "format: should 'this is a test' is: " + "this {} test".format(Array.newWith("is a")) + "\n" )
+		System.print( "format: should 'this 8 test' is: " + "this {} test".format(Array.newWith(8)) + "\n" )
+		System.print( "format: should 'this 2.6 test' is: " + "this {} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this X test' is: " + "this {} test".format(Array.newWith('X')) + "\n" )
+		System.print( "format: should 'this True test' is: " + "this {} test".format(Array.newWith(true)) + "\n" )
+		System.print( "format: should 'this (null) test' is: " + "this {} test".format(Array.newWith(null)) + "\n" )
+		
+		// multiple tokens in sequence
+		var Array params = Array.newWith(8, 2.4, 'X', Array.newWith(1,2,3))
+		
+		System.print( "format: should 'this 8 is 2.4 a {X} test [1,2,3]' is: " + \
+			"this {} is {} a {{{}} test {}".format(params) + "\n"  )
+		
+		// index tokens
+		System.print( "format: should 'this 8 is 8 a [1,2,3] test {X} 8' is: " + \
+			"this {0} is {0} a {3} test {{{2}} {0}".format(params) + "\n"  )
+		System.print( "format: should 'this 8 is 8 a [1,2,3] test {X} 8' is: " + \
+			"this {-4} is {-4} a {-1} test {{{-2}} {-4}".format(params) + "\n"  )
+		
+		// integer format
+		System.print( "format: should 'this 18 test' is: " + "this {:d} test".format(Array.newWith(18)) + "\n" )
+		System.print( "format: should 'this 0018 test' is: " + "this {:04d} test".format(Array.newWith(18)) + "\n" )
+		System.print( "format: should 'this   18 test' is: " + "this {: 4d} test".format(Array.newWith(18)) + "\n" )
+		System.print( "format: should 'this +18 test' is: " + "this {:+d} test".format(Array.newWith(18)) + "\n" )
+		System.print( "format: should 'this -18 test' is: " + "this {:d} test".format(Array.newWith(-18)) + "\n" )
+		System.print( "format: should 'this 2 test' is: " + "this {:d} test".format(Array.newWith(2.6)) + "\n" )
+		
+		System.print( "format: should 'this 21 test' is: " + "this {:o} test".format(Array.newWith(17)) + "\n" )
+		System.print( "format: should 'this 0021 test' is: " + "this {:04o} test".format(Array.newWith(17)) + "\n" )
+		
+		System.print( "format: should 'this 8a4b test' is: " + "this {:x} test".format(Array.newWith(0h8a4b)) + "\n" )
+		System.print( "format: should 'this 00008a4b test' is: " + "this {:08x} test".format(Array.newWith(0h8a4b)) + "\n" )
+		System.print( "format: should 'this 8A4B test' is: " + "this {:X} test".format(Array.newWith(0h8a4b)) + "\n" )
+		System.print( "format: should 'this 00008A4B test' is: " + "this {:08X} test".format(Array.newWith(0h8a4b)) + "\n" )
+		
+		// floating point format
+		System.print( "format: should 'this 2.600000 test' is: " + "this {:f} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.60 test' is: " + "this {:.2f} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.6 test' is: " + "this {:.1f} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2 test' is: " + "this {:.0f} test".format(Array.newWith(2.6)) + "\n" )
+		
+		System.print( "format: should 'this 2.600000e+00 test' is: " + "this {:e} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.600000e+05 test' is: " + "this {:e} test".format(Array.newWith(260000.0)) + "\n" )
+		System.print( "format: should 'this 2.60e+00 test' is: " + "this {:.2e} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.60e+05 test' is: " + "this {:.2e} test".format(Array.newWith(260000.0)) + "\n" )
+		
+		System.print( "format: should 'this 2.6 test' is: " + "this {:g} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.60 test' is: " + "this {:.2g} test".format(Array.newWith(2.6)) + "\n" )
+		System.print( "format: should 'this 2.6e+05 test' is: " + "this {:g} test".format(Array.newWith(260000.0)) + "\n" )
+		System.print( "format: should 'this 2.60e+05 test' is: " + "this {:.2g} test".format(Array.newWith(260000.0)) + "\n" )
+		
+		// character format
+		System.print( "format: should 'this X test' is: " + "this {:c} test".format(Array.newWith('X')) + "\n" )
+		System.print( "format: should 'this 1 test' is: " + "this {:c} test".format(Array.newWith(49)) + "\n" )
+		
+		// string format
+		System.print( "format: should 'this is a test' is: " + "this {:s} test".format(Array.newWith("is a")) + "\n" )
+		System.print( "format: should 'this (null) test' is: " + "this {:s} test".format(Array.newWith(null)) + "\n" )
 	end
 end
 

@@ -3627,7 +3627,7 @@ dsValue *dsClassArray::CreateArray( dsRunTime *rt, int argumentCount ){
 	return newArray;
 }
 
-void dsClassArray::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ){
+void dsClassArray::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -3651,7 +3651,7 @@ void dsClassArray::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *valu
 	nd.count++;
 }
 
-void dsClassArray::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ){
+void dsClassArray::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -3671,7 +3671,7 @@ void dsClassArray::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index 
 	nd.count--;
 }
 
-int dsClassArray::GetObjectCount( dsRunTime *rt, dsRealObject *myself ){
+int dsClassArray::GetObjectCount( dsRunTime *rt, dsRealObject *myself ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -3680,7 +3680,7 @@ int dsClassArray::GetObjectCount( dsRunTime *rt, dsRealObject *myself ){
 	return nd.count;
 }
 
-dsValue *dsClassArray::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ){
+dsValue *dsClassArray::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -3693,7 +3693,7 @@ dsValue *dsClassArray::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int ind
 	return nd.values[ index ];
 }
 
-void dsClassArray::SetObjectAt( dsRunTime *rt, dsRealObject *myself, int index, dsRealObject *object ){
+void dsClassArray::SetObjectAt( dsRunTime *rt, dsRealObject *myself, int index, dsRealObject *object ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}

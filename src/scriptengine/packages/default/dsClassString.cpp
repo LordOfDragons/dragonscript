@@ -224,6 +224,346 @@ void dsClassString::nfSubString2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	delete [] newstr;
 }
 
+// public func String format( Array parameters )
+dsClassString::nfFormat::nfFormat( const sInitData &init ) :
+dsFunction( init.clsStr, "format", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
+	p_AddParameter( init.clsArr ); // parameters
+}
+void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsRealObject * const parameters = rt->GetValue( 0 )->GetRealObject();
+	if( ! parameters ){
+		DSTHROW_INFO( dueNullPointer, "parameters" );
+	}
+	
+	const int funcIndexToString = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexToString();
+	char *format = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const dsClassArray &clsArray = *( ( dsClassArray* )rt->GetEngine()->GetClassArray() );
+	const int paramCount = clsArray.GetObjectCount( rt, parameters );
+	size_t stringLen = 0;
+	char *string = ( char* )malloc( 1 );
+	char cformat[ 14 ]; // flags=4 width=5 precision=3 format=1
+	char cformatFlags[ 5 ];
+	int nextIndex = 0;
+	size_t copyLen;
+	char *convertEnd;
+	long convertLong;
+	
+	try{
+		while( *format ){
+			char * const deliBegin = strchr( format, '{' );
+			if( ! deliBegin ){
+				copyLen = strlen( format );
+				string = ( char* )realloc( string, stringLen + copyLen + 1 );
+				strncpy( string + stringLen, format, copyLen );
+				stringLen += copyLen;
+				break;
+			}
+			
+			copyLen = ( size_t )( deliBegin - format );
+			const bool escaped = deliBegin[ 1 ] == '{';
+			if( escaped ){
+				copyLen++;
+			}
+			string = ( char* )realloc( string, stringLen + copyLen + 1 );
+			strncpy( string + stringLen, format, copyLen );
+			stringLen += copyLen;
+			format = deliBegin + 1;
+			if( escaped ){
+				format++;
+				continue;
+			}
+			
+			char * const deliEnd = strchr( format, '}' );
+			if( ! deliEnd ){
+				break;
+			}
+			
+			// parse format
+			int useIndex = nextIndex;
+			
+			char *deliIndex = strchr( format, ':' );
+			char * const deliRealIndex = deliIndex ? deliIndex : deliEnd;
+			if( deliRealIndex != deliBegin + 1 ){
+				convertLong = strtol( format, &convertEnd, 10 );
+				if( convertEnd != deliRealIndex || convertLong < -paramCount || convertLong >= paramCount ){
+					DSTHROW_INFO_FMT( dueInvalidParam, "invalid index in format token %d", nextIndex );
+				}
+				if( convertLong < 0 ){
+					useIndex = paramCount + ( int )convertLong;
+					
+				}else{
+					useIndex = ( int )convertLong;
+				}
+				
+			}else{
+				if( useIndex >= paramCount ){
+					DSTHROW_INFO_FMT( dueInvalidParam, "not enough parameters for token %d", nextIndex );
+				}
+			}
+			format = deliIndex ? deliIndex + 1 : deliEnd;
+			
+			dsValue * const parameter = clsArray.GetObjectAt( rt, parameters, useIndex );
+			
+			// parameters follow only if there is a delimiter
+			bool flagZero = false, flagBlank = false, flagPlus = false, flagMinus = false;
+			unsigned short fieldWidth = 0;
+			unsigned char precision = 0;
+			bool hasPrecision = false;
+			cformatFlags[ 0 ] = 0;
+			int formatCode = 's';
+			
+			if( format != deliEnd ){
+				// flags
+				while( format != deliEnd ){
+					if( *format == '0' ){
+						flagZero = true;
+						
+					}else if( *format == '-' ){
+						flagMinus = true;
+						
+					}else if( *format == ' ' ){
+						flagBlank = true;
+						
+					}else if( *format == '+' ){
+						flagPlus = true;
+						
+					}else{
+						break;
+					}
+					format++;
+				}
+				
+				char *ptrCFormatFlags = cformatFlags;
+				if( flagZero ) *( ptrCFormatFlags++ ) = '0';
+				if( flagMinus ) *( ptrCFormatFlags++ ) = '-';
+				if( flagBlank ) *( ptrCFormatFlags++ ) = ' ';
+				if( flagPlus ) *( ptrCFormatFlags++ ) = '+';
+				*ptrCFormatFlags = 0;
+				
+				// field width
+				if( format != deliEnd ){
+					convertLong = strtol( format, &convertEnd, 10 );
+					if( convertEnd != format ){
+						if( convertLong < 0 || convertLong > 10000 ){
+							DSTHROW_INFO_FMT( dueInvalidParam, "invalid field width in format token %d", nextIndex );
+						}
+						fieldWidth = ( unsigned short )convertLong;
+						format = convertEnd;
+					}
+				}
+				
+				// precision
+				if( format != deliEnd && *format == '.' ){
+					format++;
+					convertLong = strtol( format, &convertEnd, 10 );
+					if( convertLong < 0 || convertLong > 99 ){
+						DSTHROW_INFO_FMT( dueInvalidParam, "invalid precision in format token %d", nextIndex );
+					}
+					precision = ( unsigned char )convertLong;
+					hasPrecision = true;
+					format = convertEnd;
+				}
+				
+				// format
+				switch( *format ){
+				case 'd':
+				case 'i':
+				case 'o':
+				case 'x':
+				case 'X':
+				case 'e':
+				case 'f':
+				case 'g':
+				case 'c':
+				case 's':
+					formatCode = *format;
+					break;
+					
+				default:
+					DSTHROW_INFO_FMT( dueInvalidParam, "invalid format code in format token %d", nextIndex );
+				}
+				format++;
+				
+				if( format != deliEnd ){
+					DSTHROW_INFO_FMT( dueInvalidParam, "invalid character after format code in format token %d", nextIndex );
+				}
+			}
+			
+			// format value
+			switch( formatCode ){
+			case 'd':
+			case 'i':
+			case 'o':
+			case 'x':
+			case 'X':{
+				if( ! parameter ){
+					DSTHROW_INFO_FMT( dueNullPointer, "null not supported for format token %d", nextIndex );
+				}
+				int value;
+				switch( parameter->GetType()->GetPrimitiveType() ){
+				case DSPT_INT:
+					value = parameter->GetInt();
+					break;
+					
+				case DSPT_BYTE:
+					value = parameter->GetByte();
+					break;
+					
+				case DSPT_BOOL:
+					value = parameter->GetBool() ? 1 : 0;
+					break;
+					
+				case DSPT_FLOAT:
+					value = ( int )parameter->GetFloat();
+					break;
+					
+				default:
+					DSTHROW_INFO_FMT( dseInvalidCast, "non-matching parameter for format token %s", nextIndex );
+				}
+				
+				sprintf( cformat, "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
+				
+				const int requiredLen = snprintf( NULL, 0, cformat, value );
+				if( requiredLen < 0 ){
+					DSTHROW_INFO( dueInvalidAction, "internal error" );
+				}
+				if( requiredLen > 0 ){
+					string = ( char* )realloc( string, stringLen + requiredLen + 1 );
+					snprintf( string + stringLen, requiredLen + 1, cformat, value );
+					stringLen += requiredLen;
+				}
+				}break;
+				
+			case 'e':
+			case 'f':
+			case 'g':{
+				if( ! parameter ){
+					DSTHROW_INFO_FMT( dueNullPointer, "null not supported for format token %d", nextIndex );
+				}
+				float value;
+				switch( parameter->GetType()->GetPrimitiveType() ){
+				case DSPT_INT:
+					value = parameter->GetInt();
+					break;
+					
+				case DSPT_BYTE:
+					value = parameter->GetByte();
+					break;
+					
+				case DSPT_BOOL:
+					value = parameter->GetBool() ? 1.0f : 0.0f;
+					break;
+					
+				case DSPT_FLOAT:
+					value = parameter->GetFloat();
+					break;
+					
+				default:
+					DSTHROW_INFO_FMT( dseInvalidCast, "non-matching parameter for format token %s", nextIndex );
+				}
+				if( hasPrecision ){
+					sprintf( cformat, "%%%s%hu.%hhu%c", cformatFlags, fieldWidth, precision, formatCode );
+					
+				}else{
+					sprintf( cformat, "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
+				}
+				
+				const int requiredLen = snprintf( NULL, 0, cformat, value );
+				if( requiredLen < 0 ){
+					DSTHROW_INFO( dueInvalidAction, "internal error" );
+				}
+				if( requiredLen > 0 ){
+					string = ( char* )realloc( string, stringLen + requiredLen + 1 );
+					snprintf( string + stringLen, requiredLen + 1, cformat, value );
+					stringLen += requiredLen;
+				}
+				}break;
+				
+			case 'c':{
+				if( ! parameter ){
+					DSTHROW_INFO_FMT( dueNullPointer, "null not supported for format token %d", nextIndex );
+				}
+				int value;
+				switch( parameter->GetType()->GetPrimitiveType() ){
+				case DSPT_INT:
+					value = parameter->GetInt();
+					break;
+					
+				case DSPT_BYTE:
+					value = parameter->GetByte();
+					break;
+					
+				case DSPT_BOOL:
+					value = parameter->GetBool() ? 1 : 0;
+					break;
+					
+				case DSPT_FLOAT:
+					value = ( int )parameter->GetFloat();
+					break;
+					
+				default:
+					DSTHROW_INFO_FMT( dseInvalidCast, "non-matching parameter for format token %s", nextIndex );
+				}
+				if( value < 0 || value > 255 ){
+					DSTHROW_INFO_FMT( dseInvalidCast, "parameter value out of range for format token %s", nextIndex );
+				}
+				sprintf( cformat, "%%%sc", cformatFlags );
+				
+				const int requiredLen = snprintf( NULL, 0, cformat, ( char )( unsigned char )value );
+				if( requiredLen < 0 ){
+					DSTHROW_INFO( dueInvalidAction, "internal error" );
+				}
+				if( requiredLen > 0 ){
+					string = ( char* )realloc( string, stringLen + requiredLen + 1 );
+					snprintf( string + stringLen, requiredLen + 1, cformat, ( char )( unsigned char )value );
+					stringLen += requiredLen;
+				}
+				}break;
+				
+			case 's':{
+				const char *value = "(null)";
+				if( parameter->GetType()->GetPrimitiveType() != DSPT_OBJECT || parameter->GetRealObject() ){
+					rt->RunFunctionFast( parameter, funcIndexToString );
+					value = rt->GetReturnValue()->GetString();
+				}
+				
+				if( hasPrecision ){
+					sprintf( cformat, "%%%s%hu.%hhus", cformatFlags, fieldWidth, precision );
+					
+				}else{
+					sprintf( cformat, "%%%s%hus", cformatFlags, fieldWidth );
+				}
+				
+				const int requiredLen = snprintf( NULL, 0, cformat, value );
+				if( requiredLen < 0 ){
+					DSTHROW_INFO( dueInvalidAction, "internal error" );
+				}
+				if( requiredLen > 0 ){
+					string = ( char* )realloc( string, stringLen + requiredLen + 1 );
+					snprintf( string + stringLen, requiredLen + 1, cformat, value );
+					stringLen += requiredLen;
+				}
+				}break;
+				
+			default:
+				DSTHROW_INFO_FMT( dueInvalidParam, "invalid format code in format token %d", nextIndex );
+			}
+			
+			format++;
+			nextIndex++;
+		}
+		
+		string[ stringLen ] = 0;
+		rt->PushString( string );
+		free( string );
+		
+	}catch( ... ){
+		free( string );
+		throw;
+	}
+}
+
 
 
 // find character in string
@@ -1549,6 +1889,7 @@ void dsClassString::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfGetAt( init ) );
 	AddFunction( new nfSubString( init ) );
 	AddFunction( new nfSubString2( init ) );
+	AddFunction( new nfFormat( init ) );
 	
 	AddFunction( new nfFind( init ) );
 	AddFunction( new nfFind2( init ) );

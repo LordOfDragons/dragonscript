@@ -77,35 +77,35 @@ public:
 	 * 
 	 * For direct access by native classes.
 	 */
-	void AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value );
+	void AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const;
 	
 	/**
 	 * \brief Remove object from set.
 	 * 
 	 * For direct access by native classes.
 	 */
-	void RemoveObject( dsRunTime *rt, dsRealObject *myself, int index );
+	void RemoveObject( dsRunTime *rt, dsRealObject *myself, int index ) const;
 	
 	/**
 	 * \brief Count of items.
 	 * 
 	 * For direct access by native classes.
 	 */
-	int GetObjectCount( dsRunTime *rt, dsRealObject *myself );
+	int GetObjectCount( dsRunTime *rt, dsRealObject *myself ) const;
 	
 	/**
 	 * \brief Get object at index.
 	 * 
 	 * For direct access by native classes.
 	 */
-	dsValue *GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index );
+	dsValue *GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ) const;
 	
 	/**
 	 * \brief Object is present.
 	 * 
 	 * For direct access by native classes.
 	 */
-	bool HasObject( dsRunTime *rt, dsRealObject *myself, dsValue *value );
+	bool HasObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const;
 	
 	
 	

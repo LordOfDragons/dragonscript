@@ -67,35 +67,35 @@ public:
 	 * 
 	 * For direct access by native classes.
 	 */
-	void AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value );
+	void AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const;
 	
 	/**
 	 * \brief Removes an object from the array.
 	 * 
 	 * For direct access by native classes.
 	 */
-	void RemoveObject( dsRunTime *rt, dsRealObject *myself, int index );
+	void RemoveObject( dsRunTime *rt, dsRealObject *myself, int index ) const;
 	
 	/**
 	 * \brief Count of items.
 	 * 
 	 * For direct access by native classes.
 	 */
-	int GetObjectCount( dsRunTime *rt, dsRealObject *myself );
+	int GetObjectCount( dsRunTime *rt, dsRealObject *myself ) const;
 	
 	/**
 	 * \brief Get object at index.
 	 * 
 	 * For direct access by native classes.
 	 */
-	dsValue *GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index );
+	dsValue *GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ) const;
 	
 	/**
 	 * \brief Set object at index.
 	 * 
 	 * For direct access by native classes.
 	 */
-	void SetObjectAt( dsRunTime *rt, dsRealObject *myself, int index, dsRealObject *object );
+	void SetObjectAt( dsRunTime *rt, dsRealObject *myself, int index, dsRealObject *object ) const;
 	
 private:
 	struct sInitData{

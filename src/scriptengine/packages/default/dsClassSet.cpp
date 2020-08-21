@@ -1431,7 +1431,7 @@ dsValue *dsClassSet::CreateSet( dsRunTime *rt, int argumentCount ){
 	return newSet;
 }
 
-void dsClassSet::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ){
+void dsClassSet::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1455,7 +1455,7 @@ void dsClassSet::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value 
 	nd.count++;
 }
 
-void dsClassSet::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ){
+void dsClassSet::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1478,7 +1478,7 @@ void dsClassSet::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ){
 	nd.count--;
 }
 
-int dsClassSet::GetObjectCount( dsRunTime *rt, dsRealObject *myself ){
+int dsClassSet::GetObjectCount( dsRunTime *rt, dsRealObject *myself ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1487,7 +1487,7 @@ int dsClassSet::GetObjectCount( dsRunTime *rt, dsRealObject *myself ){
 	return nd.count;
 }
 
-dsValue *dsClassSet::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ){
+dsValue *dsClassSet::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index ) const{
 	if( ! rt || ! myself ){
 		DSTHROW( dueNullPointer );
 	}
@@ -1500,7 +1500,7 @@ dsValue *dsClassSet::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index
 	return nd.values[ index ];
 }
 
-bool dsClassSet::HasObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ){
+bool dsClassSet::HasObject( dsRunTime *rt, dsRealObject *myself, dsValue *value ) const{
 	if( ! rt || ! myself || ! value ){
 		DSTHROW( dueNullPointer );
 	}

@@ -53,16 +53,16 @@ public:
 	/** \brief Creates a new dictionary object. For direct access by native classes. */
 	dsValue *CreateDictionary( dsRunTime *rt );
 	/** \brief Retrieves the value for a key. If found writes the value ot value if not NULL. Returns true if found. */
-	bool GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue **value );
+	bool GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue **value ) const;
 	/** \brief Adds an object to the dictionary. For direct access by native classes. */
-	void SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue *value );
+	void SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *key, dsValue *value ) const;
 	/** \brief Removes an object from the dictionary. For direct access by native classes. Returns true if removed. */
-	bool RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue *key );
+	bool RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue *key ) const;
 	/** \brief Remove all keys. */
-	void RemoveAllKeys( dsRunTime *rt, dsRealObject *myself );
+	void RemoveAllKeys( dsRunTime *rt, dsRealObject *myself ) const;
 	
 	/** \brief Check dictionary load and re-size if required. */
-	void CheckLoad( dsRunTime *rt, dsRealObject *myself );
+	void CheckLoad( dsRunTime *rt, dsRealObject *myself ) const;
 	/*@}*/
 	
 private:
