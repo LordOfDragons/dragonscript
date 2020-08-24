@@ -283,6 +283,9 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 			int useIndex = nextIndex;
 			
 			char *deliIndex = strchr( format, ':' );
+			if( deliIndex >= deliEnd ){
+				deliIndex = NULL; // otherwise delimiter can be matched after the closing tag
+			}
 			char * const deliRealIndex = deliIndex ? deliIndex : deliEnd;
 			if( deliRealIndex != deliBegin + 1 ){
 				convertLong = strtol( format, &convertEnd, 10 );
