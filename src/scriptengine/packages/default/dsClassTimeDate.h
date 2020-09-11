@@ -107,6 +107,7 @@ private:
 	DEF_NATFUNC( nfGetSecond );
 	DEF_NATFUNC( nfFormat );
 	DEF_NATFUNC( nfAdd );
+	DEF_NATFUNC( nfSecondsSince );
 	
 	DEF_NATFUNC( nfHashCode );
 	DEF_NATFUNC( nfEquals );

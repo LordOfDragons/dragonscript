@@ -78,6 +78,9 @@ accessors:
 	// Add time
 	public func TimeDate add( int days, int hours, int minutes, int seconds )
 	
+	// Seconds since time
+	public func int secondsSince( TimeDate timeDate )
+	
 misc stuff:
 	// compares if the obj is equal to another object
 	public func bool equals( Object other )
@@ -423,6 +426,45 @@ void dsClassTimeDate::nfAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 	( ( dsClassTimeDate* )GetOwnerClass() )->PushTimeDate( rt, timeDate );
 }
 
+// public func int secondsSince( TimeDate timeDate )
+dsClassTimeDate::nfSecondsSince::nfSecondsSince( const sInitData &init ) :
+dsFunction( init.clsTimeDate, "secondsSince", DSFT_FUNCTION,
+DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
+	p_AddParameter( init.clsTimeDate ); // timeDate
+}
+void dsClassTimeDate::nfSecondsSince::RunFunction( dsRunTime *rt, dsValue *myself ){
+	const dsClassTimeDate &clsTimeDate = *( ( dsClassTimeDate* )GetOwnerClass() );
+	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate other( clsTimeDate.GetTimeDate( rt->GetValue( 0 )->GetRealObject() ) );
+	
+	struct tm convTime;
+	memset( &convTime, 0, sizeof( convTime ) );
+	convTime.tm_year = nd.year - 1900;
+	convTime.tm_mon = nd.month;
+	convTime.tm_mday = nd.day;
+	convTime.tm_hour = nd.hour;
+	convTime.tm_min = nd.minute;
+	convTime.tm_sec = nd.second;
+	const time_t timeVal1 = mktime( &convTime );
+	if( timeVal1 == ( time_t )-1 ){
+		DSTHROW( dueInvalidParam );
+	}
+	
+	memset( &convTime, 0, sizeof( convTime ) );
+	convTime.tm_year = other.year - 1900;
+	convTime.tm_mon = other.month;
+	convTime.tm_mday = other.day;
+	convTime.tm_hour = other.hour;
+	convTime.tm_min = other.minute;
+	convTime.tm_sec = other.second;
+	const time_t timeVal2 = mktime( &convTime );
+	if( timeVal2 == ( time_t )-1 ){
+		DSTHROW( dueInvalidParam );
+	}
+	
+	rt->PushInt( ( int )( timeVal1 - timeVal2 ) );
+}
+
 
 
 // public func int hashCode()
@@ -543,6 +585,7 @@ void dsClassTimeDate::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfGetSecond( init ) );
 	AddFunction( new nfFormat( init ) );
 	AddFunction( new nfAdd( init ) );
+	AddFunction( new nfSecondsSince( init ) );
 	
 	AddFunction( new nfHashCode( init ) );
 	AddFunction( new nfEquals( init ) );

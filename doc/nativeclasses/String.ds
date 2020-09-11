@@ -367,7 +367,7 @@ fixed class String
 	/**
 	 * \brief String is equal to another object.
 	 * \returns \em true if \em other is of type String and both are equal.
-	*/
+	 */
 	public func bool equals( Object other )
 	end
 	
