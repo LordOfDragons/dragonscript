@@ -1,0 +1,146 @@
+class SpeedOptimizations extends Application
+	class TestSubClass
+		protected var String subvalue
+		static protected var String subvalueStatic = "subvalueStatic"
+		
+		func new()
+			subvalue = "subvalue"
+		end
+		
+		func void emptySuper()
+		end
+	end
+	
+	class TestClass extends TestSubClass
+		var String value
+		static protected var String valueStatic = "valueStatic"
+		
+		func new()
+			value = "value"
+		end
+		
+		/*
+		Empty
+		unoptimized: 2.664s
+		optimized: 2.040s (1.3x)
+		*/
+		func void empty()
+		end
+		
+		func void emptySuper()
+			super.emptySuper()
+		end
+		
+		/*
+		Getter returning class variable
+		unoptimized: 6.172s
+		optimized: 4.082s (1.5x)
+		*/
+		func String getClassVar()
+			return subvalue
+		end
+		
+		/*
+		Getter returning static class variable
+		unoptimized: 5.368s
+		optimized: 4.106s (1.3x)
+		*/
+		func String getClassVarStatic()
+			return subvalueStatic
+		end
+		
+		/*
+		Getter returning aregument
+		unoptimized: 6.173s
+		optimized: 5.060s (1.22x)
+		*/
+		func String getParameter( String a )
+			return a
+		end
+		func String getParameter( String a, String b, String c, String d )
+			return b
+		end
+	end
+	
+	
+	
+	func new()
+	end
+	
+	func int run()
+		if getArgumentCount() < 1
+			printSyntax()
+			return 0
+		end
+		
+		var String test = getArgument(0)
+		if test.equals( "empty" )
+			testEmpty()
+			
+		elif test.equals( "getClassVar" )
+			testGetClassVar()
+			
+		elif test.equals( "getClassVarStatic" )
+			testGetClassVarStatic()
+			
+		elif test.equals( "getParameter" )
+			testGetParameter()
+			
+		else
+			printSyntax()
+		end
+		
+		return 0
+	end
+	
+	func void printSyntax()
+		System.print("syntax:\n")
+		System.print("  dsi speedOptimizations <test>\n")
+		System.print("\n")
+		System.print("where test can be:\n")
+		System.print("  'empty': Empty\n")
+		System.print("  'getClassVar': Getter returning class variable\n")
+		System.print("  'getClassVarStatic': Getter returning static class variable\n")
+		System.print("  'getParameter': Getter returning parameter\n")
+	end
+	
+	func void testEmpty()
+		var TestClass tc = TestClass.new()
+		var int i
+		for i = 0 to 10000000
+			tc.empty()
+		end
+	end
+	
+	func void testGetClassVar()
+		var TestClass tc = TestClass.new()
+		System.print("getClassVar " + tc.getClassVar() + "\n")
+		var String result
+		var int i
+		for i = 0 to 10000000
+			result = tc.getClassVar()
+		end
+	end
+	
+	func void testGetClassVarStatic()
+		var TestClass tc = TestClass.new()
+		System.print("getClassVarStatic " + tc.getClassVarStatic() + "\n")
+		var String result
+		var int i
+		for i = 0 to 10000000
+			result = tc.getClassVarStatic()
+		end
+	end
+	
+	func void testGetParameter()
+		var TestClass tc = TestClass.new()
+		var String a = "a", b = "b", c = "c", d = "d"
+		System.print("getParameter(a) " + tc.getParameter(a) + "\n")
+		System.print("getParameter(a,b,c,d) " + tc.getParameter(a, b, c, d) + "\n")
+		var String result
+		var int i
+		for i = 0 to 10000000
+			result = tc.getParameter(a)
+		end
+	end
+end

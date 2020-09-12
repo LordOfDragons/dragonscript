@@ -83,6 +83,7 @@ public:
 	void CheckConstants(dspParserCheck *ParserCheck);
 	dsConstant *CheckConstant(dspParserCheck *ParserCheck, const char *Name);
 	void CompileFunctionCode(dspParserCheck *ParserCheck);
+	void OptimizeFunctionCode( dspParserCheck &parserCheck );
 	void CompileConstants(dspParserCheck *ParserCheck);
 	// information
 	bool MatchesClass(const char *Name, dspParserCheckType *TypeParent) const;

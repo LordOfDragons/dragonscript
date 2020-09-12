@@ -37,6 +37,7 @@
 #include "dspParserCheckInterface.h"
 #include "dspParserCompileCode.h"
 #include "dspParserCheckScript.h"
+#include "dspOptimizeFunction.h"
 #include "../dsEngine.h"
 #include "../exceptions.h"
 #include "../objects/dsClass.h"
@@ -421,6 +422,7 @@ dsConstant *dspParserCheckClass::CheckConstant(dspParserCheck *ParserCheck, cons
 	}
 	return NULL;
 }
+
 void dspParserCheckClass::CompileFunctionCode(dspParserCheck *ParserCheck){
 	if(!ParserCheck) DSTHROW(dueInvalidParam);
 	dspParserCheckFunction *vCheckFunc;
@@ -466,6 +468,18 @@ void dspParserCheckClass::CompileFunctionCode(dspParserCheck *ParserCheck){
 //		
 //	}
 }
+
+void dspParserCheckClass::OptimizeFunctionCode( dspParserCheck &parserCheck ){
+	if( p_ClassNew->GetClassType() != DSCT_CLASS || p_natErrNode ){
+		return;
+	}
+	
+	int i;
+	for( i=0; i<p_FuncCount; i++ ){
+		dspOptimizeFunction( *p_Functions[ i ] ).Optimize( parserCheck );
+	}
+}
+
 void dspParserCheckClass::CompileConstants(dspParserCheck *ParserCheck){
 	if(!ParserCheck) DSTHROW(dueInvalidParam);
 	dspNodeStaList *vInitStaList = NULL;

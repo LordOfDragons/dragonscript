@@ -168,7 +168,10 @@ void dspNodeInitConstrCall::DebugPrint(int Level, const char *Prefix){
 
 // class function node
 ////////////////////////
-dspNodeClassFunction::dspNodeClassFunction(dspBaseNode *RefNode, const char *Name, int FuncType, int TypeMods, dspBaseNode *Type) : dspBaseNode(ntClassFunc,RefNode){
+dspNodeClassFunction::dspNodeClassFunction( dspBaseNode *RefNode, const char *Name,
+int FuncType, int TypeMods, dspBaseNode *Type) :
+dspBaseNode( ntClassFunc, RefNode )
+{
 	if(!Name) DSTHROW(dueInvalidParam);
 	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
 	strcpy(p_Name, Name);

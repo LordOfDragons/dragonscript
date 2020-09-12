@@ -304,6 +304,16 @@ void dspParserCheck::CompileScripts(){
 		p_Classes[i]->CompileFunctionCode(this);
 	}
 }
+
+void dspParserCheck::OptimizeScripts(){
+#ifdef WITH_OPTIMIZATIONS
+	int i;
+	for( i=0; i<p_ClassCount; i++ ){
+		p_Classes[ i ]->OptimizeFunctionCode( *this );
+	}
+#endif
+}
+
 dsClass *dspParserCheck::GetClassFromNode(dspBaseNode *Node, dsClass *BaseClass){
 	if(!Node) return p_Parser->GetEngine()->GetClassVoid();
 	dspParserCheckType *vCheckType=NULL;

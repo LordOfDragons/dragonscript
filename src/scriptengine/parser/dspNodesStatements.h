@@ -43,6 +43,9 @@ public:
 	~dspNodeMembVar();
 	inline const char *GetName() const{ return p_Name; }
 	inline dspBaseNode *GetRealObject() const{ return p_Obj; }
+	inline dsVariable *GetClassVariable() const{ return p_DSClsVar; }
+	inline int GetParameterID() const{ return p_ParamID; }
+	inline int GetContextVariable() const{ return pContextVariable; }
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
 	void CompileCode(dspParserCompileCode *CompileCode);
 #ifndef __NODBGPRINTF__
@@ -298,6 +301,7 @@ public:
 	~dspNodeReturn();
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
 	void CompileCode(dspParserCompileCode *CompileCode);
+	inline dspBaseNode *GetReturnValue() const{ return p_RetVal; }
 #ifndef __NODBGPRINTF__
 	void DebugPrint(int Level, const char *Prefix);
 #endif
@@ -363,6 +367,8 @@ public:
 	void AddNode(dspBaseNode *Node);
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
 	void CompileCode(dspParserCompileCode *CompileCode);
+	inline dspListNodes &GetNodes(){ return p_Nodes; }
+	inline const dspListNodes &GetNodes() const{ return p_Nodes; }
 #ifndef __NODBGPRINTF__
 	void DebugPrint(int Level, const char *Prefix);
 #endif

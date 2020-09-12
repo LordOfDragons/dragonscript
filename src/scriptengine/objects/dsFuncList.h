@@ -45,6 +45,7 @@ public:
 	inline int GetCount() const{ return p_FuncCount; }
 	void AddFunction(dsFunction *Function);
 	dsFunction *GetFunction(int Index) const;
+	void ReplaceFunction( int index, dsFunction *function );
 	int GetIndexOf(dsFunction *func) const;
 	void Clear();
 	// searching

@@ -50,7 +50,9 @@ params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
 params.Add(BoolVariable('with_debug', 'Build with debug symbols for GDB usage', False))
 params.Add(BoolVariable('with_warnerrors', 'Treat warnings as errors (dev-builds)', False))
 params.Add(BoolVariable('with_sanitize', 'Enable sanitizing (dev-builds)', False))
+params.Add(BoolVariable('with_optimizations', 'Enable run-time optimizations', True))
 params.Add(TernaryVariable('build_dsi', 'Build DragonScript Interpreter'))
+params.Add(BoolVariable('dsi_measure_runtime', 'Enable DSI run-time measuring (dev-builds)', False))
 
 if globalEnv['TARGET_PLATFORM'] in ['linux', 'android']:
 	params.Add(PathVariable('prefix', 'System path', '/usr', PathVariable.PathAccept))
@@ -140,6 +142,7 @@ parent_targets = {}
 configGroup = 'DragonScript'
 globalEnv.configReport.add('Treat warnings as errors (dev-builds)', 'with_warnerrors', configGroup)
 globalEnv.configReport.add('Build with debug symbols for GDB usage', 'with_debug', configGroup)
+globalEnv.configReport.add('Enable run-time optimizations', 'with_optimizations', configGroup)
 globalEnv.configReport.add('Build DragonScript Interpreter', 'build_dsi', configGroup)
 
 # build scripts

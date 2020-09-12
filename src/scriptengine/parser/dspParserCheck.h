@@ -64,6 +64,7 @@ public:
 	void ProcessScript(dspNodeScript *Script);
 	void CheckScripts();
 	void CompileScripts();
+	void OptimizeScripts();
 	dsClass *GetClassFromNode(dspBaseNode *Node, dsClass *BaseClass);
 	dsClass *GetClassFromName(const char *Name, dsClass *BaseClass);
 	dsClass *GetClassFromType(dspParserCheckType *Type, dsClass *BaseClass);

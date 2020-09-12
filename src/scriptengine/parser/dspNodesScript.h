@@ -25,6 +25,8 @@
 #ifndef _DSPNODESSCRIPT_H_
 #define _DSPNODESSCRIPT_H_
 
+#include "../objects/optimized/dsFunctionOptimized.h"
+
 // function argument node
 class dspNodeFuncArg : public dspBaseNode{
 private:
@@ -69,6 +71,8 @@ private:
 	dspNodeInitConstrCall *p_InitConstr;
 	dspBaseNode *p_Sta;
 	dsClass *p_DSType;
+	dsFunctionOptimized::eType pOptimization;
+	
 public:
 	dspNodeClassFunction(dspBaseNode *RefNode, const char *Name, int FuncType, int TypeMods, dspBaseNode *Type);
 	~dspNodeClassFunction();
@@ -84,6 +88,7 @@ public:
 	void SetDSType(dsClass *Class);
 	void SetInitConstrCall(dspNodeInitConstrCall *Init);
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
+	void DetectOptimization();
 	void CompileCode(dspParserCompileCode *CompileCode);
 #ifndef __NODBGPRINTF__
 	void DebugPrint(int Level, const char *Prefix);

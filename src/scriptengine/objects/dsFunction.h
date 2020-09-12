@@ -37,6 +37,7 @@ class dsClass;
 class dsByteCode;
 class dsSignature;
 class dsValue;
+class dsFunctionOptimized;
 
 // class dsFunction
 class dsFunction : public dsuArrayable {
@@ -49,6 +50,8 @@ private:
 	int p_FuncType, p_TypeModifiers;
 	int p_LocVarSize;
 	bool p_HasRetVal;
+	dsFunctionOptimized *pOptimized;
+	
 public:
 	// constructor, destructor
 	dsFunction(dsClass *OwnerClass, const char *Name, int FuncType, int TypeModifiers, dsClass *Type);
@@ -66,6 +69,18 @@ public:
 	inline int GetLocVarSize() const{ return p_LocVarSize; }
 	inline bool HasRetVal() const{ return p_HasRetVal; }
 	void SetLocVarSize(int Size);
+	
+	/** \brief Optimized function or NULL. */
+	inline dsFunctionOptimized *GetOptimized() const{ return pOptimized; }
+	
+	/**
+	 * \brief Set optimized function or NULL.
+	 * 
+	 * If \em function is different from the stored optimized function deletes the existing
+	 * optimized function if not NULL.
+	 */
+	void SetOptimized( dsFunctionOptimized *optimized );
+	
 	// run function
 	virtual void RunFunction( dsRunTime *rt, dsValue *myself );
 	

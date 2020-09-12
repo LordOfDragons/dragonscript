@@ -17,6 +17,9 @@ elif envProgram['TARGET_PLATFORM'] == 'windows':
 envProgram.Append(CPPFLAGS = envProgram['SANITIZE_FLAGS'])
 envProgram.Append(LINKFLAGS = envProgram['SANITIZE_FLAGS'])
 
+if envProgram['dsi_measure_runtime']:
+	envProgram.Append(CPPFLAGS = ['-DDSI_MEASURE_RUN_TIME'])
+
 globalEnv.targetManager.targets['dscript'].applyBuild(envProgram)
 envProgram.Append(LIBS = envProgram['CROSSCOMPILE_PROGRAM_LIBS'])
 

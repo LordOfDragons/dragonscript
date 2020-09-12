@@ -32,13 +32,16 @@
 #include "dsByteCode.h"
 #include "dsRealObject.h"
 #include "dsValue.h"
+#include "optimized/dsFunctionOptimized.h"
 #include "../dsRunTime.h"
 #include "../exceptions.h"
 
 // class dsFunction
 //////////////////////////
 // constructor, destructor
-dsFunction::dsFunction(dsClass *OwnerClass, const char *Name, int FuncType, int TypeModifiers, dsClass *Type){
+dsFunction::dsFunction(dsClass *OwnerClass, const char *Name, int FuncType, int TypeModifiers, dsClass *Type) :
+pOptimized( NULL )
+{
 	if(!OwnerClass || !Type || !Name){
 		printf("[ERROR!] function %s.%s\n", OwnerClass ? OwnerClass->GetName() : "?",
 			Name ? Name : "?");
@@ -70,6 +73,9 @@ dsFunction::~dsFunction(){
 	delete p_Signature;
 	delete [] p_Name;
 	if(p_ByteCode) delete p_ByteCode;
+	if( pOptimized ){
+		delete pOptimized;
+	}
 }
 // management
 bool dsFunction::IsEqualTo(dsFunction *Function) const{
@@ -82,13 +88,35 @@ void dsFunction::SetLocVarSize(int Size){
 	if(Size < 0) DSTHROW(dueInvalidParam);
 	p_LocVarSize = Size;
 }
+
+void dsFunction::SetOptimized( dsFunctionOptimized *optimized ){
+	if( optimized == pOptimized ){
+		return;
+	}
+	
+	if( pOptimized ){
+		delete pOptimized;
+	}
+	
+	pOptimized = optimized;
+}
+
 // run function
 void dsFunction::RunFunction( dsRunTime *rt, dsValue *myself ){
 #ifdef __DEBUG__
 	if( ! p_ByteCode ) DSTHROW( dueInvalidAction );
 #endif
 	
+#ifdef WITH_OPTIMIZATIONS
+	if( ! pOptimized ){
+		rt->p_ExecFunc( myself->GetRealObject(), p_OwnerClass, this, NULL );
+		
+	}else{
+		pOptimized->RunFunction( rt, myself );
+	}
+#else
 	rt->p_ExecFunc( myself->GetRealObject(), p_OwnerClass, this, NULL );
+#endif
 }
 
 

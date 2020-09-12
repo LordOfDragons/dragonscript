@@ -17,6 +17,7 @@ configFileDefines['OS_UNIX'] = envLibrary['TARGET_PLATFORM'] in ['linux', 'andro
 configFileDefines['OS_W32'] = envLibrary['TARGET_PLATFORM'] == 'windows'
 configFileDefines['OS_BEOS'] = envLibrary['TARGET_PLATFORM'] == 'beos'
 configFileDefines['OS_MACOS'] = envLibrary['TARGET_PLATFORM'] == 'macos'
+configFileDefines['WITH_OPTIMIZATIONS'] = envLibrary['with_optimizations']
 
 conf = envLibrary.Configure()
 

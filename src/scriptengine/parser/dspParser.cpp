@@ -135,7 +135,7 @@ bool dspParser::ParsePackage( dsPackage *Package ){
 	if( p_ErrCount > 0 ){
 		return false;
 	}
-
+	
 	vParserCheck.CheckScripts();
 	#ifndef __NODBGPRINTF__
 	//for( i=0; i<Package->GetScriptCount(); i++ ) p_ScriptNodes[ i ]->DebugPrint( 0, "" );
@@ -145,6 +145,11 @@ bool dspParser::ParsePackage( dsPackage *Package ){
 	}
 	
 	vParserCheck.CompileScripts();
+	if( p_ErrCount > 0 ){
+		return false;
+	}
+	
+	vParserCheck.OptimizeScripts();
 	if( p_ErrCount > 0 ){
 		return false;
 	}

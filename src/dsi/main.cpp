@@ -37,6 +37,9 @@
 #include "dsiClassApplication.h"
 #include "paksources/dsPakSrcLocaleFile.h"
 
+#ifdef DSI_MEASURE_RUN_TIME
+#include <sys/time.h>
+#endif
 
 // definitions
 ////////////////
@@ -289,12 +292,23 @@ bool runScript(){
 			DSTHROW_INFO(dseInvalidSyntax, "No Constructor without Arguments found in application class!");
 		}
 		// create object and start execution
+#ifdef DSI_MEASURE_RUN_TIME
+		timeval mrtBegin;
+		gettimeofday( &mrtBegin, NULL );
+#endif
 		try{
 			vRT->CreateObject(vAppObj, vClsEntry, 0);
 			vRT->RunFunction(vAppObj, "run", 0 );
 		}catch( ... ){
 			vRT->PrintExceptionTrace();
 		}
+#ifdef DSI_MEASURE_RUN_TIME
+		timeval mrtEnd;
+		gettimeofday( &mrtEnd, NULL );
+		timeval mrtDifference;
+		timersub( &mrtEnd, &mrtBegin, &mrtDifference );
+		printf( "DSI: Script Run-Time %ld.%03lds\n", mrtDifference.tv_sec, mrtDifference.tv_usec / 1000 );
+#endif
 		p_retCode = vRT->GetReturnInt();
 		// free object
 		vRT->FreeValue(vAppObj);

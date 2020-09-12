@@ -411,6 +411,18 @@ bool dspNodeMembFunc::CheckCode(dspParserCheckCode *checkCode, dspBaseNode **ppT
 }
 void dspNodeMembFunc::CompileCode(dspParserCompileCode *compileCode){
 	if(!compileCode) DSTHROW(dueInvalidParam);
+	if(!p_DSClsFunc){
+		DebugPrint(0, "(ohnoes) ");
+		DSTHROW(dueInvalidAction);
+	}
+	
+	// if super call is empty skip it
+	if( p_SuperCall && p_DSClsFunc->GetFuncType() == DSFT_FUNCTION
+	&& ! ( p_DSClsFunc->GetTypeModifiers() & DSTM_NATIVE )
+	&& ( ( const dsByteCode::sCode* )p_DSClsFunc->GetByteCode()->GetPointer() )->code == dsByteCode::ebcRet ){
+		return;
+	}
+	
 	int i, vNodeCount = 0;
 	vNodeCount = p_Args.GetNodeCount();
 	dspBaseNode **vArgNodes = new dspBaseNode*[vNodeCount];
@@ -427,10 +439,6 @@ void dspNodeMembFunc::CompileCode(dspParserCompileCode *compileCode){
 		delete [] vArgNodes;
 	}catch( ... ){
 		delete [] vArgNodes; throw;
-	}
-	if(!p_DSClsFunc){
-		DebugPrint(0, "(ohnoes) ");
-		DSTHROW(dueInvalidAction);
 	}
 	if(p_DSClsFunc->GetFuncType() == DSFT_FUNCTION){
 		if(p_Obj) p_Obj->CompileCode(compileCode);
