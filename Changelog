@@ -12,3 +12,6 @@ Initial Release
 - String: added startsWith(String), startsWithNoCase(String), endsWith(String) and endsWithNoCase(String)
 - String: changed getAt(int) to accept negative index counting from the end 
 - String: added format(Array)
+- Added support for run-time optimizations (preparation for JIT support)
+- Added run-time optimizations for simple getters and empty functions
+- Avoid super-calling function if it is empty
