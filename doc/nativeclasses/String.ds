@@ -84,11 +84,11 @@ fixed class String
 	 * escape "}" since it is special only after a non-escaped "{" is found. In all other
 	 * cases it is inserted plain.
 	 * 
-	 * Flags are optional can be one ore more of these in any order:</br>
-	 * "0": Value is padded with "0" up to the desired length.</br>
-	 * "-": Value is padded with " " on the right side instead of the left side (left aligned).</br>
-	 * " ": Use " " for positive numbers to align with negative numbers.</br>
-	 * "+": Use "+" for positive numbers to align with negative numbers.</br>
+	 * Flags are optional can be one ore more of these in any order:<br/>
+	 * "0": Value is padded with "0" up to the desired length.<br/>
+	 * "-": Value is padded with " " on the right side instead of the left side (left aligned).<br/>
+	 * " ": Use " " for positive numbers to align with negative numbers.<br/>
+	 * "+": Use "+" for positive numbers to align with negative numbers.<br/>
 	 * 
 	 * The "field width" defines the minimum field width. Depending on "format" this is used
 	 * to pad up the value to fit into the field width. The value used for "field width"
@@ -99,27 +99,27 @@ fixed class String
 	 * precision possible.
 	 * 
 	 * The "format" indicates the format to apply to the fetched parameter and can be one
-	 * of these values:</br>
-	 * "d" or "i": Integer value</br>
-	 * "o": Integer value in octal notation.</br>
-	 * "x" or "X": Integer in hexadecimal notation with either lower or upper case letters.</br>
-	 * "e": Floating point value with exponent like 1.2e7 .</br>
-	 * "f": Floating point value of desires precision.</br>
-	 * "g": Behaves like "e" if exponent of value is -4 or greater otherwise behaves like "f".</br>
-	 *      Removes trailing "0" on decimal side.</br>
-	 * "c": Integer value converted to character (0-127).</br>
-	 * "s": String value.</br>
+	 * of these values:<br/>
+	 * "d" or "i": Integer value<br/>
+	 * "o": Integer value in octal notation.<br/>
+	 * "x" or "X": Integer in hexadecimal notation with either lower or upper case letters.<br/>
+	 * "e": Floating point value with exponent like 1.2e7 .<br/>
+	 * "f": Floating point value of desires precision.<br/>
+	 * "g": Behaves like "e" if exponent of value is -4 or greater otherwise behaves like "f".<br/>
+	 *      Removes trailing "0" on decimal side.<br/>
+	 * "c": Integer value converted to character (0-127).<br/>
+	 * "s": String value.<br/>
 	 * 
-	 * Examples:</br>
-	 * "{}": Use the next parameter from \em parameters and format it as string.</br>
-	 * "{2}": Always use third parameter from \em parameters.</br>
+	 * Examples:<br/>
+	 * "{}": Use the next parameter from \em parameters and format it as string.<br/>
+	 * "{2}": Always use third parameter from \em parameters.<br/>
 	 * "{:.2f}": Use next parameter from \em parameters and format it as floating point value
-	 *           with 2 digits after the period.</br>
-	 * "{1:.2f}": Same as above but always use second parameter from \em parameters.</br>
+	 *           with 2 digits after the period.<br/>
+	 * "{1:.2f}": Same as above but always use second parameter from \em parameters.<br/>
 	 * "{:04d}": Use next parameter from \em parameters and format it as integer value padded
-	 *           up to 4 digits with "0".</br>
+	 *           up to 4 digits with "0".<br/>
 	 * "{:s}": Use next parameter from \em parameters and format it as string. This calls
-	 *         Object.toString() on the parameter. This is the same as "{}".</br>
+	 *         Object.toString() on the parameter. This is the same as "{}".<br/>
 	 */
 	public func String format( Array arguments )
 	end
