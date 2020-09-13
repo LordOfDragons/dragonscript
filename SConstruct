@@ -93,6 +93,12 @@ elif globalEnv['TARGET_PLATFORM'] == 'macos':
 params.Update(globalEnv)
 
 # set global construction variables
+if 'CPPFLAGS' in os.environ:
+	globalEnv.Append(CPPFLAGS = os.environ['CPPFLAGS'])
+
+if 'LDFLAGS' in os.environ:
+	globalEnv.Append(LINKFLAGS = os.environ['LDFLAGS'])
+
 if globalEnv['with_debug']:
 	globalEnv.Append(CPPFLAGS = ['-g', '-fno-omit-frame-pointer'])
 

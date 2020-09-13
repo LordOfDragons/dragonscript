@@ -122,7 +122,7 @@ fixed class String
 	 * "{:s}": Use next parameter from \em parameters and format it as string. This calls
 	 *         Object.toString() on the parameter. This is the same as "{}".
 	 */
-	public func String substring( int start, int last )
+	public func String format( Array arguments )
 	end
 	
 	/** \brief Index of first appearance of character or -1 if not found. */
