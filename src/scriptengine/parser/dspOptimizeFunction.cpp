@@ -152,6 +152,10 @@ void dspOptimizeFunction::pOptimizeReturn( const dspBaseNode &nodeRetVal ){
 			PRINT_OPTIMIZED("FOGetClassVarStatic")
 			
 		}else{
+			if( nodeMembVar.GetRealObject()->GetNodeType() != eNodeTypes::ntThis ){
+				return;
+			}
+			
 			pCheckFunction.GetFunction()->SetOptimized(
 				new dsFOGetClassVar( *nodeMembVar.GetClassVariable() ) );
 			PRINT_OPTIMIZED("FOGetClassVar")
