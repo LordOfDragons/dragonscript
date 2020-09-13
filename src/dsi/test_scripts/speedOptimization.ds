@@ -40,6 +40,10 @@ class SpeedOptimizations extends Application
 			return subvalue
 		end
 		
+		func String getClassVar2()
+			return new().subvalue
+		end
+		
 		/*
 		Getter returning static class variable
 		unoptimized: 5.368s
@@ -115,6 +119,7 @@ class SpeedOptimizations extends Application
 	func void testGetClassVar()
 		var TestClass tc = TestClass.new()
 		System.print("getClassVar " + tc.getClassVar() + "\n")
+		System.print("getClassVar2 " + tc.getClassVar2() + "\n")
 		var String result
 		var int i
 		for i = 0 to 10000000
