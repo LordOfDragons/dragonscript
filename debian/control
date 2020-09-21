@@ -1,4 +1,4 @@
-Source: dscript
+Source: dragonscript
 Section: interpreters
 Priority: optional
 Maintainer: Roland Plüss <roland@rptd.ch>
@@ -7,7 +7,7 @@ Standards-Version: 4.1.3
 Homepage: https://dragondreams.ch
 Rules-Requires-Root: no
 
-Package: dscript
+Package: dragonscript
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DragonScript Scripting Language
@@ -29,13 +29,13 @@ Description: DragonScript Scripting Language
      at the same time.
    - Easy to integrate as embedded language using C++ interface.
 
-Package: dscript-dev
+Package: dragonscript-dev
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DragonScript Scripting Language Development
  Developent files required to embed DragonScript into projects.
 
-Package: dsi
+Package: dragonscript-dsi
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DragonScript Scripting Language Interpreter
