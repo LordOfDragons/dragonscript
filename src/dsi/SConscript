@@ -25,6 +25,11 @@ envProgram.Append(LIBS = envProgram['CROSSCOMPILE_PROGRAM_LIBS'])
 
 pathBin = envProgram.subst('$execdir')
 
+if envProgram['OSBeOS']:
+    pathMan1 = os.path.join(envProgram.subst(envProgram['docdir']), 'man', 'man1')
+elif envProgram['OSPosix']:
+    pathMan1 = os.path.join(envProgram.subst(envProgram['datadir']), 'man', 'man1')
+
 # setup the builders
 targetProgram = globalEnv.targetManager.TargetProgram('DragonScript Interpreter')
 globalEnv.targetManager.add('dsi', targetProgram)
@@ -39,6 +44,10 @@ targetProgram.build.extend(program)
 targetProgram.aliasBuild(envProgram, 'dsi_build')
 
 targetProgram.install.extend(envProgram.Install(pathBin, program))
+
+if envProgram['OSPosix']:
+    targetProgram.install.extend(envProgram.Install(pathMan1, 'man/dsi.1'))
+
 targetProgram.aliasInstall(envProgram, 'dsi')
 
 targetProgram.archiveProgram(envProgram, pathBin, program)

@@ -1,0 +1,42 @@
+.TH DSI 1
+
+.SH NAME
+dsi \- run DragonScript script files (*.ds) from console.
+
+.SH SYNOPSIS
+.B dsi
+\fIscript-file\fR
+.RE
+
+.SH DESCRIPTION
+.B dsi
+run DragonScript script files (*.ds) from console.
+
+.SH OPTIONS
+
+.TP 4
+.I script-file
+Script file (*.ds) to run.
+.LP
+
+.SH "EXIT STATUS"
+.B dsi
+exits with return value from script application class.
+
+.SH "ENVIRONMENT VARIABLES"
+
+.TP 4
+.B DS_PAKAGE_PATH
+Overrides directory where DragonScript Packages are installed to.
+By default this directory is
+.IR "/usr/lib/dragonscript"
+
+.SH EXAMPLES
+
+.TP 4
+.nf
+.B "dsi MyScript.ds"
+
+.fi
+Run script file MyScript.ds from console.
+.LP
