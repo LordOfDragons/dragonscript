@@ -1,0 +1,43 @@
+Source: dscript
+Section: interpreters
+Priority: optional
+Maintainer: Roland Plüss <roland@rptd.ch>
+Build-Depends: debhelper-compat (= 12), scons
+Standards-Version: 4.1.3
+Homepage: https://dragondreams.ch
+Rules-Requires-Root: no
+
+Package: dscript
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: DragonScript Scripting Language
+ Scripting language used by the Drag[en]gine Game Engine DragonScript
+ Scripting module.
+ .
+ Features:
+   - Object Oriented scripting language.
+   - Strong typed with support for Late Binding and UpCast Code Blocks.
+   - Simple syntax not requiring ";", "[", "{" or other special tokens.
+     Typing code is faster since non-text characters are used with
+     less frequency.
+   - Streamable compilation. Grammar is look-ahead and look-back free
+     allowing to stream in code character by character from
+     non-seekable sources.
+   - Single Inheritance with support for multiple interfaces.
+   - Seemless mix-and-match of scripted and native functions/classes.
+     Classes can contain both scripted and native functions/classes
+     at the same time.
+   - Easy to integrate as embedded language using C++ interface.
+
+Package: dscript-dev
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: DragonScript Scripting Language Development
+ Developent files required to embed DragonScript into projects.
+
+Package: dsi
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: DragonScript Scripting Language Interpreter
+ Interpreter running *.ds scripts from the command line. Useful for
+ scripting in terminals. Not required for embedded use.

@@ -1,0 +1,7 @@
+.debhelper
+*.substvars
+dscript-dev
+dscript
+*.log
+debhelper-build-stamp
+files

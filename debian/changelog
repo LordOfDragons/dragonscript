@@ -1,0 +1,5 @@
+dscript (1.1-ubuntu2~ubuntu20.10-ppa1) focal; urgency=medium
+
+  * Initial debianization.
+
+ -- Roland Plüss <roland@rptd.ch>  Sun, 20 Sep 2020 17:15:43 +0000

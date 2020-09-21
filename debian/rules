@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+
+DESTDIR_DSCRIPT := $(shell realpath debian/dscript)
+DESTDIR_DSCRIPT_DEV := $(shell realpath debian/dscript-dev)
+DESTDIR_DSI := $(shell realpath debian/dsi)
+
+SANDBOX_DSCRIPT := --install-sandbox="$(DESTDIR_DSCRIPT)"
+SANDBOX_DSCRIPT_DEV := --install-sandbox="$(DESTDIR_DSCRIPT_DEV)"
+SANDBOX_DSI := --install-sandbox="$(DESTDIR_DSI)"
+
+SCONS_OPTIONS :=
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	scons $(SCONS_OPTIONS) --config=force build -c
+	find -type d -name "__pycache__" | xargs -- rm -rf
+	rm -f config.log
+
+override_dh_auto_configure:
+	
+override_dh_auto_build:
+	scons $(SCONS_OPTIONS) --config=force dscript dsi
+
+override_dh_auto_test:
+	
+override_dh_auto_install:
+	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DSCRIPT) install
+	
+	# split files into packages
+	mkdir -p "$(DESTDIR_DSCRIPT_DEV)/usr" "$(DESTDIR_DSI)"/usr
+	mv "$(DESTDIR_DSCRIPT)"/usr/include "$(DESTDIR_DSCRIPT_DEV)"/usr
+	mv "$(DESTDIR_DSCRIPT)"/usr/bin "$(DESTDIR_DSI)"/usr
+	
+	# non-dev-pkg-with-shlib-symlink
+	mkdir -p "$(DESTDIR_DEV)"/usr/lib
+	mv "$(DESTDIR_DSCRIPT)"/usr/lib/libdscript.so "$(DESTDIR_DSCRIPT_DEV)"/usr/lib/libdscript.so
+	
+	# 'arch-dependent-file-in-usr-share' does not like how DragonScript stores
+	# loadable packages. we can solve this on debian only using a bit of
+	# symlink magic
+	cd debian/dscript ; \
+	for f in `find "$(DESTDIR_DSCRIPT)"/usr/share/dragonscript -name "*.so"`; do \
+		f2=`echo $$f | sed -e "s@usr/share@usr/lib@"`; \
+		f3=`echo $$f | sed -e "s@.*/usr/share@/usr/lib@"`; \
+		mkdir -p `dirname $$f2`; \
+		mv $$f $$f2; \
+		ln -sf "$$f3" $$f; \
+	done
+	
+	# ubuntu seems to dislike it if build files are still around after this point in time
+	scons $(SCONS_OPTIONS) --config=cache dscript dsi -c

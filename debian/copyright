@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dragonscript
+Source: https://github.com/LordOfDragons/dragonscript
+Upstream-Contact: roland@rptd.ch
+
+Files: *
+Copyright: 2020 Roland Plüss <roland@rptd.ch>
+License: LGPL-3.0+
+
+Files: debian/*
+Copyright: 2020 Roland Plüss <roland@rptd.ch>
+License: LGPL-3.0+
