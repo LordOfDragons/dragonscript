@@ -77,7 +77,7 @@ void dsClassObject::nfClassName::RunFunction( dsRunTime *rt, dsValue *myself ){
 			fullNameLen -= nameLen;
 			// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
 			// strncpy. seriously... how brain dead is this?!
-			meemcpy( fullName + fullNameLen, curClass->GetName(), nameLen );
+			memcpy( fullName + fullNameLen, curClass->GetName(), nameLen );
 			curClass = curClass->GetParent();
 			if( curClass ){
 				fullNameLen--;
