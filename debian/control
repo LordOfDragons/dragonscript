@@ -29,9 +29,9 @@ Description: DragonScript Scripting Language
      at the same time.
    - Easy to integrate as embedded language using C++ interface.
 
-Package: libdscript1-dev
+Package: libdscript-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${binary:Version}
 Description: DragonScript Scripting Language Development
  Developent files required to embed DragonScript into projects.
 
