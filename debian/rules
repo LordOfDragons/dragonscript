@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 DESTDIR_DS := $(shell realpath debian/libdscript1)
-DESTDIR_DS_DEV := $(shell realpath debian/libdscript1-dev)
+DESTDIR_DS_DEV := $(shell realpath debian/libdscript-dev)
 DESTDIR_DS_DSI := $(shell realpath debian/dsi)
 
 SANDBOX_DS := --install-sandbox="$(DESTDIR_DS)"

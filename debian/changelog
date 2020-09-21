@@ -1,4 +1,4 @@
-dragonscript (1.1-ubuntu3~ubuntu20.10-ppa1) focal; urgency=medium
+dragonscript (1.1-ubuntu4~ubuntu20.10-ppa1) focal; urgency=medium
 
   * Fixed package naming to be in line with Debian policy
 
