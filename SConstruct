@@ -103,11 +103,9 @@ elif globalEnv['TARGET_PLATFORM'] == 'macos':
 params.Update(globalEnv)
 
 # set global construction variables
-print(os.environ)
 for x in applyEnvVars:
 	if x in os.environ:
-		print('check {} "{}"'.format(x, shlex.split(os.environ['CPPFLAGS'])))
-		globalEnv.MergeFlags({x: shlex.split(os.environ['CPPFLAGS'])})
+		globalEnv.Append(x = shlex.split(os.environ[x]))
 
 if 'CPPFLAGS' in applyEnvVars and 'CPPFLAGS' in os.environ:
 	globalEnv.Append(MODULE_CPPFLAGS = shlex.split(os.environ['CPPFLAGS']))
