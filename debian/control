@@ -10,7 +10,7 @@ Rules-Requires-Root: no
 Package: dragonscript
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: DragonScript Scripting Language
+Description: Scripting Language
  Scripting language used by the Drag[en]gine Game Engine DragonScript
  Scripting module.
  .

@@ -1,12 +1,12 @@
 #!/usr/bin/make -f
 
-DESTDIR_DSCRIPT := $(shell realpath debian/dscript)
-DESTDIR_DSCRIPT_DEV := $(shell realpath debian/dscript-dev)
-DESTDIR_DSI := $(shell realpath debian/dsi)
+DESTDIR_DRAGONSCRIPT := $(shell realpath debian/dragonscript)
+DESTDIR_DRAGONSCRIPT_DEV := $(shell realpath debian/dragonscript-dev)
+DESTDIR_DRAGONSCRIPT_DSI := $(shell realpath debian/dragonscript-dsi)
 
-SANDBOX_DSCRIPT := --install-sandbox="$(DESTDIR_DSCRIPT)"
-SANDBOX_DSCRIPT_DEV := --install-sandbox="$(DESTDIR_DSCRIPT_DEV)"
-SANDBOX_DSI := --install-sandbox="$(DESTDIR_DSI)"
+SANDBOX_DRAGONSCRIPT := --install-sandbox="$(DESTDIR_DSCRIPT)"
+SANDBOX_DRAGONSCRIPT_DEV := --install-sandbox="$(DESTDIR_DSCRIPT_DEV)"
+SANDBOX_DRAGONSCRIPT_DSI := --install-sandbox="$(DESTDIR_DSI)"
 
 SCONS_OPTIONS :=
 
@@ -26,22 +26,22 @@ override_dh_auto_build:
 override_dh_auto_test:
 	
 override_dh_auto_install:
-	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DSCRIPT) dscript
-	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DSI) dsi
+	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DRAGONSCRIPT) dscript
+	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DRAGONSCRIPT_DSI) dsi
 	
 	# split files into packages
-	mkdir -p "$(DESTDIR_DSCRIPT_DEV)/usr"
-	mv "$(DESTDIR_DSCRIPT)"/usr/include "$(DESTDIR_DSCRIPT_DEV)"/usr
+	mkdir -p "$(DESTDIR_DRAGONSCRIPT_DEV)/usr"
+	mv "$(DESTDIR_DRAGONSCRIPT)"/usr/include "$(DESTDIR_DRAGONSCRIPT_DEV)"/usr
 	
 	# non-dev-pkg-with-shlib-symlink
-	mkdir -p "$(DESTDIR_DSCRIPT_DEV)"/usr/lib
-	mv "$(DESTDIR_DSCRIPT)"/usr/lib/libdscript.so "$(DESTDIR_DSCRIPT_DEV)"/usr/lib/libdscript.so
+	mkdir -p "$(DESTDIR_DRAGONSCRIPT_DEV)"/usr/lib
+	mv "$(DESTDIR_DRAGONSCRIPT)"/usr/lib/libdscript.so "$(DESTDIR_DRAGONSCRIPT_DEV)"/usr/lib/libdscript.so
 	
 	# 'arch-dependent-file-in-usr-share' does not like how DragonScript stores
 	# loadable packages. we can solve this on debian only using a bit of
 	# symlink magic
 	cd debian/dscript ; \
-	for f in `find "$(DESTDIR_DSCRIPT)"/usr/share/dragonscript -name "*.so"`; do \
+	for f in `find "$(DESTDIR_DRAGONSCRIPT)"/usr/share/dragonscript -name "*.so"`; do \
 		f2=`echo $$f | sed -e "s@usr/share@usr/lib@"`; \
 		f3=`echo $$f | sed -e "s@.*/usr/share@/usr/lib@"`; \
 		mkdir -p `dirname $$f2`; \

@@ -1,8 +1,8 @@
 .debhelper
 *.substvars
-dscript-dev
-dscript
-dsi
+dragonscript-dev
+dragonscript
+dragonscript-dsi
 *.log
 debhelper-build-stamp
 files
