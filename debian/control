@@ -31,7 +31,7 @@ Description: DragonScript Scripting Language
 
 Package: libdscript-dev
 Architecture: any
-Depends: ${binary:Version}
+Depends: libdscript1-${binary:Version}
 Description: DragonScript Scripting Language Development
  Developent files required to embed DragonScript into projects.
 
