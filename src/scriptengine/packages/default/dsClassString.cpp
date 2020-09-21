@@ -242,8 +242,8 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const int paramCount = clsArray.GetObjectCount( rt, parameters );
 	size_t stringLen = 0;
 	char *string = ( char* )malloc( 1 );
-	char cformat[ 14 ]; // flags=4 width=5 precision=3 format=1
-	char cformatFlags[ 5 ];
+	char cformat[ 15 ]; // %=1 flags=4 width=5 precision=3 format=1 0term=1
+	char cformatFlags[ 5 ]; // flags=4 0term=1
 	int nextIndex = 0;
 	size_t copyLen;
 	char *convertEnd;
@@ -255,7 +255,9 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 			if( ! deliBegin ){
 				copyLen = strlen( format );
 				string = ( char* )realloc( string, stringLen + copyLen + 1 );
-				strncpy( string + stringLen, format, copyLen );
+				// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
+				// strncpy. seriously... how brain dead is this?!
+				memcpy( string + stringLen, format, copyLen );
 				stringLen += copyLen;
 				break;
 			}
@@ -1262,7 +1264,9 @@ void dsClassString::nfReplaceString::RunFunction( dsRunTime *rt, dsValue *myself
 	for( npos=0, i=0; i<len; i++ ){
 		if( strncmp( str + i, replace, rlen ) == 0 ){
 			if( wlen > 0 ){
-				strncpy( newstr + npos, with, wlen );
+				// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
+				// strncpy. seriously... how brain dead is this?!
+				memcpy( newstr + npos, with, wlen );
 				npos += wlen;
 			}
 			i += rlen - 1;
@@ -1722,7 +1726,9 @@ void dsClassString::nfOpAddByte::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( ! newstr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	strncpy( newstr, str, len );
+	// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
+	// strncpy. seriously... how brain dead is this?!
+	memcpy( newstr, str, len );
 	newstr[ len ] = character;
 	newstr[ len + 1 ] = '\0';
 	

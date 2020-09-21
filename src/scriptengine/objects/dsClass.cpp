@@ -596,7 +596,9 @@ int dsClass::GetFullName(char *buffer, int len){
 		while(curClass){
 			nameLen = strlen(curClass->GetName());
 			curLen -= nameLen;
-			strncpy(buffer+curLen, curClass->GetName(), nameLen);
+			// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
+			// strncpy. seriously... how brain dead is this?!
+			memcpy(buffer+curLen, curClass->GetName(), nameLen);
 			curClass = curClass->GetParent();
 			if(curClass){
 				curLen--;

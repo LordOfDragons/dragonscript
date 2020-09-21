@@ -357,7 +357,9 @@ char *dsClassException::BuildFullName(dsClass *theClass){
 	while(curClass){
 		nameLen = strlen(curClass->GetName());
 		fullNameLen -= nameLen;
-		strncpy(fullName+fullNameLen, curClass->GetName(), nameLen);
+		// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
+		// strncpy. seriously... how brain dead is this?!
+		memcpy(fullName+fullNameLen, curClass->GetName(), nameLen);
 		curClass = curClass->GetParent();
 		if(curClass){
 			fullNameLen--;
