@@ -16,7 +16,7 @@ SCONS_OPTIONS :=
 override_dh_auto_clean:
 	scons $(SCONS_OPTIONS) --config=force build -c
 	find -type d -name "__pycache__" | xargs -- rm -rf
-	rm -f config.log lastConfig.py
+	rm -f config.log lastConfig.py src/config.h
 
 override_dh_auto_configure:
 	
