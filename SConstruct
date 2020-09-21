@@ -105,7 +105,7 @@ params.Update(globalEnv)
 # set global construction variables
 for x in applyEnvVars:
 	if x in os.environ:
-		globalEnv.Append(x = shlex.split(os.environ[x]))
+		globalEnv.MergeFlags({x: shlex.split(os.environ['CPPFLAGS'])})
 
 if 'CPPFLAGS' in applyEnvVars and 'CPPFLAGS' in os.environ:
 	globalEnv.Append(MODULE_CPPFLAGS = shlex.split(os.environ['CPPFLAGS']))
