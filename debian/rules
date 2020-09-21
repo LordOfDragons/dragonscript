@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 
-DESTDIR_DS := $(shell realpath debian/dragonscript)
-DESTDIR_DS_DEV := $(shell realpath debian/dragonscript-dev)
-DESTDIR_DS_DSI := $(shell realpath debian/dragonscript-dsi)
+DESTDIR_DS := $(shell realpath debian/libdscript1)
+DESTDIR_DS_DEV := $(shell realpath debian/libdscript1-dev)
+DESTDIR_DS_DSI := $(shell realpath debian/dsi)
 
 SANDBOX_DS := --install-sandbox="$(DESTDIR_DS)"
 SANDBOX_DS_DEV := --install-sandbox="$(DESTDIR_DS_DEV)"

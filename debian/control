@@ -7,10 +7,10 @@ Standards-Version: 4.1.3
 Homepage: https://dragondreams.ch
 Rules-Requires-Root: no
 
-Package: dragonscript
+Package: libdscript1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Scripting Language
+Description: DragonScript Scripting Language
  Scripting language used by the Drag[en]gine Game Engine DragonScript
  Scripting module.
  .
@@ -29,13 +29,13 @@ Description: Scripting Language
      at the same time.
    - Easy to integrate as embedded language using C++ interface.
 
-Package: dragonscript-dev
+Package: libdscript1-dev
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DragonScript Scripting Language Development
  Developent files required to embed DragonScript into projects.
 
-Package: dragonscript-dsi
+Package: dsi
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DragonScript Scripting Language Interpreter
