@@ -25,9 +25,9 @@ envProgram.Append(LIBS = envProgram['CROSSCOMPILE_PROGRAM_LIBS'])
 
 pathBin = envProgram.subst('$execdir')
 
-if envProgram['OSBeOS']:
+if envProgram['TARGET_PLATFORM'] == 'beos':
     pathMan1 = os.path.join(envProgram.subst(envProgram['docdir']), 'man', 'man1')
-elif envProgram['OSPosix']:
+elif envProgram['TARGET_PLATFORM'] in ['linux', 'macos']:
     pathMan1 = os.path.join(envProgram.subst(envProgram['datadir']), 'man', 'man1')
 
 # setup the builders
@@ -45,7 +45,7 @@ targetProgram.aliasBuild(envProgram, 'dsi_build')
 
 targetProgram.install.extend(envProgram.Install(pathBin, program))
 
-if envProgram['OSPosix']:
+if envProgram['TARGET_PLATFORM'] in ['linux', 'beos', 'macos']:
     targetProgram.install.extend(envProgram.Install(pathMan1, 'man/dsi.1'))
 
 targetProgram.aliasInstall(envProgram, 'dsi')
