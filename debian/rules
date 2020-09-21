@@ -34,7 +34,7 @@ override_dh_auto_install:
 	mv "$(DESTDIR_DSCRIPT)"/usr/include "$(DESTDIR_DSCRIPT_DEV)"/usr
 	
 	# non-dev-pkg-with-shlib-symlink
-	mkdir -p "$(DESTDIR_DEV)"/usr/lib
+	mkdir -p "$(DESTDIR_DSCRIPT_DEV)"/usr/lib
 	mv "$(DESTDIR_DSCRIPT)"/usr/lib/libdscript.so "$(DESTDIR_DSCRIPT_DEV)"/usr/lib/libdscript.so
 	
 	# 'arch-dependent-file-in-usr-share' does not like how DragonScript stores

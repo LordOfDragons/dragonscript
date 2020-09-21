@@ -2,6 +2,7 @@
 *.substvars
 dscript-dev
 dscript
+dsi
 *.log
 debhelper-build-stamp
 files
