@@ -32,3 +32,5 @@ targetPackage.aliasInstall(envPackage, 'pak_math')
 
 targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)
 targetPackage.archiveLibrary(envPackage, pathPackage, library[0:1])
+
+globalEnv.targetManager.targets['install_runtime'].target.extend(targetPackage.install)

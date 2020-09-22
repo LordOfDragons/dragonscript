@@ -61,6 +61,9 @@ envLibrary.Append(LINKFLAGS = envLibrary['SANITIZE_FLAGS'])
 targetLibrary = globalEnv.targetManager.TargetLibrary('DragonScript Library')
 globalEnv.targetManager.add('dscript', targetLibrary)
 
+targetLibraryDev = globalEnv.targetManager.TargetLibrary('DragonScript Library Develpoment')
+globalEnv.targetManager.add('dscript_develop', targetLibraryDev)
+
 sources = []
 headers = []
 globFiles(envLibrary, '.', '*.cpp', sources)
@@ -78,12 +81,16 @@ library = envLibrary.SharedLibrary(target='dscript', source=objects)
 targetLibrary.build.extend(library)
 targetLibrary.aliasBuild(envLibrary, 'dscript_build')
 
-targetLibrary.installCutDirs(envLibrary, pathInclude, headers, 0)
 if 'SHLIBVERSION' in envLibrary:
 	targetLibrary.install.extend(envLibrary.InstallVersionedLib(pathLib, library))
 else:
 	targetLibrary.install.extend(envLibrary.Install(pathLib, library))
-targetLibrary.aliasInstall(envLibrary, 'dscript')
+globalEnv.targetManager.targets['install_runtime'].target.extend(targetLibrary.install)
+
+targetLibraryDev.installCutDirs(envLibrary, pathInclude, headers, 0)
+targetLibraryDev.aliasInstall(envLibrary, 'install_develop')
+
+envLibrary.Alias('dscript', [targetLibraryDev.install, targetLibrary.install])
 
 targetLibrary.archiveCutDirs(envLibrary, pathInclude, headers, 0)
 targetLibrary.archiveLibrary(envLibrary, pathLib, library)
