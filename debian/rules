@@ -21,17 +21,14 @@ override_dh_auto_clean:
 override_dh_auto_configure:
 	
 override_dh_auto_build:
-	scons $(SCONS_OPTIONS) --config=force dscript_build dsi_build
+	scons $(SCONS_OPTIONS) --config=force build
 
 override_dh_auto_test:
 	
 override_dh_auto_install:
-	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DS) dscript
+	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DS) install_runtime
+	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DS_DEV) install_develop
 	scons $(SCONS_OPTIONS) --config=cache $(SANDBOX_DS_DSI) dsi
-	
-	# split files into packages
-	mkdir -p "$(DESTDIR_DS_DEV)/usr"
-	mv "$(DESTDIR_DS)"/usr/include "$(DESTDIR_DS_DEV)"/usr
 	
 	# non-dev-pkg-with-shlib-symlink
 	mkdir -p "$(DESTDIR_DS_DEV)"/usr/lib
