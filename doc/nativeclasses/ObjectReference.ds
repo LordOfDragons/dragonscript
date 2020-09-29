@@ -56,6 +56,7 @@ fixed class ObjectReference
 	/*@{*/
 	/** \brief Stored object. */
 	public func Object get()
+		return null
 	end
 	
 	/** \brief Set stored object. */
@@ -69,10 +70,12 @@ fixed class ObjectReference
 	 * \returns \em true if \em other is of type ObjectReference and both have the same object set.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	/*@}*/
 end

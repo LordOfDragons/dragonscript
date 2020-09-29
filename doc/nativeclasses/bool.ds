@@ -47,6 +47,7 @@ fixed class bool
 	 * \retval >0 This boolean value is \em true and the other boolean value is \em false.
 	 */
 	public func int compare( Object other )
+		return 0
 	end
 	
 	/**
@@ -54,14 +55,17 @@ fixed class bool
 	 * \returns \em true if \em other is of type Boolean and both are equal.
 	 */
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of boolean value. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 	
@@ -71,25 +75,31 @@ fixed class bool
 	/*@{*/
 	/** \brief Logical and between this boolean and another boolean. */
 	public func bool &( bool other )
+		return false
 	end
 	
 	/** \brief Logical or between this boolean and another boolean. */
 	public func bool |( bool other )
+		return false
 	end
 	
 	/** \brief Logical xor between this boolean and another boolean. */
 	public func bool ^( bool other )
+		return false
 	end
 	
 	/** \brief Set boolean value to logical and between this boolean and another boolean and return new value. */
 	public func bool &=( bool other )
+		return false
 	end
 	
 	/** \brief Set boolean value to logical or between this boolean and another boolean and return new value. */
 	public func bool |=( bool other )
+		return false
 	end
 	
 	/** \brief Set boolean value to logical xor between this boolean and another boolean and return new value. */
 	public func bool ^=( bool other )
+		return false
 	end
 end

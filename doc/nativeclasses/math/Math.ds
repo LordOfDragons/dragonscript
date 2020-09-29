@@ -62,106 +62,132 @@ class Math
 	/*@{*/
 	/** \brief Absolute value of n. */
 	public static func int abs( int n )
+		return 0
 	end
 	
 	/** \brief Arc cosine of n. */
 	public static func float acos( float n )
+		return 0.0
 	end
 	
 	/** \brief Arc sine of n. */
 	public static func float asin( float n )
+		return 0.0
 	end
 	
 	/** \brief Arc tangense of n. */
 	public static func float atan( float n )
+		return 0.0
 	end
 	
 	/** \brief Tangense of y/x. */
 	public static func float atan2( float y, float x )
+		return 0.0
 	end
 	
 	/** \brief Smallest integer that is greater or equal to x. */
 	public static func float ceil( float x )
+		return 0.0
 	end
 	
 	/** \brief Cosine of value x. */
 	public static func float cos( float x )
+		return 0.0
 	end
 	
 	/** \brief Hyperbolic cosine of value x. */
 	public static func float cosh( float x )
+		return 0.0
 	end
 	
 	/** \brief Exponential. */
 	public static func float exp( float x )
+		return 0.0
 	end
 	
 	/** \brief Absolute value of floating point value. */
 	public static func float fabs( float x )
+		return 0.0
 	end
 	
 	/** \brief Round down value. */
 	public static func float floor( float x )
+		return 0.0
 	end
 	
 	/** \brief Reminder of x/y. */
 	public static func float fmod( float x, float y )
+		return 0.0
 	end
 	
 	/** \brief Natural logarithme. */
 	public static func float log( float x )
+		return 0.0
 	end
 	
 	/** \brief Logarithme base 10. */
 	public static func float log10( float x )
+		return 0.0
 	end
 	
 	/** \brief X raised to the power of y. */
 	public static func float pow( float x, float y )
+		return 0.0
 	end
 	
 	/** \brief Sinus. */
 	public static func float sin( float x )
+		return 0.0
 	end
 	
 	/** \brief Hyperbolic sinus. */
 	public static func float sinh( float x )
+		return 0.0
 	end
 	
 	/** \brief Square root. */
 	public static func float sqrt( float x )
+		return 0.0
 	end
 	
 	/** \brief Tangense. */
 	public static func float tan( float x )
+		return 0.0
 	end
 	
 	/** \brief Hhyperbolic tangense. */
 	public static func float tanh( float x )
+		return 0.0
 	end
 	
 	/** \brief Smaller of two numbers. */
 	public static func int min( int a, int b )
+		return 0
 	end
 	
 	/** \brief Smaller of two numbers. */
 	public static func float min( float a, float b )
+		return 0.0
 	end
 	
 	/** \brief Larger of two numbers. */
 	public static func int max( int a, int b )
+		return 0
 	end
 	
 	/** \brief Larger of two numbers. */
 	public static func float max( float a, float b )
+		return 0.0
 	end
 	
 	/** \brief Clamp value to a value range. If upper is less than lower lower is returned. */
-	public static func clamp( int value, int lower, int upper )
+	public static func int clamp( int value, int lower, int upper )
+		return 0
 	end
 	
 	/** \brief Clamp value to a value range. If upper is less than lower lower is returned. */
-	public static func clamp( float value, float lower, float upper )
+	public static func float clamp( float value, float lower, float upper )
+		return 0.0
 	end
 	/*@}*/
 end

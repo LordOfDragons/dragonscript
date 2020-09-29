@@ -32,12 +32,14 @@ class Package
 	/*@{*/
 	/** \brief Package name. */
 	public func String getName()
+		return null
 	end
 	
 	
 	
 	/** \brief Number of classes in this package. */
 	public func int getClassCount()
+		return 0
 	end
 	
 	/**
@@ -45,10 +47,12 @@ class Package
 	 * \throws EOutOfBoundary \em index is less than 0 or greaten than or equal to getClassCount().
 	 */
 	public func Class getClass( int index )
+		return null
 	end
 	
 	/** \brief Named class exists in this package. */
 	public func bool containsClass( String name )
+		return false
 	end
 	
 	
@@ -58,14 +62,17 @@ class Package
 	 * \returns \em true if \em other is of type Package and both represent the same package.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of package. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 end

@@ -30,6 +30,7 @@ class Object
 	/*@{*/
 	/** \brief Fully qualified classname of the object class. */
 	public func String className()
+		return null
 	end
 	
 	/**
@@ -38,6 +39,7 @@ class Object
 	 * \returns \em true if both object references point to the same object in memory.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/**
@@ -45,6 +47,7 @@ class Object
 	 * \details Overwrite to use object as dictionary keys or other code using hashes.
 	 */
 	public func int hashCode()
+		return 0
 	end
 	
 	/**
@@ -52,6 +55,7 @@ class Object
 	 * \details Overwrite to display objects with useful text.
 	 */
 	public func String toString()
+		return null
 	end
 	
 	/**
@@ -62,6 +66,7 @@ class Object
 	 * \retval >0 Object comes after \em obj.
 	 */
 	public func int compare( Object obj )
+		return 0
 	end
 	/*@}*/
 end

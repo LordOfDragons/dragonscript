@@ -44,6 +44,7 @@ fixed class float
 	 * \retval >0 This float value is greater than the other float value.
 	 */
 	public func int compare( Object other )
+		return 0
 	end
 	
 	/**
@@ -51,14 +52,17 @@ fixed class float
 	 * \returns \em true if \em other is of type float and both are equal.
 	 */
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of float value. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 	
@@ -68,32 +72,39 @@ fixed class float
 	/*@{*/
 	/** \brief Integer value is less than another float value. */
 	public func bool <( float other )
+		return false
 	end
 	
 	/** \brief Integer value is less than or equal to another float value. */
 	public func bool <=( float other )
+		return false
 	end
 	
 	/** \brief Integer value is greater than another float value. */
 	public func bool >( float other )
+		return false
 	end
 	
 	/** \brief Integer value is greater than or equal to another float value. */
 	public func bool >=( float other )
+		return false
 	end
 	
 	
 	
 	/** \brief Integer plus another float value. */
 	public func float +( float other )
+		return 0.0
 	end
 	
 	/** \brief Integer minus another float value. */
 	public func float -( float other )
+		return 0.0
 	end
 	
 	/** \brief Integer value timer another float value. */
 	public func float *( float other )
+		return 0.0
 	end
 	
 	/**
@@ -101,18 +112,22 @@ fixed class float
 	 * \throws EDivisionByZero \em other is 0.
 	 */
 	public func float /( float other )
+		return 0.0
 	end
 	
 	/** \brief Set float value to float value plus another float value. */
 	public func float +=( float other )
+		return 0.0
 	end
 	
 	/** \brief Set float value to float value minus another float value. */
 	public func float -=( float other )
+		return 0.0
 	end
 	
 	/** \brief Set float value to float value timer another float value. */
 	public func float *=( float other )
+		return 0.0
 	end
 	
 	/**
@@ -120,15 +135,18 @@ fixed class float
 	 * \throws EDivisionByZero \em other is 0.
 	 */
 	public func float /=( float other )
+		return 0.0
 	end
 	
 	
 	
 	/** \brief Increment float value by one. */
 	public func float ++()
+		return 0.0
 	end
 	
 	/** \brief Decrement float value by one. */
 	public func float --()
+		return 0.0
 	end
 end

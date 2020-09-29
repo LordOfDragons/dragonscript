@@ -25,6 +25,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run()
+		return null
 	end
 	
 	/**
@@ -32,6 +33,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run( Object arg1 )
+		return null
 	end
 	
 	/**
@@ -39,6 +41,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run( Object arg1, Object arg2 )
+		return null
 	end
 	
 	/**
@@ -46,6 +49,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run( Object arg1, Object arg2, Object arg3 )
+		return null
 	end
 	
 	/**
@@ -53,6 +57,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run( Object arg1, Object arg2, Object arg3, Object arg4 )
+		return null
 	end
 	
 	/**
@@ -60,6 +65,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object run( Object arg1, Object arg2, Object arg3, Object arg4, Object arg5 )
+		return null
 	end
 	
 	/**
@@ -67,6 +73,7 @@ fixed class Block
 	 * \throws EInvalidAction Number of arguments does not match the block code.
 	 */
 	public func Object runWith( Array arguments )
+		return null
 	end
 	
 	
@@ -76,14 +83,17 @@ fixed class Block
 	 * \returns \em true if \em other is of type Block and both point to the same code block.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of block. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 end

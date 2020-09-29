@@ -23,32 +23,39 @@ class Function
 	/*@{*/
 	/** \brief Name of the function. */
 	public func String getName()
+		return null
 	end
 	
 	/** \brief Full name of the function. */
 	public func String getFullName()
+		return null
 	end
 	
 	/** \brief Type of the function. */
 	public func Class getType()
+		return null
 	end
 	
 	/** \brief Parent class of the function. */
 	public func Class getParent()
+		return null
 	end
 	
 	/** \brief Signature of function. */
 	public func Array getSignature()
+		return null
 	end
 	
 	/** \brief Function type modifiers. */
 	public func int getTypeModifiers()
+		return 0
 	end
 	
 	
 	
 	/** \brief Check if type modifier flags are set. */
 	public func bool isSet( int flags )
+		return false
 	end
 	
 	
@@ -60,6 +67,7 @@ class Function
 	 * \throws EInvalidParam \em arguments do not match function signature.
 	 */
 	public func Object callDirect( Object object, Array arguments )
+		return null
 	end
 	
 	/**
@@ -70,6 +78,7 @@ class Function
 	 * \throws EInvalidParam \em arguments do not match function signature.
 	 */
 	public func Object call( Object object, Array arguments )
+		return null
 	end
 	
 	
@@ -79,14 +88,17 @@ class Function
 	 * \returns \em true if \em other is of type Function and both represent the same function.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of class. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 end

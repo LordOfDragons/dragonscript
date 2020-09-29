@@ -23,6 +23,7 @@ fixed class DS
 	/*@{*/
 	/** \brief Number of classes in the root namespace. */
 	public static func int getClassCount()
+		return 0
 	end
 	
 	/**
@@ -30,12 +31,14 @@ fixed class DS
 	 * \throws EOutOfBoundary \em index is less than 0 or larger than or equal to getClassCount().
 	 */
 	public static func Class getClass( int index )
+		return null
 	end
 	
 	
 	
 	/** \brief Number of loaded packages. */
 	public static func int getPackageCount()
+		return 0
 	end
 	
 	/**
@@ -43,6 +46,7 @@ fixed class DS
 	 * \throws EOutOfBoundary \em index is less than 0 or larger than or equal to getPackageCount().
 	 */
 	public static func Package getPackage( int index )
+		return null
 	end
 	/*@}*/
 end

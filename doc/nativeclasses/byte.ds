@@ -44,6 +44,7 @@ fixed class byte
 	 * \retval >0 This byte value is greater than the other byte value.
 	 */
 	public func int compare( Object other )
+		return 0
 	end
 	
 	/**
@@ -51,14 +52,17 @@ fixed class byte
 	 * \returns \em true if \em other is of type byte and both are equal.
 	 */
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	
 	/** \brief String representation of byte value. */
 	public func String toString()
+		return null
 	end
 	/*@}*/
 	
@@ -68,32 +72,39 @@ fixed class byte
 	/*@{*/
 	/** \brief Byte value is less than another byte value. */
 	public func bool <( byte other )
+		return false
 	end
 	
 	/** \brief Byte value is less than or equal to another byte value. */
 	public func bool <=( byte other )
+		return false
 	end
 	
 	/** \brief Byte value is greater than another byte value. */
 	public func bool >( byte other )
+		return false
 	end
 	
 	/** \brief Byte value is greater than or equal to another byte value. */
 	public func bool >=( byte other )
+		return false
 	end
 	
 	
 	
 	/** \brief Byte plus another byte value. */
 	public func int +( byte other )
+		return 0
 	end
 	
 	/** \brief Byte minus another byte value. */
 	public func int -( byte other )
+		return 0
 	end
 	
 	/** \brief Byte value timer another byte value. */
 	public func int *( byte other )
+		return 0
 	end
 	
 	/**
@@ -101,30 +112,37 @@ fixed class byte
 	 * \throws EDivisionByZero \em other is 0.
 	 */
 	public func byte /( byte other )
+		return 0
 	end
 	
 	/** \brief Byte modulo another byte value. */
 	public func byte %( byte other )
+		return 0
 	end
 	
 	/** \brief Byte left shifted by digits. */
 	public func int <<( byte digits )
+		return 0
 	end
 	
 	/** \brief Byte right shifted by digits. */
 	public func byte >>( byte digits )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte value plus another byte value. */
 	public func byte +=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte value minus another byte value. */
 	public func byte -=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte value timer another byte value. */
 	public func byte *=( byte other )
+		return 0
 	end
 	
 	/**
@@ -132,53 +150,65 @@ fixed class byte
 	 * \throws EDivisionByZero \em other is 0.
 	 */
 	public func byte /=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte modulo another byte value. */
 	public func byte %=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte value left shifted by digits. */
 	public func byte <<=( byte digits )
+		return 0
 	end
 	
 	/** \brief Set byte value to byte value right shifted by digits. */
 	public func byte >>=( byte digits )
+		return 0
 	end
 	
 	
 	
 	/** \brief Bitwise and between this byte and another byte. */
 	public func byte &( byte other )
+		return 0
 	end
 	
 	/** \brief Bitwise  or between this byte and another byte. */
 	public func byte |( byte other )
+		return 0
 	end
 	
 	/** \brief Bitwise xor between this byte and another byte. */
 	public func byte ^( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to bitwise and between this byte and another byte and return new value. */
 	public func byte &=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to bitwise or between this byte and another byte and return new value. */
 	public func byte |=( byte other )
+		return 0
 	end
 	
 	/** \brief Set byte value to bitwise xor between this byte and another byte and return new value. */
 	public func byte ^=( byte other )
+		return 0
 	end
 	
 	
 	
 	/** \brief Increment byte value by one. */
 	public func byte ++()
+		return 0
 	end
 	
 	/** \brief Decrement byte value by one. */
 	public func byte --()
+		return 0
 	end
 end
