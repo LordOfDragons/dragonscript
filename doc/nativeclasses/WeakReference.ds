@@ -38,6 +38,7 @@ fixed class WeakReference
 	/*@{*/
 	/** \brief Object or \em null if all references to object have been released or \em null has been assigned. */
 	public func Object get()
+		return null
 	end
 	
 	/** \brief Set object or \em null. */
@@ -51,10 +52,12 @@ fixed class WeakReference
 	 * \returns \em true if \em other is of type WeakReference and both have the same object set.
 	*/
 	public func bool equals( Object other )
+		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
 	public func int hashCode()
+		return 0
 	end
 	/*@}*/
 end

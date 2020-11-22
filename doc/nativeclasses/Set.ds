@@ -30,51 +30,51 @@ fixed class Set
 	
 	/** \brief Create set with one object added. */
 	public static func Set newWith( Object obj )
+		return null
 	end
 	
 	/** \brief Create set with two object added. */
 	public static func Set newWith( Object obj1, Object obj2 )
+		return null
 	end
 	
 	/** \brief Create set with three object added. */
 	public static func Set newWith( Object obj1, Object obj2, Object obj3 )
+		return null
 	end
 	
 	/** \brief Create set with four object added. */
 	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4 )
+		return null
 	end
 	
 	/** \brief Create set with five object added. */
 	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5 )
+		return null
 	end
 	
 	/** \brief Create set with six object added. */
-	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
-	Object obj5, Object obj6 )
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6 )
 		return null
 	end
 	
 	/** \brief Create set with seven object added. */
-	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
-	Object obj5, Object obj6, Object obj7 )
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6, Object obj7 )
 		return null
 	end
 	
 	/** \brief Create set with eight object added. */
-	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
-	Object obj5, Object obj6, Object obj7, Object obj8 )
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6, Object obj7, Object obj8 )
 		return null
 	end
 	
 	/** \brief Create set with nine object added. */
-	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
-	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6, Object obj7, Object obj8, Object obj9 )
 		return null
 	end
 	
 	/** \brief Create set with ten object added. */
-	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, \
-	Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
+	public static func Set newWith( Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6, Object obj7, Object obj8, Object obj9, Object obj10 )
 		return null
 	end
 	/*@}*/
@@ -85,6 +85,7 @@ fixed class Set
 	/*@{*/
 	/** \brief Count of elements. */
 	public func int getCount()
+		return 0
 	end
 	
 	/** \brief Add object if absent. */
@@ -97,6 +98,7 @@ fixed class Set
 	
 	/** \brief Object is present. */
 	public func bool has( Object obj )
+		return false
 	end
 	
 	/** \brief Remove object if present. */
@@ -133,6 +135,7 @@ fixed class Set
 	 * Block receives \ref Object as argument and has to return \ref Object .
 	 */
 	public func Set map( Block ablock )
+		return null
 	end
 	
 	/**
@@ -141,6 +144,7 @@ fixed class Set
 	 * Block receives \ref Object as argument and has to return \ref bool .
 	 */
 	public func Set collect( Block ablock )
+		return null
 	end
 	
 	/**
@@ -153,6 +157,7 @@ fixed class Set
 	 * folded value.
 	 */
 	public func Object fold( Block ablock )
+		return null
 	end
 	
 	/**
@@ -165,6 +170,7 @@ fixed class Set
 	 * Block receives as first argument Object injectValue and as second argument Object entry.
 	 */
 	public func Object inject( Object injectValue, Block ablock )
+		return null
 	end
 	
 	/**
@@ -173,6 +179,7 @@ fixed class Set
 	 * Block receives \ref Object as argument and has to return \ref bool .
 	 */
 	public func int count( Block ablock )
+		return 0
 	end
 	
 	/**
@@ -181,6 +188,7 @@ fixed class Set
 	 * Block receives \ref Object as argument and has to return \ref bool .
 	 */
 	public func Object find( Block ablock )
+		return null
 	end
 	
 	/**
@@ -198,16 +206,19 @@ fixed class Set
 	 * \details throws EInvalidParam Set is empty.
 	 */
 	public func Object random()
+		return null
 	end
 	
 	
 	
 	/** \brief String representation of set. */
 	public func String toString()
+		return null
 	end
 	
 	/** \brief Array with content of set. */
 	public func Array toArray()
+		return null
 	end
 	
 	

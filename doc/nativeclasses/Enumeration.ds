@@ -11,7 +11,7 @@
  * 
  * This is a native class. It can not be subclassed.
  */
-fixed class Array
+fixed class Enumeration
 	/** \name Management */
 	/*@{*/
 	/** \brief Name of constant. */
@@ -54,6 +54,7 @@ fixed class Array
 	 * \retval >0 Order og object is smaller.
 	 */
 	public func int compare( Object other )
+		return 0
 	end
 	
 	/** \brief Constant order is less than order of other constant. */
@@ -91,18 +92,18 @@ fixed class Array
 	/**
 	 * \brief Apply block to each element of enumeration.
 	 * 
-	 * Block receives \ref EnumConstant as argument.
+	 * Block receives \ref Enumeration as argument.
 	 */
-	static public func void forEach( Block block )
+	static public func void forEach( Block ablock )
 	end
 	
 	/** \brief Enumeration element with matching name or null if not found. */
-	static public func EnumConstant named( String name )
+	static public func Enumeration named( String name )
 		return null
 	end
 	
 	/** \brief Enumeration element with matching order or null if not found. */
-	static public func EnumConstant withOrder( int order )
+	static public func Enumeration withOrder( int order )
 		return null
 	end
 	/*@}*/
