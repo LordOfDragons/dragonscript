@@ -149,4 +149,9 @@ fixed class float
 	public func float --()
 		return 0.0
 	end
+	
+	/** \brief Negated value. */
+	public func float -()
+		return 0.0
+	end
 end
