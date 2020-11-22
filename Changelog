@@ -10,8 +10,13 @@ Initial Release
 - Set: added newWith() method for up to 10 objects
 - Set: added addAll(Set) and removeAll(Set)
 - String: added startsWith(String), startsWithNoCase(String), endsWith(String) and endsWithNoCase(String)
-- String: changed getAt(int) to accept negative index counting from the end 
+- String: changed getAt(int) to accept negative index counting from the end
 - String: added format(Array)
 - Added support for run-time optimizations (preparation for JIT support)
 - Added run-time optimizations for simple getters and empty functions
 - Avoid super-calling function if it is empty
+
+1.2
+---
+- Applied Debian fixed
+- Fixed DragonScript documentation to work properly with DragonScript Kdevelop Plugin
