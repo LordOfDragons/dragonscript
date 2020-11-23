@@ -90,6 +90,7 @@ elif globalEnv['TARGET_PLATFORM'] == 'beos':
 	params.Add(PathVariable('sysconfdir', 'System configuration', '${prefix}/settings', PathVariable.PathAccept))
 	params.Add(PathVariable('execdir', 'System binaries', '${prefix}/bin', PathVariable.PathAccept))
 	params.Add(PathVariable('sysvardir', 'System var', '${prefix}/var', PathVariable.PathAccept))
+	params.Add(PathVariable('docdir', 'System documentation', '${prefix}/documentation', PathVariable.PathAccept))
 
 elif globalEnv['TARGET_PLATFORM'] == 'macos':
 	params.Add(PathVariable('prefix', 'System path', '/usr', PathVariable.PathAccept))
