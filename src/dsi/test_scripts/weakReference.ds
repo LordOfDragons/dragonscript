@@ -1,0 +1,94 @@
+class WeakReferenceTests extends Application
+	class LivetimeTracker
+		var String pValue
+		public func new( String value )
+			System.print( "LivetimeTracker(" + value + ") create\n" )
+			this.pValue = value
+		end
+		public func destructor()
+			System.print( "LivetimeTracker(" + this.pValue + ") destroy\n" )
+		end
+		public func String toString()
+			return this.pValue
+		end
+	end
+	
+	
+	public func new()
+	end
+	
+	public func int run()
+		this.testEmpty()
+		this.testBasic()
+		this.testRun()
+		
+		return 0
+	end
+	
+	public func void testEmpty()
+		var WeakReference wref = WeakReference.new()
+		System.print( "testEmpty: new: should null is " + wref.get() + "\n" )
+	end
+	
+	public func void testBasic()
+		var LivetimeTracker obj = LivetimeTracker.new( "abc" )
+		var WeakReference wref = WeakReference.new( obj )
+		System.print( "testBasic: new: should 'abc' is " + wref.get() + "\n" )
+		obj = null
+		System.print( "testBasic: drop: should null is " + wref.get() + "\n" )
+		
+		obj = LivetimeTracker.new( "xyz" )
+		wref.set( obj )
+		System.print( "testBasic: set: should 'xyz' is " + wref.get() + "\n" )
+		obj = null
+		System.print( "testBasic: drop: should null is " + wref.get() + "\n" )
+		
+		wref = WeakReference.new( LivetimeTracker.new( "efg" ) )
+		System.print( "testBasic: new temporary: should null is " + wref.get() + "\n" )
+		
+		wref = WeakReference.new( LivetimeTracker.new( "hij" ) )
+		System.print( "testBasic: set temporary: should null is " + wref.get() + "\n" )
+	end
+	
+	public func void testRun()
+		var LivetimeTracker obj = LivetimeTracker.new( "abc" )
+		var WeakReference wref = WeakReference.new( obj )
+		wref.run( block LivetimeTracker x
+			System.print( "testRun: run: should 'abc' is " + x + "\n" )
+		end )
+		
+		System.print( "testRun: run dropped: no second line\n" )
+		obj = null
+		wref.run( block LivetimeTracker x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+		
+		var Array obj2 = Array.newWith( "mno" )
+		wref.set( obj2 )
+		wref.runCastable( block Array x
+			System.print( "testRun: runCastable: found array: " + x + "\n" )
+		end )
+		System.print( "testRun: runCastable: no second line\n" )
+		wref.runCastable( block LivetimeTracker x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+		
+		obj2 = null
+		System.print( "testRun: runCastable: no second line\n" )
+		wref.runCastable( block Array x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+		wref.runCastable( block LivetimeTracker x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+		
+		wref.set( null )
+		System.print( "testRun: runCastable: no second line\n" )
+		wref.runCastable( block Array x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+		wref.runCastable( block LivetimeTracker x
+			System.print( ">>>> testRun: run dropped: THIS SHOULD NOT HAPPEN\n" )
+		end )
+	end
+end

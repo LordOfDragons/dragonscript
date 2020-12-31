@@ -19,13 +19,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// includes
 #include <stdio.h>
 #include <stdint.h>
 #include "../../../config.h"
 #include "dsClassWeakRef.h"
+#include "dsClassBlock.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
 #include "../../exceptions.h"
@@ -34,10 +32,14 @@
 #include "../../objects/dsRealObject.h"
 #include "../../objects/dsClassParserInfo.h"
 
+
+
 // native data structure
 struct sWeakNatData{
 	dsRealObject *obj;
 };
+
+
 
 // native functions
 /////////////////////
@@ -84,7 +86,7 @@ dsClassWeakRef::nfGet::nfGet(const sInitData &init) : dsFunction(init.clsWeak,
 }
 void dsClassWeakRef::nfGet::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sWeakNatData *nd = (sWeakNatData*)p_GetNativeData(myself);
-	if(nd->obj && (nd->obj->GetRefCount() > 0)){
+	if( nd->obj && nd->obj->GetRefCount() > 0 ){
 		rt->PushObject(nd->obj);
 	}else{
 		rt->PushObject(NULL);
@@ -106,6 +108,48 @@ void dsClassWeakRef::nfSet::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if(vObj->GetType()->GetPrimitiveType()==DSPT_OBJECT && vObj->GetRealObject()){
 		nd->obj = vObj->GetRealObject();
 		rt->AddWeakRef(nd->obj);
+	}
+}
+
+// func void run( Block ablock )
+dsClassWeakRef::nfRun::nfRun( const sInitData &init ) : dsFunction( init.clsWeak,
+"run", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassWeakRef::nfRun::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sWeakNatData &nd = *( ( sWeakNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	if( nd.obj && nd.obj->GetRefCount() > 0 ){
+		rt->PushObject( nd.obj );
+		rt->RunFunctionFast( block, ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1() );
+	}
+}
+
+// func void runCastable( Block ablock )
+dsClassWeakRef::nfRunCastable::nfRunCastable( const sInitData &init ) : dsFunction( init.clsWeak,
+"runCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassWeakRef::nfRunCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sWeakNatData &nd = *( ( sWeakNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	if( nd.obj && nd.obj->GetRefCount() > 0 ){
+		const dsClassBlock &clsBlock = *( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() );
+		const dsSignature &signature = clsBlock.GetSignature( block->GetRealObject() );
+		if( nd.obj->GetType()->CastableTo( signature.GetParameter( 0 ) ) ){
+			rt->PushObject( nd.obj );
+			rt->RunFunctionFast( block, clsBlock.GetFuncIndexRun1() );
+		}
 	}
 }
 
@@ -151,13 +195,14 @@ dsClassWeakRef::~dsClassWeakRef(){ }
 // management
 void dsClassWeakRef::CreateClassMembers(dsEngine *engine){
 	sInitData init;
-	// store classes
+	
 	init.clsWeak = this;
 	init.clsVoid = engine->GetClassVoid();
 	init.clsInt = engine->GetClassInt();
 	init.clsBool = engine->GetClassBool();
 	init.clsObj = engine->GetClassObject();
-	// functions
+	init.clsBlock = engine->GetClassBlock();
+	
 	AddFunction(new nfNew(init));
 	AddFunction(new nfNew2(init));
 	AddFunction(new nfDestructor(init));
@@ -165,4 +210,6 @@ void dsClassWeakRef::CreateClassMembers(dsEngine *engine){
 	AddFunction(new nfSet(init));
 	AddFunction(new nfHashCode(init));
 	AddFunction(new nfEquals(init));
+	AddFunction(new nfRun(init));
+	AddFunction(new nfRunCastable(init));
 }

@@ -45,6 +45,7 @@ public:
 private:
 	struct sInitData{
 		dsClass *clsWeak, *clsVoid, *clsInt, *clsBool, *clsObj;
+		dsClass *clsBlock;
 	};
 #define DEF_NATFUNC(name) \
 	class name : public dsFunction{ \
@@ -59,6 +60,8 @@ private:
 	DEF_NATFUNC(nfHashCode);
 	DEF_NATFUNC(nfEquals);
 	DEF_NATFUNC(nfGet);
+	DEF_NATFUNC(nfRun);
+	DEF_NATFUNC(nfRunCastable);
 #undef DEF_NATFUNC
 };
 

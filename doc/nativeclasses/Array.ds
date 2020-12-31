@@ -267,6 +267,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature void(Type object) or void(int index, Type object).
 	 */
@@ -275,6 +276,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in the given range.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature void(Type object) or void(int index, Type object).
 	 * 
@@ -286,6 +288,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in the given range using a given step.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature void(Type object) or void(int index, Type object).
 	 * 
@@ -298,6 +301,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in reverse order.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature void(Type object) or void(int index, Type object).
 	 */
@@ -306,6 +310,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter until the blocks returns false for the first time.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -314,6 +319,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in the given range until the blocks returns false.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -325,6 +331,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in the given range using a given step time until the blocks returns false.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -337,6 +344,7 @@ fixed class Array
 	
 	/**
 	 * \brief Apply block to each element castable to last block parameter in reverse until the blocks returns false.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -437,6 +445,7 @@ fixed class Array
 	
 	/**
 	 * \brief Collect all elements castable to last block parameter into a new array for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -446,6 +455,7 @@ fixed class Array
 	
 	/**
 	 * \brief Collect all elements castable to last block parameter in the given range into a new array for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -458,6 +468,7 @@ fixed class Array
 	
 	/**
 	 * \brief Collect all elements castable to last block parameter in the given range with a given step into a new array for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -471,6 +482,7 @@ fixed class Array
 	
 	/**
 	 * \brief Collect all elements castable to last block parameter in reverse into a new array for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -672,6 +684,7 @@ fixed class Array
 	
 	/**
 	 * \brief Number of elements castable to last block parameter for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -681,6 +694,7 @@ fixed class Array
 	
 	/**
 	 * \brief Number of elements castable to last block parameter in the given range for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -693,6 +707,7 @@ fixed class Array
 	
 	/**
 	 * \brief Number of elements castable to last block parameter in the given range for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -706,6 +721,7 @@ fixed class Array
 	
 	/**
 	 * \brief Number of elements castable to last block parameter in the given range for which the block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -762,6 +778,7 @@ fixed class Array
 	
 	/**
 	 * \brief First element castable to last block parameter for which the block evaluates to true or null otherwise.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -771,6 +788,7 @@ fixed class Array
 	
 	/**
 	 * \brief First element castable to last block parameter for which the block evaluates to true or null otherwise.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -783,6 +801,7 @@ fixed class Array
 	
 	/**
 	 * \brief First element castable to last block parameter for which the block evaluates to true or null otherwise.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 * 
@@ -796,6 +815,7 @@ fixed class Array
 	
 	/**
 	 * \brief First element castable to last block parameter for which the block evaluates to true or null otherwise.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
@@ -815,6 +835,7 @@ fixed class Array
 	
 	/**
 	 * \brief Remove elements castable to last block parameter for which a block returns true.
+	 * \version 1.3
 	 * 
 	 * Block has to use signature bool(Type object) or bool(int index, Type object).
 	 */
