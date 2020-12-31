@@ -150,14 +150,20 @@ private:
 	DEF_NATFUNC( nfRemoveAll2 );
 	
 	DEF_NATFUNC( nfForEach );
+	DEF_NATFUNC( nfForEachCastable );
 	DEF_NATFUNC( nfForEachWhile );
+	DEF_NATFUNC( nfForEachWhileCastable );
 	DEF_NATFUNC( nfMap );
 	DEF_NATFUNC( nfCollect );
+	DEF_NATFUNC( nfCollectCastable );
 	DEF_NATFUNC( nfFold );
 	DEF_NATFUNC( nfFind );
+	DEF_NATFUNC( nfFindCastable );
 	DEF_NATFUNC( nfInject );
 	DEF_NATFUNC( nfCount );
+	DEF_NATFUNC( nfCountCastable );
 	DEF_NATFUNC( nfRemoveIf );
+	DEF_NATFUNC( nfRemoveIfCastable );
 	
 	DEF_NATFUNC( nfRandom );
 	DEF_NATFUNC( nfToArray );

@@ -94,14 +94,22 @@ private:
 	DEF_NATFUNC( nfGetValues );
 	
 	DEF_NATFUNC( nfForEach );
+	DEF_NATFUNC( nfForEachCastable );
 	DEF_NATFUNC( nfForEachKey );
+	DEF_NATFUNC( nfForEachKeyCastable );
 	DEF_NATFUNC( nfForEachValue );
+	DEF_NATFUNC( nfForEachValueCastable );
 	DEF_NATFUNC( nfFind );
+	DEF_NATFUNC( nfFindCastable );
 	DEF_NATFUNC( nfFindKey );
+	DEF_NATFUNC( nfFindKeyCastable );
 	DEF_NATFUNC( nfMap );
 	DEF_NATFUNC( nfCollect );
+	DEF_NATFUNC( nfCollectCastable );
 	DEF_NATFUNC( nfCount );
+	DEF_NATFUNC( nfCountCastable );
 	DEF_NATFUNC( nfRemoveIf );
+	DEF_NATFUNC( nfRemoveIfCastable );
 	DEF_NATFUNC( nfInject );
 	DEF_NATFUNC( nfInjectKey );
 	DEF_NATFUNC( nfInjectValue );

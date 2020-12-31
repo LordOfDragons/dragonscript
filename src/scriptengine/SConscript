@@ -75,7 +75,7 @@ for h in headers:
 	envLibrary.Command('include/libdscript/{}'.format(h), h, Copy('$TARGET', '$SOURCE'))
 
 if envLibrary['TARGET_PLATFORM'] != 'windows':
-	envLibrary['SHLIBVERSION'] = '1.2.0'
+	envLibrary['SHLIBVERSION'] = '1.3.0'
 
 library = envLibrary.SharedLibrary(target='dscript', source=objects)
 targetLibrary.build.extend(library)

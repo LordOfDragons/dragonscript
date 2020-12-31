@@ -23,9 +23,14 @@ class SetTests extends Application
 		this.testFold()
 		this.testInject()
 		this.testRemoveIf()
+		this.testRemoveIfCastable()
 		this.testToString()
 		this.testHas()
 		this.testForEach()
+		this.testForEachCastable()
+		this.testCollectCastable()
+		this.testFindCastable()
+		this.testCountCastable()
 		this.testEquals()
 		this.iterateModifyProtection()
 		this.testNewWith()
@@ -139,7 +144,7 @@ class SetTests extends Application
 		arr.removeIf( block int each
 			return each > 4
 		end )
-		System.print( "[0..9] removeIf(>4) should [5..9] is " + arr + "\n" )
+		System.print( "[0..9] removeIf(>4) should [0..4] is " + arr + "\n" )
 		
 		arr = Set.new( arrInit )
 		arr.removeIf( block int each
@@ -155,6 +160,57 @@ class SetTests extends Application
 			return each.is( 2 ) or each.is( 4 )
 		end )
 		System.print( "[0..9] removeIf(=={2,4}) should [0,1,3,5..9] is " + arr + "\n" )
+	end
+	
+	public func void testRemoveIfCastable()
+		var Set arr, arrInit
+		var int i
+		
+		arrInit = Set.new()
+		for i = 0 to 10
+			if i < 5
+				arrInit.add( i )
+			else
+				arrInit.add( i.toString() )
+			end
+		end
+		
+		arr = Set.new( arrInit )
+		arr.removeIfCastable( block int each
+			return false
+		end )
+		System.print( "[0..9] removeIfCastable(false) should [0..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIfCastable( block int each
+			return each == 2
+		end )
+		System.print( "[0..9] removeIfCastable(==2) should [0,1,3..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIfCastable( block int each
+			return each > 2
+		end )
+		System.print( "[0..9] removeIfCastable(>2) should [0,1,2,5..9] is " + arr + "\n" )
+		
+		arr = Set.new( arrInit )
+		arr.removeIfCastable( block int each
+			return true
+		end )
+		System.print( "[0..9] removeIfCastable(true) should [5..9] is " + arr + "\n" )
+		
+		arr = Set.new()
+		for i = 0 to 10
+			if i < 5
+				arr.add( RemoveTracker.new( i ) )
+			else
+				arr.add( i )
+			end
+		end
+		arr.removeIfCastable( block RemoveTracker each
+			return each.is( 2 ) or each.is( 4 )
+		end )
+		System.print( "[0..9] removeIfCastable(=={2,4}) should [0,1,3,5..9] is " + arr + "\n" )
 	end
 	
 	public func void testToString()
@@ -175,6 +231,38 @@ class SetTests extends Application
 		arr.forEach( block int each
 			System.print( "forEach(block): " + each + "\n" )
 		end )
+	end
+	
+	public func void testForEachCastable()
+		var Set arr = Set.newWith( 0, "b", 2, 5 )
+		arr.forEachCastable( block int each
+			System.print( "forEachCastable(block): " + each + "\n" )
+		end )
+		arr.forEachWhileCastable( block int each
+			System.print( "forEachWhileCastable(block): " + each + "\n" )
+			return each != 2
+		end )
+	end
+	
+	public func void testCollectCastable()
+		var Set arr = Set.newWith( 0, "b", 2, 5 )
+		System.print( "collectCastable(block): " + arr.collectCastable( block int each
+			return each < 3
+		end ) + "\n" )
+	end
+	
+	public func void testFindCastable()
+		var Set arr = Set.newWith( 0, "b", 2, 5 )
+		System.print( "findCastable(block): " + arr.findCastable( block int each
+			return each > 3
+		end ) + "\n" )
+	end
+	
+	public func void testCountCastable()
+		var Set arr = Set.newWith( 0, "b", 2, 5 )
+		System.print( "countCastable(block): " + arr.countCastable( block int each
+			return each < 3
+		end ) + "\n" )
 	end
 	
 	public func void testEquals()

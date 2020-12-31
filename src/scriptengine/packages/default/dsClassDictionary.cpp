@@ -42,6 +42,28 @@ struct sDictEntry{
 	dsValue *key;
 	dsValue *value;
 	sDictEntry *next;
+	
+	bool CastableTo( dsValue &value, dsClass *type ) const{
+		dsClass *valueType = value.GetType();
+		if( valueType->GetPrimitiveType() == DSPT_OBJECT ){
+			if( value.GetRealObject() ){
+				valueType = value.GetRealObject()->GetType();
+			}
+		}
+		return valueType->CastableTo( type );
+	}
+	
+	bool CastableTo( dsClass *typeKey, dsClass *typeValue ) const{
+		return CastableTo( *key, typeKey ) && CastableTo( *value, typeValue );
+	}
+	
+	bool KeyCastableTo( dsClass *type ) const{
+		return CastableTo( *key, type );
+	}
+	
+	bool ValueCastableTo( dsClass *type ) const{
+		return CastableTo( *value, type );
+	}
 };
 
 struct sDictNatData{
@@ -49,6 +71,86 @@ struct sDictNatData{
 	int bucketCount;
 	int entryCount;
 	int lockModify;
+	
+	sDictEntry *SetAt( dsRunTime &rt, int index, sDictEntry *lastEntry, unsigned int hash, dsValue *key, dsValue *value ){
+		sDictEntry * const newEntry = new sDictEntry;
+		try{
+			newEntry->hash = hash;
+			newEntry->key = NULL;
+			newEntry->value = NULL;
+			newEntry->next = NULL;
+			
+			newEntry->key = rt.CreateValue();
+			rt.CopyValue( key, newEntry->key );
+			
+			newEntry->value = rt.CreateValue();
+			rt.CopyValue( value, newEntry->value );
+			
+			if( lastEntry ){
+				lastEntry->next = newEntry;
+				
+			}else{
+				buckets[ index ] = newEntry;
+			}
+			
+			entryCount++;
+			return newEntry;
+			
+		}catch( ... ){
+			if( newEntry ){
+				if( newEntry->key ){
+					rt.FreeValue( newEntry->key );
+				}
+				if( newEntry->value ){
+					rt.FreeValue( newEntry->value );
+				}
+				delete newEntry;
+			}
+			throw;
+		}
+	}
+	
+	sDictEntry *SetAt( dsRunTime &rt, int index, sDictEntry *lastEntry, const sDictEntry &entry ){
+		return SetAt( rt, index, lastEntry, entry.hash, entry.key, entry.value );
+	}
+	
+	void Remove( dsRunTime &rt, int index, sDictEntry *entry, sDictEntry *lastEntry ){
+		if( lastEntry ){
+			lastEntry->next = entry->next;
+			
+		}else{
+			buckets[ index ] = entry->next;
+		}
+		entryCount--;
+		
+		if( entry->key ){
+			rt.FreeValue( entry->key );
+		}
+		if( entry->value ){
+			rt.FreeValue( entry->value );
+		}
+		delete entry;
+	}
+};
+
+class dsClassDictionary_NewFinally{
+	dsRunTime &pRT;
+	dsValue *pValue;
+	
+public:
+	dsClassDictionary_NewFinally( dsRunTime &rt, dsClass &cls ) :
+	pRT( rt ), pValue( NULL ){
+		pValue = ( ( dsClassDictionary& )cls ).CreateDictionary( &rt );
+	}
+	
+	inline dsValue *Value() const{ return pValue; }
+	inline void Push() const{ pRT.PushValue( pValue ); }
+	
+	~dsClassDictionary_NewFinally(){
+		if( pValue ){
+			pRT.FreeValue( pValue );
+		}
+	}
 };
 
 class cDictNatDatLockModifyGuard{
@@ -63,6 +165,76 @@ public:
 		pLockModify--;
 	}
 };
+
+class dsClassDictionary_BlockRunner{
+public:
+	dsRunTime &rt;
+	sDictNatData &nd;
+	dsValue * const block;
+	const dsClassBlock &clsBlock;
+	const dsSignature &signature;
+	const int funcIndexRun1;
+	const int funcIndexRun2;
+	const cDictNatDatLockModifyGuard lock;
+	
+	dsClassDictionary_BlockRunner( dsRunTime &rt, sDictNatData &nd, dsValue *block ) :
+	rt( rt ),
+	nd( nd ),
+	block( block ),
+	clsBlock( *( ( dsClassBlock* )rt.GetEngine()->GetClassBlock() ) ),
+	signature( clsBlock.GetSignature( block->GetRealObject() ) ),
+	funcIndexRun1( clsBlock.GetFuncIndexRun1() ),
+	funcIndexRun2( clsBlock.GetFuncIndexRun2() ),
+	lock( nd.lockModify ){
+	}
+	
+	void Run( const sDictEntry &entry ) const{
+		rt.PushValue( entry.value );
+		rt.PushValue( entry.key );
+		rt.RunFunctionFast( block, funcIndexRun2 ); // Object run( key, value )
+	}
+	
+	void Run( dsValue *value ) const{
+		rt.PushValue( value );
+		rt.RunFunctionFast( block, funcIndexRun1 ); // Object run( key, value )
+	}
+	
+	dsClass * const castType1() const{
+		return signature.GetParameter( 0 );
+	}
+	
+	dsClass * const castType2() const{
+		return signature.GetParameter( 1 );
+	}
+};
+
+class dsClassDictionary_BlockRunnerBool : public dsClassDictionary_BlockRunner{
+public:
+	dsClass * const clsBool;
+	
+	dsClassDictionary_BlockRunnerBool( dsRunTime &rt, sDictNatData &nd, dsValue *block ) :
+	dsClassDictionary_BlockRunner( rt, nd, block ),
+	clsBool( rt.GetEngine()->GetClassBool() ){
+	}
+	
+	bool RunBool( const sDictEntry &entry ) const{
+		Run( entry );
+		if( rt.GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt.GetReturnValue(), clsBool ) );
+		}
+		return rt.GetReturnBool();
+	}
+	
+	bool RunBool( dsValue *value ) const{
+		Run( value );
+		if( rt.GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt.GetReturnValue(), clsBool ) );
+		}
+		return rt.GetReturnBool();
+	}
+};
+
+
 
 // Native Functions
 /////////////////////
@@ -441,6 +613,38 @@ void dsClassDictionary::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself )
 	}
 }
 
+// public func void forEachCastable( Block ablock )
+dsClassDictionary::nfForEachCastable::nfForEachCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"forEachCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfForEachCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) ){
+				blockRunner.Run( *iterEntry );
+			}
+			iterEntry = iterEntry->next;
+		}
+	}
+}
+
 // public func void forEachKey( Block ablock )
 dsClassDictionary::nfForEachKey::nfForEachKey( const sInitData &init ) : dsFunction( init.clsDict,
 "forEachKey", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -473,6 +677,37 @@ void dsClassDictionary::nfForEachKey::RunFunction( dsRunTime *rt, dsValue *mysel
 	}
 }
 
+// public func void forEachKeyCastable( Block ablock )
+dsClassDictionary::nfForEachKeyCastable::nfForEachKeyCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"forEachKeyCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfForEachKeyCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->KeyCastableTo( castTypeKey ) ){
+				blockRunner.Run( iterEntry->key );
+			}
+			iterEntry = iterEntry->next;
+		}
+	}
+}
+
 // public func void forEachValue( Block ablock )
 dsClassDictionary::nfForEachValue::nfForEachValue( const sInitData &init ) : dsFunction( init.clsDict,
 "forEachValue", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -500,6 +735,37 @@ void dsClassDictionary::nfForEachValue::RunFunction( dsRunTime *rt, dsValue *mys
 		while( iterEntry ){
 			rt->PushValue( iterEntry->value );
 			rt->RunFunctionFast( block, funcIndexRun ); // Object run( value )
+			iterEntry = iterEntry->next;
+		}
+	}
+}
+
+// public func void forEachValueCastable( Block ablock )
+dsClassDictionary::nfForEachValueCastable::nfForEachValueCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"forEachValueCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfForEachValueCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castTypeValue = blockRunner.castType1();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->ValueCastableTo( castTypeValue ) ){
+				blockRunner.Run( iterEntry->value );
+			}
 			iterEntry = iterEntry->next;
 		}
 	}
@@ -547,6 +813,42 @@ void dsClassDictionary::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 	rt->PushObject( NULL );
 }
 
+// public func Object findCastable( Block ablock )
+dsClassDictionary::nfFindCastable::nfFindCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"findCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfFindCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		rt->PushObject( NULL );
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) && blockRunner.RunBool( *iterEntry ) ){
+				rt->PushValue( iterEntry->value );
+				return;
+			}
+			iterEntry = iterEntry->next;
+		}
+	}
+	
+	rt->PushObject( NULL );
+}
+
 // public func Object findKey( Block ablock )
 dsClassDictionary::nfFindKey::nfFindKey( const sInitData &init ) : dsFunction( init.clsDict,
 "findKey", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
@@ -579,6 +881,42 @@ void dsClassDictionary::nfFindKey::RunFunction( dsRunTime *rt, dsValue *myself )
 			rt->RunFunctionFast( block, funcIndexRun ); // Object run( key, value )
 			
 			if( rt->GetReturnBool() ){
+				rt->PushValue( iterEntry->key );
+				return;
+			}
+			iterEntry = iterEntry->next;
+		}
+	}
+	
+	rt->PushObject( NULL );
+}
+
+// public func Object findKeyCastable( Block ablock )
+dsClassDictionary::nfFindKeyCastable::nfFindKeyCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"findKeyCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfFindKeyCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		rt->PushObject( NULL );
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) && blockRunner.RunBool( *iterEntry ) ){
 				rt->PushValue( iterEntry->key );
 				return;
 			}
@@ -783,6 +1121,41 @@ void dsClassDictionary::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself )
 	}
 }
 
+// public func Dictionary collectCastable( Block ablock )
+dsClassDictionary::nfCollectCastable::nfCollectCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"collectCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsDict ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	
+	const dsClassDictionary_NewFinally dict( *rt, *GetOwnerClass() );
+	sDictNatData &ndnew = *( ( sDictNatData* )p_GetNativeData( dict.Value() ) );
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		sDictEntry *lastEntry = NULL;
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) && blockRunner.RunBool( *iterEntry ) ){
+				lastEntry = ndnew.SetAt( *rt, i, lastEntry, *iterEntry );
+			}
+			iterEntry = iterEntry->next;
+		}
+	}
+	
+	dict.Push();
+}
+
 // public func int count( Block ablock )
 dsClassDictionary::nfCount::nfCount( const sInitData &init ) : dsFunction( init.clsDict,
 "count", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
@@ -819,6 +1192,41 @@ void dsClassDictionary::nfCount::RunFunction( dsRunTime *rt, dsValue *myself ){
 				count++;
 			}
 			
+			iterEntry = iterEntry->next;
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+// public func int countCastable( Block ablock )
+dsClassDictionary::nfCountCastable::nfCountCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"countCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfCountCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.entryCount == 0 ){
+		rt->PushInt( 0 );
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	int i, count = 0;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) && blockRunner.RunBool( *iterEntry ) ){
+				count++;
+			}
 			iterEntry = iterEntry->next;
 		}
 	}
@@ -883,6 +1291,49 @@ void dsClassDictionary::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself 
 					delentry->value = NULL;
 				}
 				delete delentry;
+				
+			}else{
+				lastEntry = iterEntry;
+				iterEntry = iterEntry->next;
+			}
+		}
+	}
+}
+
+// public func void removeIfCastable( Block ablock )
+dsClassDictionary::nfRemoveIfCastable::nfRemoveIfCastable( const sInitData &init ) : dsFunction( init.clsDict,
+"removeIfCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassDictionary::nfRemoveIfCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	if( nd.entryCount == 0 ){
+		return;
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassDictionary_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castTypeKey = blockRunner.castType1();
+	dsClass * const castTypeValue = blockRunner.castType2();
+	int i;
+	
+	for( i=0; i<nd.bucketCount; i++ ){
+		sDictEntry *iterEntry = nd.buckets[ i ];
+		sDictEntry *lastEntry = NULL;
+		
+		while( iterEntry ){
+			if( iterEntry->CastableTo( castTypeKey, castTypeValue ) && blockRunner.RunBool( *iterEntry ) ){
+				sDictEntry * const nextEntry = iterEntry->next;
+				nd.Remove( *rt, i, iterEntry, lastEntry );
+				iterEntry = nextEntry;
 				
 			}else{
 				lastEntry = iterEntry;
@@ -1290,14 +1741,22 @@ void dsClassDictionary::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfGetValues( init ) );
 	
 	AddFunction( new nfForEach( init ) );
+	AddFunction( new nfForEachCastable( init ) );
 	AddFunction( new nfForEachKey( init ) );
+	AddFunction( new nfForEachKeyCastable( init ) );
 	AddFunction( new nfForEachValue( init ) );
+	AddFunction( new nfForEachValueCastable( init ) );
 	AddFunction( new nfFind( init ) );
+	AddFunction( new nfFindCastable( init ) );
 	AddFunction( new nfFindKey( init ) );
+	AddFunction( new nfFindKeyCastable( init ) );
 	AddFunction( new nfMap( init ) );
 	AddFunction( new nfCollect( init ) );
+	AddFunction( new nfCollectCastable( init ) );
 	AddFunction( new nfCount( init ) );
+	AddFunction( new nfCountCastable( init ) );
 	AddFunction( new nfRemoveIf( init ) );
+	AddFunction( new nfRemoveIfCastable( init ) );
 	AddFunction( new nfInject( init ) );
 	AddFunction( new nfInjectKey( init ) );
 	AddFunction( new nfInjectValue( init ) );
