@@ -52,32 +52,6 @@ public:
 	}
 };
 
-class dsClassArray_NewFinally{
-	dsRunTime &pRT;
-	dsValue *pValue;
-	
-public:
-	dsClassArray_NewFinally( dsRunTime &rt, dsClass &cls, int argumentCount = 0 ) :
-	pRT( rt ), pValue( NULL ){
-		dsClassArray &clsArr = ( dsClassArray& )cls;
-		if( argumentCount == 0 ){
-			pValue = clsArr.CreateArray( &rt );
-			
-		}else{
-			pValue = clsArr.CreateArray( &rt, argumentCount );
-		}
-	}
-	
-	inline dsValue *Value() const{ return pValue; }
-	inline void Push() const{ pRT.PushValue( pValue ); }
-	
-	~dsClassArray_NewFinally(){
-		if( pValue ){
-			pRT.FreeValue( pValue );
-		}
-	}
-};
-
 struct sArrNatData{
 	dsValue **values;
 	int count;
@@ -100,6 +74,14 @@ struct sArrNatData{
 				size++;
 			}
 		}
+	}
+	
+	void Add( dsRunTime *rt, dsValue *value, dsClass *clsObj ){
+		if( count == size ){
+			SetSize( size * 3 / 2 + 1, rt, clsObj );
+		}
+		rt->CopyValue( value, values[ count ] );
+		count++;
 	}
 	
 	// sort using quick-sort
@@ -244,6 +226,120 @@ struct sArrNatData{
 		if( r_hold > left ){
 			pSortAscending( rt, block, funcIndexRun, left + 1, r_hold );
 		}
+	}
+	
+	bool CastableTo( int index, dsClass *type ) const{
+		const dsValue &value = *values[ index ];
+		dsClass *valueType = value.GetType();
+		if( valueType->GetPrimitiveType() == DSPT_OBJECT ){
+			if( value.GetRealObject() ){
+				valueType = value.GetRealObject()->GetType();
+			}
+		}
+		return valueType->CastableTo( type );
+	}
+};
+
+class dsClassArray_NewFinally{
+	dsRunTime &pRT;
+	dsValue *pValue;
+	
+public:
+	dsClassArray_NewFinally( dsRunTime &rt, dsClass &cls, int argumentCount = 0 ) :
+	pRT( rt ), pValue( NULL ){
+		dsClassArray &clsArr = ( dsClassArray& )cls;
+		if( argumentCount == 0 ){
+			pValue = clsArr.CreateArray( &rt );
+			
+		}else{
+			pValue = clsArr.CreateArray( &rt, argumentCount );
+		}
+	}
+	
+	inline dsValue *Value() const{ return pValue; }
+	inline void Push() const{ pRT.PushValue( pValue ); }
+	
+	~dsClassArray_NewFinally(){
+		if( pValue ){
+			pRT.FreeValue( pValue );
+		}
+	}
+};
+
+static int dsClassArray_funcIndexRun1Or2( const dsClassBlock &clsBlock, const dsSignature &signature ){
+	if( signature.GetCount() == 1 ){
+		return clsBlock.GetFuncIndexRun1();
+		
+	}else if( signature.GetCount() == 2 ){
+		return clsBlock.GetFuncIndexRun2();
+		
+	}else{
+		DSTHROW_INFO( dueInvalidParam, "block argument count not 1 or 2" );
+	}
+}
+
+static int dsClassArray_funcIndexRun2Or3( const dsClassBlock &clsBlock, const dsSignature &signature ){
+	if( signature.GetCount() == 2 ){
+		return clsBlock.GetFuncIndexRun2();
+		
+	}else if( signature.GetCount() == 3 ){
+		return clsBlock.GetFuncIndexRun3();
+		
+	}else{
+		DSTHROW_INFO( dueInvalidParam, "block argument count not 3 or 3" );
+	}
+}
+
+class dsClassArray_BlockRunner{
+public:
+	dsRunTime &rt;
+	sArrNatData &nd;
+	dsValue * const block;
+	const dsClassBlock &clsBlock;
+	const dsSignature &signature;
+	const bool useIndex;
+	const int funcIndexRun;
+	const dsClassArray_LockModifyGuard lock;
+	
+	dsClassArray_BlockRunner( dsRunTime &rt, sArrNatData &nd, dsValue *block ) :
+	rt( rt ),
+	nd( nd ),
+	block( block ),
+	clsBlock( *( ( dsClassBlock* )rt.GetEngine()->GetClassBlock() ) ),
+	signature( clsBlock.GetSignature( block->GetRealObject() ) ),
+	useIndex( signature.GetCount() == 2 ),
+	funcIndexRun( dsClassArray_funcIndexRun1Or2( clsBlock, signature ) ),
+	lock( nd.lockModify ){
+	}
+	
+	void Run( int index ) const{
+		rt.PushValue( nd.values[ index ] );
+		if( useIndex ){
+			rt.PushInt( index );
+		}
+		rt.RunFunctionFast( block, funcIndexRun );
+	}
+	
+	dsClass * const castType() const{
+		return signature.GetParameter( signature.GetCount() - 1 );
+	}
+};
+
+class dsClassArray_BlockRunnerBool : public dsClassArray_BlockRunner{
+public:
+	dsClass * const clsBool;
+	
+	dsClassArray_BlockRunnerBool( dsRunTime &rt, sArrNatData &nd, dsValue *block ) :
+	dsClassArray_BlockRunner( rt, nd, block ),
+	clsBool( rt.GetEngine()->GetClassBool() ){
+	}
+	
+	bool RunBool( int index ) const{
+		Run( index );
+		if( rt.GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt.GetReturnValue(), clsBool ) );
+		}
+		return rt.GetReturnBool();
 	}
 };
 
@@ -955,30 +1051,6 @@ void dsClassArray::nfMove::RunFunction( dsRunTime *rt, dsValue *myself ){
 // Enumeration
 ////////////////
 
-static int dsClassArray_funcIndexRun1Or2( const dsClassBlock &clsBlock, const dsSignature &signature ){
-	if( signature.GetCount() == 1 ){
-		return clsBlock.GetFuncIndexRun1();
-		
-	}else if( signature.GetCount() == 2 ){
-		return clsBlock.GetFuncIndexRun2();
-		
-	}else{
-		DSTHROW_INFO( dueInvalidParam, "block argument count not 1 or 2" );
-	}
-}
-
-static int dsClassArray_funcIndexRun2Or3( const dsClassBlock &clsBlock, const dsSignature &signature ){
-	if( signature.GetCount() == 2 ){
-		return clsBlock.GetFuncIndexRun2();
-		
-	}else if( signature.GetCount() == 3 ){
-		return clsBlock.GetFuncIndexRun3();
-		
-	}else{
-		DSTHROW_INFO( dueInvalidParam, "block argument count not 3 or 3" );
-	}
-}
-
 // public func void forEach( Block ablock )
 dsClassArray::nfForEach::nfForEach( const sInitData &init ) : dsFunction( init.clsArr,
 "forEach", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -1351,6 +1423,282 @@ void dsClassArray::nfForEachWhileReverse::RunFunction( dsRunTime *rt, dsValue *m
 			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
 		}
 		if( ! rt->GetReturnBool() ){
+			break;
+		}
+	}
+}
+
+// public func void forEachCastable( Block ablock )
+dsClassArray::nfForEachCastable::nfForEachCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) ){
+			blockRunner.Run( i );
+		}
+	}
+}
+
+// public func void forEachCastable( int fromIndex, int toIndex, Block ablock )
+dsClassArray::nfForEachCastable2::nfForEachCastable2( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachCastable2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	dsValue * const block = rt->GetValue( 2 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "block" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	
+	const dsClassArray_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=fromIndex; i<toIndex; i++ ){
+		if( nd.CastableTo( i, castType ) ){
+			blockRunner.Run( i );
+		}
+	}
+}
+
+// public func void forEachCastable( int fromIndex, int toIndex, int step, Block ablock )
+dsClassArray::nfForEachCastable3::nfForEachCastable3( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsInt ); // step
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachCastable3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	const int step = rt->GetValue( 2 )->GetInt();
+	dsValue * const block = rt->GetValue( 3 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	if( step == 0 ){
+		DSTHROW_INFO( dueInvalidParam, "step == 0" );
+	}
+	
+	const dsClassArray_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) ){
+				blockRunner.Run( i );
+			}
+		}
+		
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) ){
+				blockRunner.Run( i );
+			}
+		}
+	}
+}
+
+// public func void forEachReverse( Block ablock )
+dsClassArray::nfForEachReverseCastable::nfForEachReverseCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachReverseCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachReverseCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=nd.count-1; i>=0; i-- ){
+		if( nd.CastableTo( i, castType ) ){
+			blockRunner.Run( i );
+		}
+	}
+}
+
+// public func void forEachWhileCastable( Block ablock )
+dsClassArray::nfForEachWhileCastable::nfForEachWhileCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachWhileCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachWhileCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
+			break;
+		}
+	}
+}
+
+// public func void forEachWhileCastable( int fromIndex, int toIndex, Block ablock )
+dsClassArray::nfForEachWhileCastable2::nfForEachWhileCastable2( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachWhileCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachWhileCastable2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	dsValue * const block = rt->GetValue( 2 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=fromIndex; i<toIndex; i++ ){
+		if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
+			break;
+		}
+	}
+}
+
+// public func void forEachWhileCastable( int fromIndex, int toIndex, int step, Block ablock )
+dsClassArray::nfForEachWhileCastable3::nfForEachWhileCastable3( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachWhileCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsInt ); // step
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachWhileCastable3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	const int step = rt->GetValue( 2 )->GetInt();
+	dsValue * const block = rt->GetValue( 3 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	if( step == 0 ){
+		DSTHROW_INFO( dueInvalidParam, "step == 0" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
+				break;
+			}
+		}
+		
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
+				break;
+			}
+		}
+	}
+}
+
+// public func void forEachWhileReverseCastable( Block ablock )
+dsClassArray::nfForEachWhileReverseCastable::nfForEachWhileReverseCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"forEachWhileReverseCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfForEachWhileReverseCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=nd.count-1; i>=0; i-- ){
+		if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
 			break;
 		}
 	}
@@ -1831,6 +2179,174 @@ void dsClassArray::nfCollectReverse::RunFunction( dsRunTime *rt, dsValue *myself
 			}
 			rt->CopyValue( nd->values[ i ], ndnew.values[ ndnew.count ] );
 			ndnew.count++;
+		}
+	}
+	
+	value.Push();
+}
+
+
+
+// public func Array collectCastable( Block ablock )
+dsClassArray::nfCollectCastable::nfCollectCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"collectCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
+	dsClass * const castType = blockRunner.castType();
+	
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			ndnew.Add( rt, nd.values[ i ], clsObj );
+		}
+	}
+	
+	value.Push();
+}
+
+// public func Array collectCastable( int fromIndex, int toIndex, Block ablock )
+dsClassArray::nfCollectCastable2::nfCollectCastable2( const sInitData &init ) : dsFunction( init.clsArr,
+"collectCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCollectCastable2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	dsValue * const block = rt->GetValue( 2 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	dsClass * const clsObj = rt->GetEngine()->GetClassObject();
+	dsClass * const castType = blockRunner.castType();
+	
+	for( i=fromIndex; i<toIndex; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			ndnew.Add( rt, nd.values[ i ], clsObj );
+		}
+	}
+	
+	value.Push();
+}
+
+// public func Array collectCastable( int fromIndex, int toIndex, int step, Block ablock )
+dsClassArray::nfCollectCastable3::nfCollectCastable3( const sInitData &init ) : dsFunction( init.clsArr,
+"collectCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsInt ); // step
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCollectCastable3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	const int step = rt->GetValue( 2 )->GetInt();
+	dsValue * const block = rt->GetValue( 3 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	if( step == 0 ){
+		DSTHROW_INFO( dueInvalidParam, "step == 0" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	dsClass *clsObj = rt->GetEngine()->GetClassObject();
+	dsClass * const castType = blockRunner.castType();
+	
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				ndnew.Add( rt, nd.values[ i ], clsObj );
+			}
+		}
+		
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				ndnew.Add( rt, nd.values[ i ], clsObj );
+			}
+		}
+	}
+	
+	value.Push();
+}
+
+// public func Array collectReverseCastable( Block ablock )
+dsClassArray::nfCollectReverseCastable::nfCollectReverseCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"collectReverseCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCollectReverseCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	
+	const dsClassArray_NewFinally value( *rt, *GetOwnerClass() );
+	sArrNatData &ndnew = *( ( sArrNatData* )p_GetNativeData( value.Value() ) );
+	dsClass *clsObj = rt->GetEngine()->GetClassObject();
+	dsClass * const castType = blockRunner.castType();
+	
+	for( i=nd.count-1; i>=0; i-- ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			ndnew.Add( rt, nd.values[ i ], clsObj );
 		}
 	}
 	
@@ -2571,6 +3087,156 @@ void dsClassArray::nfCountReverse::RunFunction( dsRunTime *rt, dsValue *myself )
 	rt->PushInt( count );
 }
 
+
+
+// public func int countCastable( Block ablock )
+dsClassArray::nfCountCastable::nfCountCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"countCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCountCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i, count = 0;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			count++;
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+// public func int countCastable( int fromIndex, int toIndex, Block ablock )
+dsClassArray::nfCountCastable2::nfCountCastable2( const sInitData &init ) : dsFunction( init.clsArr,
+"countCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCountCastable2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i, count = 0;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	dsValue * const block = rt->GetValue( 2 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=fromIndex; i<toIndex; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			count++;
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+// public func int countCastable( int fromIndex, int toIndex, int step, Block ablock )
+dsClassArray::nfCountCastable3::nfCountCastable3( const sInitData &init ) : dsFunction( init.clsArr,
+"countCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsInt ); // step
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCountCastable3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i, count = 0;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	const int step = rt->GetValue( 2 )->GetInt();
+	dsValue * const block = rt->GetValue( 3 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	if( step == 0 ){
+		DSTHROW_INFO( dueInvalidParam, "step == 0" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				count++;
+			}
+		}
+		
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				count++;
+			}
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+// public func int countReverseCastable( Block ablock )
+dsClassArray::nfCountReverseCastable::nfCountReverseCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"countReverseCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfCountReverseCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i, count = 0;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=nd.count-1; i>=0; i-- ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			count++;
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+
+
 // public func Object find( Block ablock )
 dsClassArray::nfFind::nfFind( const sInitData &init ) : dsFunction( init.clsArr,
 "find", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
@@ -2826,6 +3492,161 @@ void dsClassArray::nfFindReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	rt->PushObject( NULL, clsObj );
 }
 
+
+
+// public func Object findCastable( Block ablock )
+dsClassArray::nfFindCastable::nfFindCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"findCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfFindCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			rt->PushValue( nd.values[ i ] );
+			return;
+		}
+	}
+	
+	rt->PushObject( NULL, rt->GetEngine()->GetClassObject() );
+}
+
+// public func Object findCastable( int fromIndex, int toIndex, Block ablock )
+dsClassArray::nfFindCastable2::nfFindCastable2( const sInitData &init ) : dsFunction( init.clsArr,
+"findCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfFindCastable2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	dsValue * const block = rt->GetValue( 2 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=fromIndex; i<toIndex; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			rt->PushValue( nd.values[ i ] );
+			return;
+		}
+	}
+	
+	rt->PushObject( NULL, rt->GetEngine()->GetClassObject() );
+}
+
+// public func Object findCastable( int fromIndex, int toIndex, int step, Block ablock )
+dsClassArray::nfFindCastable3::nfFindCastable3( const sInitData &init ) : dsFunction( init.clsArr,
+"findCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsInt ); // fromIndex
+	p_AddParameter( init.clsInt ); // toIndex
+	p_AddParameter( init.clsInt ); // step
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfFindCastable3::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	const int fromIndex = rt->GetValue( 0 )->GetInt();
+	const int toIndex = rt->GetValue( 1 )->GetInt();
+	const int step = rt->GetValue( 2 )->GetInt();
+	dsValue * const block = rt->GetValue( 3 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	if( fromIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) < 0", fromIndex );
+	}
+	if( fromIndex >= nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
+	}
+	if( toIndex < 0 ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
+	}
+	if( toIndex > nd.count ){
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
+	}
+	if( step == 0 ){
+		DSTHROW_INFO( dueInvalidParam, "step == 0" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	if( step > 0 ){
+		for( i=fromIndex; i<toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				rt->PushValue( nd.values[ i ] );
+				return;
+			}
+		}
+		
+	}else{
+		for( i=fromIndex; i>=toIndex; i+=step ){
+			if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+				rt->PushValue( nd.values[ i ] );
+				return;
+			}
+		}
+	}
+	
+	rt->PushObject( NULL, rt->GetEngine()->GetClassObject() );
+}
+
+// public func Object findReverseCastable( Block ablock )
+dsClassArray::nfFindReverseCastable::nfFindReverseCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"findReverseCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfFindReverseCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	int i;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=nd.count-1; i>=0; i-- ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			rt->PushValue( nd.values[ i ] );
+			return;
+		}
+	}
+	
+	rt->PushObject( NULL, rt->GetEngine()->GetClassObject() );
+}
+
+
+
 // public func void removeIf( Block ablock )
 dsClassArray::nfRemoveIf::nfRemoveIf( const sInitData &init ) : dsFunction( init.clsArr,
 "removeIf", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -2876,6 +3697,48 @@ void dsClassArray::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	nd.count = last;
 }
+
+
+
+// public func void removeIfCastable ( Block ablock )
+dsClassArray::nfRemoveIfCastable::nfRemoveIfCastable( const sInitData &init ) : dsFunction( init.clsArr,
+"removeIfCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassArray::nfRemoveIfCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	int i, last = 0;
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	dsClassArray_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			continue;
+		}
+		
+		if( i > last ){
+			rt->MoveValue( nd.values[ i ], nd.values[ last ] );
+		}
+		last++;
+	}
+	
+	for( i=last; i<nd.count; i++ ){
+		rt->ClearValue( nd.values[ i ] );
+	}
+	
+	nd.count = last;
+}
+
+
 
 // public func Array slice( int indexFrom )
 dsClassArray::nfSlice::nfSlice( const sInitData &init ) : dsFunction( init.clsArr,
@@ -3531,6 +4394,14 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfForEachWhile2( init ) );
 	AddFunction( new nfForEachWhile3( init ) );
 	AddFunction( new nfForEachWhileReverse( init ) );
+	AddFunction( new nfForEachCastable( init ) );
+	AddFunction( new nfForEachCastable2( init ) );
+	AddFunction( new nfForEachCastable3( init ) );
+	AddFunction( new nfForEachReverseCastable( init ) );
+	AddFunction( new nfForEachWhileCastable( init ) );
+	AddFunction( new nfForEachWhileCastable2( init ) );
+	AddFunction( new nfForEachWhileCastable3( init ) );
+	AddFunction( new nfForEachWhileReverseCastable( init ) );
 	AddFunction( new nfMap( init ) );
 	AddFunction( new nfMap2( init ) );
 	AddFunction( new nfMap3( init ) );
@@ -3539,6 +4410,10 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfCollect2( init ) );
 	AddFunction( new nfCollect3( init ) );
 	AddFunction( new nfCollectReverse( init ) );
+	AddFunction( new nfCollectCastable( init ) );
+	AddFunction( new nfCollectCastable2( init ) );
+	AddFunction( new nfCollectCastable3( init ) );
+	AddFunction( new nfCollectReverseCastable( init ) );
 	AddFunction( new nfFold( init ) );
 	AddFunction( new nfFold2( init ) );
 	AddFunction( new nfFold3( init ) );
@@ -3551,11 +4426,20 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfCount2( init ) );
 	AddFunction( new nfCount3( init ) );
 	AddFunction( new nfCountReverse( init ) );
+	AddFunction( new nfCountCastable( init ) );
+	AddFunction( new nfCountCastable2( init ) );
+	AddFunction( new nfCountCastable3( init ) );
+	AddFunction( new nfCountReverseCastable( init ) );
 	AddFunction( new nfFind( init ) );
 	AddFunction( new nfFind2( init ) );
 	AddFunction( new nfFind3( init ) );
 	AddFunction( new nfFindReverse( init ) );
+	AddFunction( new nfFindCastable( init ) );
+	AddFunction( new nfFindCastable2( init ) );
+	AddFunction( new nfFindCastable3( init ) );
+	AddFunction( new nfFindReverseCastable( init ) );
 	AddFunction( new nfRemoveIf( init ) );
+	AddFunction( new nfRemoveIfCastable( init ) );
 	AddFunction( new nfSlice( init ) );
 	AddFunction( new nfSlice2( init ) );
 	AddFunction( new nfSlice3( init ) );

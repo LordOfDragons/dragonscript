@@ -74,9 +74,14 @@ class ArrayTests extends Application
 		this.testFold()
 		this.testInject()
 		this.testRemoveIf()
+		this.testRemoveIfCastable()
 		this.testToString()
 		this.testHas()
 		this.testForEach()
+		this.testForEachCastable()
+		this.testCollectCastable()
+		this.testCountCastable()
+		this.testFindCastable()
 		this.testMove()
 		this.testEquals()
 		this.iterateModifyProtection()
@@ -183,6 +188,57 @@ class ArrayTests extends Application
 		System.print( "[0..9] removeIf(=={2,4}) should [0,1,3,5..9] is " + arr + "\n" )
 	end
 	
+	public func void testRemoveIfCastable()
+		var Array arr, arrInit
+		var int i
+		
+		arrInit = Array.new()
+		for i = 0 to 10
+			if i < 5
+				arrInit.add( i )
+			else
+				arrInit.add( i.toString() )
+			end
+		end
+		
+		arr = Array.new( arrInit )
+		arr.removeIfCastable( block int each
+			return false
+		end )
+		System.print( "[0..9] removeIfCastable(false) should [0..9] is " + arr + "\n" )
+		
+		arr = Array.new( arrInit )
+		arr.removeIfCastable( block int each
+			return each == 2
+		end )
+		System.print( "[0..9] removeIfCastable(==2) should [0,1,3..9] is " + arr + "\n" )
+		
+		arr = Array.new( arrInit )
+		arr.removeIfCastable( block int each
+			return each > 4
+		end )
+		System.print( "[0..9] removeIfCastable(>4) should [0..9] is " + arr + "\n" )
+		
+		arr = Array.new( arrInit )
+		arr.removeIfCastable( block int each
+			return true
+		end )
+		System.print( "[0..9] removeIfCastable(true) should [5..9] is " + arr + "\n" )
+		
+		arr = Array.new()
+		for i = 0 to 10
+			if i < 5
+				arr.add( RemoveTracker.new( i ) )
+			else
+				arr.add( i )
+			end
+		end
+		arr.removeIfCastable( block RemoveTracker each
+			return each.is( 2 ) or each.is( 4 )
+		end )
+		System.print( "[0..9] removeIfCastable(=={2,4}) should [0,1,3,5..9] is " + arr + "\n" )
+	end
+	
 	public func void testToString()
 		System.print( "toString: " + Array.newWith( 8, null, "test" ) + "\n" )
 	end
@@ -276,6 +332,177 @@ class ArrayTests extends Application
 			System.print( "forEachWhileReverse2(block): " + index + " => " + value + "\n" )
 			return index > 1
 		end )
+	end
+	
+	public func void testForEachCastable()
+		var Array arr = Array.newWith( "a", 8, "c" )
+		arr.forEachCastable( block String each
+			System.print( "forEachCastable(block): " + each + "\n" )
+		end )
+		arr.forEachCastable( 0, 3, block String each
+			System.print( "forEachCastable(i,i,block): " + each + "\n" )
+		end )
+		arr.forEachCastable( block int index, String value
+			System.print( "forEachCastable2(block): " + index + " => " + value + "\n" )
+		end )
+		arr.forEachCastable( 0, 3, block int index, String value
+			System.print( "forEachCastable2(i,i,block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr = Array.newWith( "a", "b", 8, "d", "e" )
+		arr.forEachCastable( 0, 5, 2, block String each
+			System.print( "forEachCastable(i,i,i,block): " + each + "\n" )
+		end )
+		arr.forEachCastable( 4, 0, -2, block String each
+			System.print( "forEachCastable(i,i,-i,block): " + each + "\n" )
+		end )
+		arr.forEachCastable( 0, 5, 2, block int index, String value
+			System.print( "forEachCastable2(i,i,i,block): " + index + " => " + value + "\n" )
+		end )
+		arr.forEachCastable( 4, 0, -2, block int index, String value
+			System.print( "forEachCastable2(i,i,-i,block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr = Array.newWith( "a", 8, "c" )
+		arr.forEachReverseCastable( block String each
+			System.print( "forEachReverseCastable(block): " + each + "\n" )
+		end )
+		arr.forEachReverseCastable( block int index, String value
+			System.print( "forEachReverseCastable2(block): " + index + " => " + value + "\n" )
+		end )
+		
+		arr.forEachWhileCastable( block String each
+			System.print( "forEachWhile(block): " + each + "\n" )
+			return not each.equals( "c" )
+		end )
+		arr.forEachWhileCastable( block int index, String value
+			System.print( "forEachWhileCastable2(block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhileCastable( 0, 3, block String each
+			System.print( "forEachWhileCastable(i,i,block): " + each + "\n" )
+			return not each.equals( "c" )
+		end )
+		arr.forEachWhileCastable( 0, 3, block int index, String value
+			System.print( "forEachWhileCastable2(i,i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhileCastable( 0, 3, 2, block String each
+			System.print( "forEachWhileCastable(i,i,i,block): " + each + "\n" )
+			return not each.equals( "c" )
+		end )
+		arr.forEachWhileCastable( 2, 0, -2, block String each
+			System.print( "forEachWhileCastable(i,i,-i,block): " + each + "\n" )
+			return not each.equals( "c" )
+		end )
+		arr.forEachWhileCastable( 0, 3, 2, block int index, String value
+			System.print( "forEachWhileCastable2(i,i,i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		arr.forEachWhileCastable( 2, 0, -2, block int index, String value
+			System.print( "forEachWhileCastable2(i,i,-i,block): " + index + " => " + value + "\n" )
+			return index < 1
+		end )
+		
+		arr.forEachWhileReverseCastable( block String each
+			System.print( "forEachWhileReverseCastable(block): " + each + "\n" )
+			return not each.equals( "a" )
+		end )
+			arr.forEachWhileReverseCastable( block int index, String value
+			System.print( "forEachWhileReverseCastable2(block): " + index + " => " + value + "\n" )
+			return index > 1
+		end )
+	end
+	
+	public func void testCollectCastable()
+		var Array arr = Array.newWith( "a", 8, "c" )
+		var Block blk1 = block String each
+			return true
+		end
+		var Block blk2 = block int index, String each
+			return true
+		end
+		
+		System.print( "collectCastable(block): " + arr.collectCastable( blk1 ) + "\n" )
+		System.print( "collectCastable2(block): " + arr.collectCastable( blk2 ) + "\n" )
+		System.print( "collectCastable(i,i,block): " + arr.collectCastable( 0, 3, blk1 ) + "\n" )
+		System.print( "collectCastable2(i,i,block): " + arr.collectCastable( 0, 3, blk2 ) + "\n" )
+		
+		arr = Array.newWith( "a", "b", 8, "d", "e" )
+		System.print( "collectCastable(i,i,i,block): " + arr.collectCastable( 0, 5, 2, blk1 ) + "\n" )
+		System.print( "collectCastable(i,i,i,block): " + arr.collectCastable( 4, 0, -2, blk1 ) + "\n" )
+		System.print( "collectCastable2(i,i,i,block): " + arr.collectCastable( 0, 5, 2, blk2 ) + "\n" )
+		System.print( "collectCastable2(i,i,i,block): " + arr.collectCastable( 4, 0, -2, blk2 ) + "\n" )
+		
+		arr = Array.newWith( "a", 8, "c" )
+		System.print( "collectReverseCastable(block): " + arr.collectReverseCastable( blk1 ) + "\n" )
+		System.print( "collectReverseCastable2(block): " + arr.collectReverseCastable( blk2 ) + "\n" )
+	end
+	
+	public func void testCountCastable()
+		var Array arr = Array.newWith( "a", 8, "c" )
+		var Block blk1 = block String each
+			return true
+		end
+		var Block blk2 = block int index, String each
+			return true
+		end
+		
+		System.print( "countCastable(block): " + arr.countCastable( blk1 ) + "\n" )
+		System.print( "countCastable2(block): " + arr.countCastable( blk2 ) + "\n" )
+		System.print( "countCastable(i,i,block): " + arr.countCastable( 0, 3, blk1 ) + "\n" )
+		System.print( "countCastable2(i,i,block): " + arr.countCastable( 0, 3, blk2 ) + "\n" )
+		
+		arr = Array.newWith( "a", "b", 8, "d", "e" )
+		System.print( "countCastable(i,i,i,block): " + arr.countCastable( 0, 5, 2, blk1 ) + "\n" )
+		System.print( "countCastable(i,i,i,block): " + arr.countCastable( 4, 0, -2, blk1 ) + "\n" )
+		System.print( "countCastable2(i,i,i,block): " + arr.countCastable( 0, 5, 2, blk2 ) + "\n" )
+		System.print( "countCastable2(i,i,i,block): " + arr.countCastable( 4, 0, -2, blk2 ) + "\n" )
+		
+		arr = Array.newWith( "a", 8, "c" )
+		System.print( "countReverseCastable(block): " + arr.countReverseCastable( blk1 ) + "\n" )
+		System.print( "countReverseCastable2(block): " + arr.countReverseCastable( blk2 ) + "\n" )
+	end
+	
+	public func void testFindCastable()
+		var Array arr = Array.newWith( "a", 8, "c" )
+		
+		System.print( "findCastable(block): " + arr.findCastable( block String each
+			return each.equals( "c" )
+		end ) + "\n" )
+		System.print( "findCastable2(block): " + arr.findCastable( block int index, String each
+			return index == 2
+		end ) + "\n" )
+		System.print( "findCastable(i,i,block): " + arr.findCastable( 0, 3, block String each
+			return each.equals( "c" )
+		end ) + "\n" )
+		System.print( "findCastable2(i,i,block): " + arr.findCastable( 0, 3, block int index, String each
+			return index == 2
+		end ) + "\n" )
+		
+		arr = Array.newWith( "a", "b", 8, "d", "e" )
+		System.print( "findCastable(i,i,i,block): " + arr.findCastable( 0, 5, 2, block String each
+			return each.equals( "e" )
+		end ) + "\n" )
+		System.print( "findCastable(i,i,i,block): " + arr.findCastable( 4, 0, -2, block String each
+			return each.equals( "a" )
+		end ) + "\n" )
+		System.print( "findCastable2(i,i,i,block): " + arr.findCastable( 0, 5, 2, block int index, String each
+			return index == 4
+		end ) + "\n" )
+		System.print( "findCastable2(i,i,i,block): " + arr.findCastable( 4, 0, -2, block int index, String each
+			return index == 0
+		end ) + "\n" )
+		
+		arr = Array.newWith( "a", 8, "c" )
+		System.print( "findReverseCastable(block): " + arr.findReverseCastable( block String each
+			return each.equals( "a" )
+		end ) + "\n" )
+		System.print( "findReverseCastable2(block): " + arr.findReverseCastable( block int index, String each
+			return index == 0
+		end ) + "\n" )
 	end
 	
 	public func void testMove()
