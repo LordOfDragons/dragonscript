@@ -103,7 +103,106 @@ struct sSetNatData{
 	bool Has( dsRunTime &rt, dsValue &value ){
 		return IndexOf( rt, value ) != -1;
 	}
+	
+	bool CastableTo( int index, dsClass *type ) const{
+		const dsValue &value = *values[ index ];
+		dsClass *valueType = value.GetType();
+		if( valueType->GetPrimitiveType() == DSPT_OBJECT ){
+			if( value.GetRealObject() ){
+				valueType = value.GetRealObject()->GetType();
+			}
+		}
+		return valueType->CastableTo( type );
+	}
+	
+	void Add( dsRunTime *rt, dsValue *value, dsClass *clsObject ){
+		if( count == size ){
+			SetSize( size * 3 / 2 + 1, rt, clsObject );
+		}
+		rt->CopyValue( value, values[ count ] );
+		count++;
+	}
 };
+
+class dsClassSet_NewFinally{
+	dsRunTime &pRT;
+	dsValue *pValue;
+	
+public:
+	dsClassSet_NewFinally( dsRunTime &rt, dsClass &cls, int argumentCount = 0 ) :
+	pRT( rt ), pValue( NULL ){
+		dsClassSet &clsSet = ( dsClassSet& )cls;
+		if( argumentCount == 0 ){
+			pValue = clsSet.CreateSet( &rt );
+			
+		}else{
+			pValue = clsSet.CreateSet( &rt, argumentCount );
+		}
+	}
+	
+	inline dsValue *Value() const{ return pValue; }
+	inline void Push() const{ pRT.PushValue( pValue ); }
+	
+	~dsClassSet_NewFinally(){
+		if( pValue ){
+			pRT.FreeValue( pValue );
+		}
+	}
+};
+
+class dsClassSet_BlockRunner{
+public:
+	dsRunTime &rt;
+	sSetNatData &nd;
+	dsValue * const block;
+	const dsClassBlock &clsBlock;
+	const dsSignature &signature;
+	const bool useIndex;
+	const int funcIndexRun;
+	const cSetNatDatLockModifyGuard lock;
+	
+	dsClassSet_BlockRunner( dsRunTime &rt, sSetNatData &nd, dsValue *block ) :
+	rt( rt ),
+	nd( nd ),
+	block( block ),
+	clsBlock( *( ( dsClassBlock* )rt.GetEngine()->GetClassBlock() ) ),
+	signature( clsBlock.GetSignature( block->GetRealObject() ) ),
+	useIndex( signature.GetCount() == 2 ),
+	funcIndexRun( clsBlock.GetFuncIndexRun1() ),
+	lock( nd.lockModify ){
+	}
+	
+	void Run( int index ) const{
+		rt.PushValue( nd.values[ index ] );
+		if( useIndex ){
+			rt.PushInt( index );
+		}
+		rt.RunFunctionFast( block, funcIndexRun );
+	}
+	
+	dsClass * const castType() const{
+		return signature.GetParameter( signature.GetCount() - 1 );
+	}
+};
+
+class dsClassSet_BlockRunnerBool : public dsClassSet_BlockRunner{
+public:
+	dsClass * const clsBool;
+	
+	dsClassSet_BlockRunnerBool( dsRunTime &rt, sSetNatData &nd, dsValue *block ) :
+	dsClassSet_BlockRunner( rt, nd, block ),
+	clsBool( rt.GetEngine()->GetClassBool() ){
+	}
+	
+	bool RunBool( int index ) const{
+		Run( index );
+		if( rt.GetReturnValue()->GetType() != clsBool ){
+			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt.GetReturnValue(), clsBool ) );
+		}
+		return rt.GetReturnBool();
+	}
+};
+
 
 
 // Native functions
@@ -650,6 +749,29 @@ void dsClassSet::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 }
 
+// public func void forEachCastable( Block ablock )
+dsClassSet::nfForEachCastable::nfForEachCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"forEachCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfForEachCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunner blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i;
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) ){
+			blockRunner.Run( i );
+		}
+	}
+}
+
 // public func void forEachWhile( Block ablock )
 dsClassSet::nfForEachWhile::nfForEachWhile( const sInitData &init ) : dsFunction( init.clsSet,
 "forEachWhile", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -675,6 +797,29 @@ void dsClassSet::nfForEachWhile::RunFunction( dsRunTime *rt, dsValue *myself ){
 			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
 		}
 		if( ! rt->GetReturnBool() ){
+			break;
+		}
+	}
+}
+
+// public func void forEachWhileCastable( Block ablock )
+dsClassSet::nfForEachWhileCastable::nfForEachWhileCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"forEachWhileCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfForEachWhileCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i;
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && ! blockRunner.RunBool( i ) ){
 			break;
 		}
 	}
@@ -789,6 +934,36 @@ void dsClassSet::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
 		if( newSet ) rt->FreeValue( newSet );
 		throw;
 	}
+}
+
+// public func Set collectCastable( Block ablock )
+dsClassSet::nfCollectCastable::nfCollectCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"collectCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsSet ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i;
+	
+	const dsClassSet_NewFinally set( *rt, *GetOwnerClass() );
+	sSetNatData &ndnew = *( ( sSetNatData* )p_GetNativeData( set.Value() ) );
+	dsClass * const clsObject = rt->GetEngine()->GetClassObject();
+	
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			ndnew.Add( rt, nd.values[ i ], clsObject );
+		}
+	}
+	
+	set.Push();
 }
 
 // public func Object fold( Block ablock )
@@ -912,6 +1087,33 @@ void dsClassSet::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 	rt->PushObject( NULL, clsObject );
 }
 
+// public func Object findCastable( Block ablock )
+dsClassSet::nfFindCastable::nfFindCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"findCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObject ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfFindCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i;
+	
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			rt->PushValue( nd.values[ i ] );
+			return;
+		}
+	}
+	
+	rt->PushObject( NULL, rt->GetEngine()->GetClassObject() );
+}
+
 // public func void removeIf( Block ablock )
 dsClassSet::nfRemoveIf::nfRemoveIf( const sInitData &init ) : dsFunction( init.clsSet,
 "removeIf", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
@@ -958,6 +1160,44 @@ void dsClassSet::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself ){
 	nd.count = last;
 }
 
+// public func void removeIfCastable( Block ablock )
+dsClassSet::nfRemoveIfCastable::nfRemoveIfCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"removeIfCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfRemoveIfCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i, last = 0;
+	
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
+			continue;
+		}
+		
+		if( i > last ){
+			rt->MoveValue( nd.values[ i ], nd.values[ last ] );
+		}
+		last++;
+	}
+	
+	for( i=last; i<nd.count; i++ ){
+		rt->ClearValue( nd.values[ i ] );
+	}
+	
+	nd.count = last;
+}
+
 // public func int count( Block ablock )
 dsClassSet::nfCount::nfCount( const sInitData &init ) : dsFunction( init.clsSet,
 "count", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
@@ -988,6 +1228,35 @@ void dsClassSet::nfCount::RunFunction( dsRunTime *rt, dsValue *myself ){
 			DSTHROW_INFO( dseInvalidCast, ErrorCastInfo( rt->GetReturnValue(), clsBool ) );
 		}
 		if( rt->GetReturnBool() ){
+			count++;
+		}
+	}
+	
+	rt->PushInt( count );
+}
+
+// public func int countCastable( Block ablock )
+dsClassSet::nfCountCastable::nfCountCastable( const sInitData &init ) : dsFunction( init.clsSet,
+"countCastable", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
+	p_AddParameter( init.clsBlock ); // ablock
+}
+void dsClassSet::nfCountCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
+	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	if( nd.lockModify != 0 ){
+		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
+	}
+	
+	dsValue * const block = rt->GetValue( 0 );
+	if( ! block->GetRealObject() ){
+		DSTHROW_INFO( dueNullPointer, "ablock" );
+	}
+	
+	const dsClassSet_BlockRunnerBool blockRunner( *rt, nd, block );
+	dsClass * const castType = blockRunner.castType();
+	int i, count = 0;
+	
+	for( i=0; i<nd.count; i++ ){
+		if( nd.CastableTo( i, castType ) && blockRunner.RunBool( i ) ){
 			count++;
 		}
 	}
@@ -1355,14 +1624,20 @@ void dsClassSet::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfRemoveAll( init ) );
 	AddFunction( new nfRemoveAll2( init ) );
 	AddFunction( new nfForEach( init ) );
+	AddFunction( new nfForEachCastable( init ) );
 	AddFunction( new nfForEachWhile( init ) );
+	AddFunction( new nfForEachWhileCastable( init ) );
 	AddFunction( new nfMap( init ) );
 	AddFunction( new nfCollect( init ) );
+	AddFunction( new nfCollectCastable( init ) );
 	AddFunction( new nfFold( init ) );
 	AddFunction( new nfInject( init ) );
 	AddFunction( new nfFind( init ) );
+	AddFunction( new nfFindCastable( init ) );
 	AddFunction( new nfRemoveIf( init ) );
+	AddFunction( new nfRemoveIfCastable( init ) );
 	AddFunction( new nfCount( init ) );
+	AddFunction( new nfCountCastable( init ) );
 	
 	AddFunction( new nfRandom( init ) );
 	AddFunction( new nfToArray( init ) );

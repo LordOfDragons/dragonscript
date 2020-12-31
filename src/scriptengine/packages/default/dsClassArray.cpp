@@ -343,6 +343,8 @@ public:
 	}
 };
 
+
+
 // native functions
 /////////////////////
 // constructor Create()

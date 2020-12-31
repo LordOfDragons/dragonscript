@@ -154,6 +154,8 @@ class DictTests extends Application
 		iterateModifyProtection()
 		testSetAll()
 		testOperatorAdd()
+		testNotCastable()
+		testCastable()
 		
 		return 0
 	end
@@ -328,5 +330,83 @@ class DictTests extends Application
 		
 		System.print( "+(Dict): should be {aa->1,bb->2} is " + ( dict1 + Dictionary.new() ) + "\n" )
 		System.print( "+(Dict): should be {aa->5,bb->2,cc->3,dd->4} is " + ( dict1 + dict2 ) + "\n" )
+	end
+	
+	public func void testNotCastable()
+		var Dictionary dict
+		dict = Dictionary.new()
+		dict.setAt( "cc", 3 )
+		dict.setAt( "bb", 8 )
+		dict.setAt( "aa", 5 )
+		dict.setAt( "dd", 6 )
+		
+		dict.forEach( block String key, int value
+			System.print( "forEach: '" + key + "' -> '" + value + "'\n" )
+		end )
+		dict.forEachKey( block String key
+			System.print( "forEachKey: '" + key + "'\n" )
+		end )
+		dict.forEachValue( block int value
+			System.print( "forEachValue: '" + value + "'\n" )
+		end )
+		
+		System.print( "find: '" + dict.find( block String key, int  value
+			return value == 5
+		end ) + "'\n" )
+		System.print( "findKey: '" + dict.findKey( block String key, int value
+			return key.equals( "aa" )
+		end ) + "'\n" )
+		
+		System.print( "collect: '" + dict.collect( block String key, int  value
+			return value > 4
+		end ) + "'\n" )
+		
+		System.print( "count: '" + dict.count( block String key, int  value
+			return value > 4
+		end ) + "'\n" )
+		
+		dict.removeIf( block String key, int  value
+			return value > 4
+		end )
+		System.print( "removeIf: '" + dict + "'\n" )
+	end
+	
+	public func void testCastable()
+		var Dictionary dict
+		dict = Dictionary.new()
+		dict.setAt( "cc", 3 )
+		dict.setAt( 8, "bb" )
+		dict.setAt( "aa", 5 )
+		dict.setAt( "dd", 6 )
+		
+		dict.forEachCastable( block String key, int value
+			System.print( "forEachCastable: '" + key + "' -> '" + value + "'\n" )
+		end )
+		dict.forEachKeyCastable( block String key
+			System.print( "forEachKeyCastable: '" + key + "'\n" )
+		end )
+		dict.forEachValueCastable( block int value
+			System.print( "forEachValueCastable: '" + value + "'\n" )
+		end )
+		
+		System.print( "findCastable: '" + dict.findCastable( block String key, int value
+			return value == 5
+		end ) + "'\n" )
+		System.print( "findKeyCastable: '" + dict.findKeyCastable( block String key, int value
+			return key.equals( "aa" )
+		end ) + "'\n" )
+		
+		System.print( "collectCastable: '" + dict.collectCastable( block String key, int value
+			return value > 2
+		end ) + "'\n" )
+		
+		System.print( "countCastable: '" + dict.countCastable( block String key, int value
+			return value > 2
+		end ) + "'\n" )
+		
+		dict.removeIfCastable( block String key, int value
+			return value > 2
+		end )
+		System.print( "removeIfCastable: '" + dict + "'\n" )
 	end
 end
