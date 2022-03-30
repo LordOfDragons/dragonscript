@@ -95,7 +95,11 @@ misc stuff:
 
 #ifdef OS_W32
 struct tm *localtime_r( const time_t *timep, struct tm *result ){
-	return result = localtime( timep );
+	struct tm * const temp = localtime( timep );
+	if( temp ){
+		memcpy( result, temp, sizeof( struct tm ) );
+	}
+	return result;
 }
 #endif
 
