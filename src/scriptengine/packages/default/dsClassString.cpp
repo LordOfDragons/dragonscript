@@ -1310,21 +1310,23 @@ void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
 		}
 	}
 	
-	char * const newstr = new char[ len - i + 1 ];
-	if( ! newstr ){
-		DSTHROW( dueOutOfMemory );
-	}
-	strncpy( newstr, str + i, len - i );
-	newstr[ len - i ] = '\0';
-	
-	try{
-		rt->PushString( newstr );
+	if( i < len ){
+		char * const newstr = new char[ len - i + 1 ];
+		strncpy( newstr, str + i, len - i );
+		newstr[ len - i ] = '\0';
 		
-	}catch( ... ){
+		try{
+			rt->PushString( newstr );
+			
+		}catch( ... ){
+			delete [] newstr;
+			throw;
+		}
 		delete [] newstr;
-		throw;
+		
+	}else{
+		rt->PushString( "" );
 	}
-	delete [] newstr;
 }
 
 // public func String trimRight()
@@ -1343,21 +1345,23 @@ void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
 		}
 	}
 	
-	char * const newstr = new char[ i + 2 ];
-	if( ! newstr ){
-		DSTHROW( dueOutOfMemory );
-	}
-	strncpy( newstr, str, i + 1 );
-	newstr[ i + 1 ] = '\0';
-	
-	try{
-		rt->PushString( newstr );
+	if( i >= 0 ){
+		char * const newstr = new char[ i + 2 ];
+		strncpy( newstr, str, i + 1 );
+		newstr[ i + 1 ] = '\0';
 		
-	}catch( ... ){
+		try{
+			rt->PushString( newstr );
+			
+		}catch( ... ){
+			delete [] newstr;
+			throw;
+		}
 		delete [] newstr;
-		throw;
+		
+	}else{
+		rt->PushString( "" );
 	}
-	delete [] newstr;
 }
 
 // public func String trimBoth()
@@ -1375,28 +1379,30 @@ void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
 			break;
 		}
 	}
-	for( j=len-1; j>=0; j-- ){
+	for( j=len-1; j>i; j-- ){
 		const char character = str[ j ];
 		if( ! ( ( ( character >= 0x9 ) && ( character <= 0xD ) ) || ( character == 0x20 ) ) ){
 			break;
 		}
 	}
 	
-	char * const newstr = new char[ j - i + 2 ];
-	if( ! newstr ){
-		DSTHROW( dueOutOfMemory );
-	}
-	strncpy( newstr, str + i, j - i + 1 );
-	newstr[ j - i + 1 ] = '\0';
-	
-	try{
-		rt->PushString( newstr );
+	if( j >= i ){
+		char * const newstr = new char[ j - i + 2 ];
+		strncpy( newstr, str + i, j - i + 1 );
+		newstr[ j - i + 1 ] = '\0';
 		
-	}catch( ... ){
+		try{
+			rt->PushString( newstr );
+			
+		}catch( ... ){
+			delete [] newstr;
+			throw;
+		}
 		delete [] newstr;
-		throw;
+		
+	}else{
+		rt->PushString( "" );
 	}
-	delete [] newstr;
 }
 
 // public func String toLower()
