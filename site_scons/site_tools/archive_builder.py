@@ -64,7 +64,7 @@ def generate(env):
 				arcfile.write(node.abspath, normalizePath(path))
 	
 	env.Append(BUILDERS={'ArchiveTarBz2': Builder(action=Action(
-		buildArchiveTarBz2, '$ARCHIVETARBZ2COMSTR'), suffix='.tarbz2', src_suffix='')})
+		buildArchiveTarBz2, '$ARCHIVETARBZ2COMSTR'), suffix='.tar.bz2', src_suffix='')})
 	env['ARCHIVETARBZ2COM'] = 'Archiving "$TARGET"'
 	env['ARCHIVETARBZ2COMSTR'] = env['ARCHIVETARBZ2COM']
 	

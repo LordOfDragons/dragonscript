@@ -2,10 +2,6 @@ from SCons.Script import ARGUMENTS
 
 Import('globalEnv')
 
-params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
-params.Add(('version', 'Release version', '1.1'))
-params.Update(globalEnv)
-
 globalEnv.configReport.add('Target platform', 'target_platform')
 
 envArchive = globalEnv.Clone()
@@ -20,11 +16,11 @@ for t in globalEnv.targetManager.targets.values():
 targetArchive = globalEnv.targetManager.TargetArchive('DragonScript Archive')
 globalEnv.targetManager.add('archive', targetArchive)
 
-filename = 'libdscript-{}'.format(envArchive['version'])
+if envArchive['archive_format'] == 'tarbz2':
+	archiveMethod = targetArchive.formatTarBz2
+elif envArchive['archive_format'] == 'zip':
+	archiveMethod = targetArchive.formatZip
 
-if envArchive['TARGET_PLATFORM'] == 'windows':
-	targetArchive.archiveFiles(envArchive, filename, files, targetArchive.formatZip)
-else:
-	targetArchive.archiveFiles(envArchive, filename, files, targetArchive.formatTarBz2)
+targetArchive.archiveFiles(envArchive, envArchive['archive_name_library'], files, archiveMethod)
 
 targetArchive.alias(envArchive, 'archive')
