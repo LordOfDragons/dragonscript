@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\SConstruct" />
+    <None Include="..\..\src\scriptengine\SConscript" />
+    <None Include="post_build.ps1" />
+    <None Include="pre_build.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\scriptengine\dragonscript_export.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsBaseEngineManager.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsDefaultEngineManager.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsDefinitions.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsEngine.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsExceptionTrace.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsExceptionTracePoint.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsFile.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsGarbageCollector.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsMemoryManager.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsPackage.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsPackageSource.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsPackageWrapper.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsRunTime.h" />
+    <ClInclude Include="..\..\src\scriptengine\dsScriptSource.h" />
+    <ClInclude Include="..\..\src\scriptengine\exceptions.h" />
+    <ClInclude Include="..\..\src\scriptengine\exceptions\duException.h" />
+    <ClInclude Include="..\..\src\scriptengine\libdscript.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsByteCode.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsClass.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsClassParserInfo.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsConstant.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsFuncList.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsFunction.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsImplClass.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsLocalVariable.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsRealObject.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsSignature.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsValue.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsValueData.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\dsVariable.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.h" />
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassArray.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassBlock.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassBool.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassByte.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassDictionary.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassEnumeration.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassException.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassFloat.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassInt.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassNull.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObject.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectBoolean.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectByte.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectFloat.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectInteger.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectRef.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassSet.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassString.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassTimeDate.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassVoid.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassWeakRef.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\default\package_default.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\dsEnginePackages.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\dsNativePackage.h" />
+    <ClInclude Include="..\..\src\scriptengine\packages\utils\dsClassStringBuffer.h" />
+    <ClInclude Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodes.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesBasics.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesConstants.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesKeywords.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesOperations.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesScript.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesSpecial.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspNodesStatements.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspOptimizeFunction.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParser.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheck.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckClass.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckCode.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckConstant.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckFunction.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckInterface.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckScript.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCheckType.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspParserCompileCode.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspScanner.h" />
+    <ClInclude Include="..\..\src\scriptengine\parser\dspTypeModifiers.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuArray.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuArrayable.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuIndexList.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuIndexStack.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuPointerList.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuPointerStack.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuStack.h" />
+    <ClInclude Include="..\..\src\scriptengine\utils\dsuString.h" />
+    <ClInclude Include="dragonscript_config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\scriptengine\android\dscript-jni.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsBaseEngineManager.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsDefaultEngineManager.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsEngine.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsExceptionTrace.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsExceptionTracePoint.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsFile.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsGarbageCollector.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsMemoryManager.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsPackage.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsPackageWrapper.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\dsRunTime.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\exceptions\duException.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\exceptions\exceptions.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsByteCode.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsClass.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsClassParserInfo.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsConstant.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsFuncList.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsFunction.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsImplClass.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsLocalVariable.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsRealObject.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsSignature.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsValue.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\dsVariable.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassArray.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassBlock.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassBool.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassByte.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassDictionary.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassEnumeration.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassException.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassFloat.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassInt.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassNull.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObject.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectBoolean.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectByte.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectFloat.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectInteger.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectRef.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassSet.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassString.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassTimeDate.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassVoid.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassWeakRef.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\dsEnginePackages.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\packages\dsNativePackage.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesBasics.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesConstants.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesKeywords.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesOperations.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesScript.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesSpecial.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspNodesStatements.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspOptimizeFunction.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParser.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheck.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckClass.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckCode.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckConstant.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckFunction.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckInterface.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckScript.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCheckType.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspParserCompileCode.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspScanner.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\parser\dspTypeModifiers.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuArray.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuArrayable.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuIndexList.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuIndexStack.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuPointerList.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuPointerStack.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuStack.cpp" />
+    <ClCompile Include="..\..\src\scriptengine\utils\dsuString.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{9e501d96-d56d-4ed5-93ab-5e1c5f1b8ce7}</ProjectGuid>
+    <RootNamespace>dragonscript</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>libdscript</TargetName>
+    <PublicIncludeDirectories>$(SolutionDir)$(Platform)\$(Configuration)\include</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
+    <PublicModuleDirectories>$(SolutionDir)$(Platform)\$(Configuration)\include</PublicModuleDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>libdscript</TargetName>
+    <PublicIncludeDirectories>$(SolutionDir)$(Platform)\$(Configuration)\include</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <PublicModuleDirectories>$(SolutionDir)$(Platform)\$(Configuration)\include</PublicModuleDirectories>
+    <AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;DS_PAK_PATH="C:\\Program Files\\DragonScript";DS_COMPILE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4200</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PreBuildEvent>
+      <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -File "$(ProjectDir)pre_build.ps1" -SourceDir "$(SolutionDir)..\src\scriptengine"</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -File "$(ProjectDir)post_build.ps1" -SourceDir "$(SolutionDir)..\src\scriptengine" -OutputDir "$(SolutionDir)$(Platform)\$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;DS_PAK_PATH="C:\\Program Files\\DragonScript";DS_COMPILE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4200</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PreBuildEvent>
+      <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -File "$(ProjectDir)pre_build.ps1" -SourceDir "$(SolutionDir)..\src\scriptengine"</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -File "$(ProjectDir)post_build.ps1" -SourceDir "$(SolutionDir)..\src\scriptengine" -OutputDir "$(SolutionDir)$(Platform)\$(Configuration)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

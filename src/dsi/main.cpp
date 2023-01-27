@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "../config.h"
 #include "../scriptengine/libdscript.h"
 #include "../scriptengine/dsFile.h"
 #include "dsiEngineManager.h"

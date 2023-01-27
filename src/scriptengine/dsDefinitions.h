@@ -25,6 +25,9 @@
 #ifndef _DSDEFINITIONS_H_
 #define _DSDEFINITIONS_H_
 
+#include "dragonscript_config.h"
+#include "dragonscript_export.h"
+
 // typedefs
 typedef unsigned char byte;
 

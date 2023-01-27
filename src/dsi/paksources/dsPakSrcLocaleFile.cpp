@@ -30,7 +30,6 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <errno.h>
-#include "../../config.h"
 #include "dsPakSrcLocaleFile.h"
 #include "../../scriptengine/libdscript.h"
 #include "../../scriptengine/dsFile.h"

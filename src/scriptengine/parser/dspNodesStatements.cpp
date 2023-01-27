@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspNodesScript.h"
 #include "dspParserCheck.h"
@@ -49,9 +49,14 @@
 // dspNodeMembVar
 
 dspNodeMembVar::dspNodeMembVar( dspNodeIdent *member, dspBaseNode *obj ) : dspBaseNode( ntMembVar, member ){
-	p_Name = new char[ strlen( member->GetName() ) + 1 ];
-	if( ! p_Name ) DSTHROW( dueOutOfMemory );
-	strcpy( p_Name, member->GetName() );
+	const int size = ( int )strlen( member->GetName() );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, member->GetName(), size );
+	#else
+		strncpy(p_Name, member->GetName(), size);
+	#endif
+	p_Name[ size ] = 0;
 	
 	p_Obj = obj;
 	p_DSClass = NULL;
@@ -65,9 +70,14 @@ dspNodeMembVar::dspNodeMembVar( dspNodeIdent *member, dspBaseNode *obj ) : dspBa
 dspNodeMembVar::dspNodeMembVar( dspBaseNode *refnode, const char *name ) : dspBaseNode( ntMembVar, refnode ){
 	if( ! name || name[ 0 ] == '\0' ) DSTHROW( dueInvalidParam );
 	
-	p_Name = new char[ strlen( name ) + 1 ];
-	if( ! p_Name ) DSTHROW( dueOutOfMemory );
-	strcpy( p_Name, name );
+	const int size = ( int )strlen( name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, name, size );
+	#else
+		strncpy(p_Name, name, size);
+	#endif
+	p_Name[ size ] = 0;
 	
 	p_Obj = NULL;
 	p_DSClass = NULL;
@@ -273,8 +283,16 @@ void dspNodeMembVar::DebugPrint(int level, const char *prefix){
 
 // dspNodeMembFunc
 dspNodeMembFunc::dspNodeMembFunc(dspNodeIdent *Member, dspBaseNode *Obj) : dspBaseNode(ntSuper,Member){
-	if(!(p_Name = new char[strlen(Member->GetName())+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Member->GetName()); p_Obj = Obj;
+	const int size = ( int )strlen( Member->GetName() );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Member->GetName(), size );
+	#else
+		strncpy(p_Name, Member->GetName(), size);
+	#endif
+	p_Name[ size ] = 0;
+
+	p_Obj = Obj;
 	p_DSClsFunc = NULL;
 	p_FuncID = -1;
 	p_SuperCall = false;
@@ -1688,8 +1706,15 @@ void dspNodeVarDefList::DebugPrint(int level, const char *prefix){
 
 
 dspNodeVarDef::dspNodeVarDef(dspNodeIdent *IdentNode, dspBaseNode *Init) : dspBaseNode(ntVarDef,IdentNode){
-	if(!(p_Name = new char[strlen(IdentNode->GetName())+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, IdentNode->GetName());
+	const int size = ( int )strlen( IdentNode->GetName() );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, IdentNode->GetName(), size );
+	#else
+		strncpy(p_Name, IdentNode->GetName(), size);
+	#endif
+	p_Name[ size ] = 0;
+
 	p_Init = Init;
 	pTypeClass = NULL;
 }
@@ -1843,8 +1868,16 @@ void dspNodeThrow::DebugPrint(int level, const char *prefix){
 ////////////////////
 dspNodeCatch::dspNodeCatch(dspBaseNode *refnode, dspBaseNode *Type, const char *VarName, dspBaseNode *Sta) : dspBaseNode(ntCatch,refnode){
 	if(!Type || !VarName || VarName[0]=='\0' || !Sta) DSTHROW(dueInvalidParam);
-	if(!(p_CatchName = new char[strlen(VarName)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_CatchName, VarName);
+
+	const int size = ( int )strlen( VarName );
+	if(!(p_CatchName = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_CatchName, size, VarName, size );
+	#else
+		strncpy(p_CatchName, VarName, size);
+	#endif
+	p_CatchName[ size ] = 0;
+
 	p_CatchType = Type; p_Sta = Sta;
 	p_DSType = NULL;
 }

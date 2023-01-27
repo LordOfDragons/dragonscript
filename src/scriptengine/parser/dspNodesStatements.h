@@ -26,7 +26,7 @@
 #define _DSPNODESSTATEMENTS_H_
 
 // member nodes
-class dspNodeMembVar : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeMembVar : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj;
 	char *p_Name;
@@ -53,7 +53,7 @@ public:
 #endif
 };
 
-class dspNodeMembFunc : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeMembFunc : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj;
 	char *p_Name;
@@ -74,7 +74,7 @@ public:
 };
 
 // empty statement node
-class dspNodeEmptySta : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeEmptySta : public dspBaseNode{
 public:
 	dspNodeEmptySta(dspBaseNode *RefNode);
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
@@ -85,7 +85,7 @@ public:
 };
 
 // if-else node
-class dspNodeIfElse : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeIfElse : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond;
 	dspBaseNode *p_If;
@@ -102,7 +102,7 @@ public:
 };
 
 // select-case nodes
-class dspNodeCase : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeCase : public dspBaseNode{
 private:
 	dspListNodes p_ValNodes;
 	dspBaseNode *p_Sta;
@@ -134,7 +134,7 @@ private:
 	void p_AddStaticValue(dsVariable *Value);
 };
 
-class dspNodeSelect : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeSelect : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond;
 	dspListNodes p_Cases;
@@ -154,7 +154,7 @@ private:
 };
 
 // while node
-class dspNodeWhile : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeWhile : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond, *p_Sta;
 public:
@@ -168,7 +168,7 @@ public:
 };
 
 // do while node
-class dspNodeDoWhile : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeDoWhile : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond, *p_Sta;
 public:
@@ -182,7 +182,7 @@ public:
 };
 
 // for nodes
-class dspNodeForUp : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeForUp : public dspBaseNode{
 private:
 	dspBaseNode *p_Var, *p_From, *p_To, *p_Step, *p_Sta;
 public:
@@ -195,7 +195,7 @@ public:
 #endif
 };
 
-class dspNodeForDown : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeForDown : public dspBaseNode{
 private:
 	dspBaseNode *p_Var, *p_From, *p_To, *p_Step, *p_Sta;
 public:
@@ -209,7 +209,7 @@ public:
 };
 
 // break node
-class dspNodeBreak : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeBreak : public dspBaseNode{
 public:
 	dspNodeBreak(dspBaseNode *RefNode);
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
@@ -220,7 +220,7 @@ public:
 };
 
 // continue node
-class dspNodeContinue : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeContinue : public dspBaseNode{
 public:
 	dspNodeContinue(dspBaseNode *RefNode);
 	bool CheckCode(dspParserCheckCode *CheckCode, dspBaseNode **ppThisNode);
@@ -231,7 +231,7 @@ public:
 };
 
 // block node
-class dspNodeBlock : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeBlock : public dspBaseNode{
 private:
 	dspListNodes p_Args;
 	dspBaseNode *p_Sta;
@@ -257,7 +257,7 @@ private:
 };
 
 // variable declaration nodes
-class dspNodeVarDefList : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeVarDefList : public dspBaseNode{
 private:
 	dspBaseNode *p_Type;
 	dspListNodes p_Vars;
@@ -274,7 +274,7 @@ public:
 #endif
 };
 
-class dspNodeVarDef : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeVarDef : public dspBaseNode{
 private:
 	char *p_Name;
 	dspBaseNode *p_Init;
@@ -293,7 +293,7 @@ public:
 };
 
 // return node
-class dspNodeReturn : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeReturn : public dspBaseNode{
 private:
 	dspBaseNode *p_RetVal;
 public:
@@ -308,7 +308,7 @@ public:
 };
 
 // throw node
-class dspNodeThrow : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeThrow : public dspBaseNode{
 private:
 	dspBaseNode *p_Expr;
 public:
@@ -322,7 +322,7 @@ public:
 };
 
 // try-catch nodes
-class dspNodeCatch : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeCatch : public dspBaseNode{
 private:
 	dspBaseNode *p_CatchType;
 	char *p_CatchName;
@@ -340,7 +340,7 @@ public:
 #endif
 };
 
-class dspNodeTry : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeTry : public dspBaseNode{
 private:
 	dspBaseNode *p_Sta;
 	dspListNodes p_Catches;
@@ -358,7 +358,7 @@ private:
 };
 
 // statement list node
-class dspNodeStaList : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeStaList : public dspBaseNode{
 private:
 	dspListNodes p_Nodes;
 public:

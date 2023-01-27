@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <ctype.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsuString.h"
 #include "../exceptions.h"
 
@@ -36,11 +36,15 @@ dsuString::dsuString(){
 	p_String[0] = '\0';
 }
 dsuString::dsuString(const char *String){
-	int vStrLen = strlen(String);
+	int vStrLen = ( int )strlen(String);
 	if(vStrLen > 0){
 		p_String = new char[vStrLen+1];
 		if(!p_String) DSTHROW(dueOutOfMemory);
-		strcpy(p_String, String);
+		#ifdef OS_W32_VS
+			strncpy_s( p_String, vStrLen, String, vStrLen );
+		#else
+			strncpy(p_String, String, vStrLen);
+		#endif
 		p_String[vStrLen] = 0;
 	}else{
 		p_String = new char[1];
@@ -48,11 +52,15 @@ dsuString::dsuString(const char *String){
 	}
 }
 dsuString::dsuString(const dsuString &String){
-	int vStrLen = strlen(String.p_String);
+	int vStrLen = ( int )strlen(String.p_String);
 	if(vStrLen > 0){
 		p_String = new char[vStrLen+1];
 		if(!p_String) DSTHROW(dueOutOfMemory);
-		strcpy(p_String, String.p_String);
+		#ifdef OS_W32_VS
+			strncpy_s( p_String, vStrLen, String.p_String, vStrLen );
+		#else
+			strncpy(p_String, String.p_String, vStrLen);
+		#endif
 		p_String[vStrLen] = 0;
 	}else{
 		p_String = new char[1];
@@ -141,23 +149,40 @@ void dsuString::ReplaceChar(char OldChar, char NewChar){
 }
 void dsuString::Insert(int Index, char Char){
 	if( (Index < 0) || (Index > Length()) ) DSTHROW(dueOutOfBoundary);
-	char *vString = new char[Length()+2];
+	const int size = Length();
+	char *vString = new char[size + 2];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strncpy(vString, p_String, Index);
+	#ifdef OS_W32_VS
+		strncpy_s( vString, Index, p_String, Index );
+	#else
+		strncpy(vString, p_String, Index);
+	#endif
 	vString[Index] = Char;
-	strcpy(vString+Index+1, p_String+Index);
-	vString[Length()+1] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString+Index+1, size - Index, p_String+Index, size - Index );
+	#else
+		strncpy(vString+Index+1, p_String+Index, size - Index);
+	#endif
+	vString[size+1] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
 void dsuString::Insert(int Index, const char *String){
 	if( (Index < 0) || (Index > Length()) ) DSTHROW(dueOutOfBoundary);
-	char *vString = new char[Length() + strlen(String) + 1];
+	const int size1 = Length();
+	const int size2 = ( int )strlen( String );
+	char *vString = new char[size1 + size2 + 1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strncpy(vString, p_String, Index);
-	strcpy(vString+Index, String);
-	strcpy(vString+Index+strlen(String), p_String+Index);
-	vString[Length() + strlen(String)] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, Index, p_String, Index );
+		strncpy_s( vString + Index, size2, String, size2 );
+		strncpy_s( vString + Index + size2, size1 - Index, p_String + Index, size1 - Index );
+	#else
+		strncpy(vString, p_String, Index);
+		strncpy(vString+Index, String, size2);
+		strncpy(vString+Index+size2, p_String+Index, size1-Index);
+	#endif
+	vString[ size1 + size2 ] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
@@ -165,32 +190,49 @@ void dsuString::Delete(int Start, int aLength){
 	if(aLength == 0) return;
 	if( (Start < 0) || (Start >= Length()) ) DSTHROW(dueOutOfBoundary);
 	if(aLength == -1) aLength = Length() - Start;
-	char *vString = new char[Length() - aLength + 1];
+	const int size1 = Length();
+	const int size2 = size1 - ( Start + aLength );
+	char *vString = new char[size1 - aLength + 1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strncpy(vString, p_String, Start);
-	strcpy(vString+Start, p_String+Start+aLength);
-	vString[Length() - aLength] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, Start, p_String, Start );
+		strncpy_s( vString + Start, size2, p_String + Start + aLength, size2 );
+	#else
+		strncpy(vString, p_String, Start);
+		strncpy(vString+Start, p_String+Start+aLength, size2);
+	#endif
+	vString[size1 - aLength] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
 // conversion
 void dsuString::SetInt(int Value){
 	char vNum[12];
-	sprintf((char*)(&vNum), "%i", Value);
-	char *vString = new char[strlen(vNum)+1];
+	snprintf((char*)(&vNum), sizeof( vNum ), "%i", Value);
+	const int size = ( int )strlen( vNum );
+	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strcpy(vString, vNum);
-	vString[strlen(vNum)] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, size, vNum, size );
+	#else
+		strncpy(vString, vNum, size);
+	#endif
+	vString[size] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
 void dsuString::SetDouble(double Value){
 	char vNum[20];
-	sprintf((char*)(&vNum), "%f", Value);
-	char *vString = new char[strlen(vNum)+1];
+	snprintf((char*)(&vNum), sizeof( vNum ), "%f", Value);
+	const int size = ( int )strlen( vNum );
+	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strcpy(vString, vNum);
-	vString[strlen(vNum)] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, size, vNum, size );
+	#else
+		strncpy(vString, vNum, size);
+	#endif
+	vString[size] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
@@ -205,10 +247,15 @@ bool dsuString::IsQuoted() const{
 void dsuString::Quote(){
 	char *vString = new char[Length()+3];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	vString[0] = 34;
-	strcpy(vString+1, p_String);
-	vString[Length()+1] = 34;
-	vString[Length()+2] = 0;
+	const int size = Length();
+	vString[0] = '"';
+	#ifdef OS_W32_VS
+		strncpy_s( vString + 1, size, p_String, size );
+	#else
+		strncpy(vString+1, p_String, size);
+	#endif
+	vString[size+1] = '"';
+	vString[size+2] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 }
@@ -216,27 +263,42 @@ void dsuString::Unquote(){
 	if(IsQuoted()){
 		char *vString = new char[Length()-1];
 		if(!vString) DSTHROW(dueOutOfMemory);
-		strncpy(vString, p_String+1, Length()-2);
-		vString[Length()-2] = 0;
+		const int size = Length() - 2;
+		#ifdef OS_W32_VS
+			strncpy_s( vString, size, p_String+1, size );
+		#else
+			strncpy(vString, p_String+1, size)
+		#endif;
+		vString[size] = 0;
 		if(p_String) delete [] p_String;
 		p_String = vString;
 	}
 }
 // operators
 const dsuString &dsuString::operator=(const char *String){
-	char *vString = new char[strlen(String)+1];
+	const int size = ( int )strlen( String );
+	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strcpy(vString, String);
-	vString[strlen(String)] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, size, String, size );
+	#else
+		strncpy(vString, String, size);
+	#endif
+	vString[size] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 	return *this;
 }
 const dsuString &dsuString::operator=(const dsuString &String){
-	char *vString = new char[String.Length()+1];
+	const int size = String.Length();
+	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
-	strcpy(vString, String.p_String);
-	vString[String.Length()] = 0;
+	#ifdef OS_W32_VS
+		strncpy_s( vString, size, String.p_String, size );
+	#else
+		strncpy(vString, String.p_String, size);
+	#endif
+	vString[size] = 0;
 	if(p_String) delete [] p_String;
 	p_String = vString;
 	return *this;
@@ -244,11 +306,25 @@ const dsuString &dsuString::operator=(const dsuString &String){
 // operator functions
 const dsuString &dsuString::operator+=(const char *String){
 	if(strlen(String) > 0){
-		int vStrLen = Length() + strlen(String);
+		const int size1 = Length();
+		const int size2 = ( int )strlen( String );
+		int vStrLen = size1 + size2;
 		char *vString = new char[vStrLen+1];
 		if(!vString) DSTHROW(dueOutOfMemory);
-		if(!IsEmpty()) strcpy(vString, p_String);
-		if(strlen(String) > 0) strcpy(vString+Length(), String);
+		if(size1 > 0){
+			#ifdef OS_W32_VS
+				strncpy_s( vString, size1, p_String, size1 );
+			#else
+				strncpy(vString, p_String, size1);
+			#endif
+		}
+		if(size2 > 0){
+			#ifdef OS_W32_VS
+				strncpy_s( vString + size1, size2, String, size2 );
+			#else
+				strncpy(vString+size1, String, size2);
+			#endif
+		}
 		vString[vStrLen] = 0;
 		if(p_String) delete [] p_String;
 		p_String = vString;

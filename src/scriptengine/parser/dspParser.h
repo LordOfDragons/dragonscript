@@ -54,7 +54,7 @@ class dspNodeScript;
 class dspTypeModifiers;
 
 // class dspParser
-class dspParser{
+class DS_DLL_EXPORT dspParser{
 friend class dsEngine;
 friend class dspParserCheck;
 friend class dspParserCheckClass;

@@ -34,7 +34,7 @@ class dsConstant;
 class dspNodeClassVariable;
 
 // class dspParserCheckConstant
-class dspParserCheckConstant{
+class DS_DLL_EXPORT dspParserCheckConstant{
 private:
 	dspNodeClassVariable *p_VarNode;
 	dsClass *p_Type;

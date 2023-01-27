@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspScanner.h"
 #include "../dsEngine.h"
@@ -198,9 +198,13 @@ void dspScanner::p_AdvanceLine(){
 }
 void dspScanner::p_AddTokenChar(char Char){
 	if(p_TokenBufPos == p_TokenBufLen-1){
-		char *vNewBuf = new char[p_TokenBufLen+DSP_TOKENBUFSIZE];
+		char *vNewBuf = new char[p_TokenBufLen + DSP_TOKENBUFSIZE];
 		if(!vNewBuf) DSTHROW(dueOutOfMemory);
-		strncpy(vNewBuf, p_TokenBuf, p_TokenBufLen);
+		#ifdef OS_W32_VS
+			strncpy_s(vNewBuf, p_TokenBufLen, p_TokenBuf, p_TokenBufLen);
+		#else
+			strncpy(vNewBuf, p_TokenBuf, p_TokenBufLen);
+		#endif
 		delete [] p_TokenBuf;
 		p_TokenBuf = vNewBuf;
 		p_TokenBufLen += DSP_TOKENBUFSIZE;
@@ -212,7 +216,11 @@ void dspScanner::p_AddStringChar(char Char){
 	if(p_StrBufPos == p_StrBufLen-1){
 		char *vNewBuf = new char[p_StrBufLen+DSP_STRINGBUFSIZE];
 		if(!vNewBuf) DSTHROW(dueOutOfMemory);
-		strncpy(vNewBuf, p_StrBuf, p_StrBufLen);
+		#ifdef OS_W32_VS
+			strncpy_s(vNewBuf, p_StrBufLen, p_StrBuf, p_StrBufLen);
+		#else
+			strncpy(vNewBuf, p_StrBuf, p_StrBufLen);
+		#endif
 		delete [] p_StrBuf;
 		p_StrBuf = vNewBuf;
 		p_StrBufLen += DSP_STRINGBUFSIZE;
@@ -283,7 +291,14 @@ dspBaseNode *dspScanner::p_ScanString(){
 	p_ClearToken(); p_AdvanceChars();
 	while(p_CurChar != '"'){
 		if(p_CurChar == '\n'){
-			strcpy(p_MsgBuf, "String literal spawning multiple lines found.");
+			const char * const message = "String literal spawning multiple lines found.";
+			const int size = ( int )strlen( message );
+			#ifdef OS_W32_VS
+				strncpy_s( p_MsgBuf, DSP_MSGBUFSIZE, message, size );
+			#else
+				strncpy(p_MsgBuf, message, size);
+			#endif
+			p_MsgBuf[ size ] = 0;
 			p_Engine->GetEngineManager()->OutputWarning(p_MsgBuf, dsEngine::pwStringMulLineSpawn, p_Source, p_RefLineNum, p_RefCharNum);
 			p_WarnCount++; p_AdvanceChars(); p_AdvanceLine();
 		}else{
@@ -332,7 +347,14 @@ dspBaseNode *dspScanner::p_ScanInlineComment(){
 	p_AdvanceChars(2,true);
 	while(!(p_CurChar=='*' && p_NextChar=='/')){
 		if(p_CurChar == '\0'){
-			strcpy(p_MsgBuf, "Unclosed inline comment found.");
+			const char * const message = "Unclosed inline comment found.";
+			const int size = ( int )strlen( message );
+			#ifdef OS_W32_VS
+				strncpy_s( p_MsgBuf, size, message, size );
+			#else
+				strncpy(p_MsgBuf, message, size);
+			#endif
+			p_MsgBuf[ size ] = 0;
 			p_Engine->GetEngineManager()->OutputWarning(p_MsgBuf, dsEngine::pwUnclosedInlineComment, p_Source, p_RefLineNum, p_RefCharNum);
 			p_WarnCount++; break;
 		}else if(p_CurChar == '\n'){
@@ -461,7 +483,7 @@ void dspScanner::p_SkipInvalidChars(){
 		if(i < p_OperatorCount) break;
 		p_AdvanceChars();
 	}
-	sprintf(p_MsgBuf, "Invalid token '%s' found.", p_TokenBuf);
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Invalid token '%s' found.", p_TokenBuf);
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, dsEngine::peInvalidToken, p_Source, p_RefLineNum, p_RefCharNum);
 	p_ErrCount++;
 }

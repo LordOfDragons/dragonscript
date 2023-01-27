@@ -25,7 +25,7 @@
 #ifndef _DSENGINEPACKAGES_H_
 #define _DSENGINEPACKAGES_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsEngine;
@@ -33,7 +33,7 @@ class dsBaseEnginePackage;
 class dsNativePackage;
 
 // class dsEnginePackages
-class dsEnginePackages{
+class DS_DLL_EXPORT dsEnginePackages{
 private:
 	dsEngine *p_Engine;
 	dsBaseEnginePackage **p_Packages;

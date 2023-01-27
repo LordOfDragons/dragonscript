@@ -33,7 +33,7 @@ class dsValue;
 /**
  * \brief Time/Date class.
  */
-class dsClassTimeDate : public dsClass {
+class DS_DLL_EXPORT dsClassTimeDate : public dsClass {
 public:
 	struct sTimeDate{
 		int year;

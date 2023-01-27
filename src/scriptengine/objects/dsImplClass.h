@@ -25,13 +25,13 @@
 #ifndef _DSIMPLCLASS_H_
 #define _DSIMPLCLASS_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsClass;
 
 // class dsImplClass
-class dsImplClass : public dsuArrayable {
+class DS_DLL_EXPORT dsImplClass : public dsuArrayable {
 private:
 	dsClass *p_Class; // interface class implemented here
 	int p_FuncBase; // function base index

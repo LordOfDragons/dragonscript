@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassEnumeration.h"
 #include "dsClassSet.h"
 #include "dsClassBlock.h"
@@ -503,8 +503,8 @@ const char *name, int order ) const{
 	nd.toString = NULL;
 	nd.order = 0;
 	
-	const int lenClassName = strlen( subClass.GetName() );
-	const int lenName = strlen( name );
+	const int lenClassName = ( int )strlen( subClass.GetName() );
+	const int lenName = ( int )strlen( name );
 	
 	nd.name = new dsuString( name );
 	nd.order = order;

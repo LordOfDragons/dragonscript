@@ -25,8 +25,10 @@
 #ifndef _DSCLASSPARSERINFO_H_
 #define _DSCLASSPARSERINFO_H_
 
+#include "../dragonscript_export.h"
+
 // class dsClassParserInfo
-class dsClassParserInfo{
+class DS_DLL_EXPORT dsClassParserInfo{
 private:
 	char *p_parent; // full classname of parent namespace/class
 	char *p_base; // full classname of base class/interface

@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "dspParserCompileCode.h"
@@ -41,8 +41,15 @@
 ///////////////////////////
 dspNodeFuncArg::dspNodeFuncArg(dspBaseNode *RefNode, const char *Name, dspBaseNode *Type, dspBaseNode *DefValue) : dspBaseNode(ntFuncArg,RefNode){
 	if(!Name || !Type) DSTHROW(dueInvalidParam);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name); p_Type = Type; p_DefVal = DefValue;
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
+	p_Type = Type; p_DefVal = DefValue;
 }
 dspNodeFuncArg::~dspNodeFuncArg(){
 	delete [] p_Name; delete p_Type; if(p_DefVal) delete p_DefVal;
@@ -173,8 +180,14 @@ int FuncType, int TypeMods, dspBaseNode *Type) :
 dspBaseNode( ntClassFunc, RefNode )
 {
 	if(!Name) DSTHROW(dueInvalidParam);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	if(Type){
 		p_Type = Type;
 	}else{
@@ -314,8 +327,14 @@ void dspNodeClassVariableList::DebugPrint(int Level, const char *Prefix){
 #endif
 
 dspNodeClassVariable::dspNodeClassVariable(dspNodeIdent *IdentNode, dspBaseNode *Init) : dspBaseNode(ntClassVar,IdentNode){
-	if(!(p_Name = new char[strlen(IdentNode->GetName())+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, IdentNode->GetName());
+	const int size = ( int )strlen( IdentNode->GetName() );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, IdentNode->GetName(), size );
+	#else
+		strncpy(p_Name, IdentNode->GetName(), size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Init = Init;
 	pTypeClass = NULL;
 }
@@ -374,8 +393,15 @@ void dspNodeEnumeration::DebugPrint(int Level, const char *Prefix){
 ///////////////
 dspNodeClass::dspNodeClass(dspBaseNode *RefNode, const char *Name, int ClassType, int TypeMods) : dspBaseNode(ntClass,RefNode){
 	if(!Name) DSTHROW(dueInvalidParam);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name); p_BaseClass = NULL;
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
+	p_BaseClass = NULL;
 	p_ClsType = ClassType;
 	p_TypeMods = TypeMods;
 	if( ClassType == DSCT_INTERFACE ) p_TypeMods |= DSTM_ABSTRACT;
@@ -456,10 +482,24 @@ void dspNodeNamespace::DebugPrint(int Level, const char *Prefix){
 // option node
 dspNodeOption::dspNodeOption(dspBaseNode *RefNode, const char *Key, const char *Value) : dspBaseNode(ntOption,RefNode){
 	if(!Key || Key[0]=='\0' || !Value) DSTHROW(dueInvalidParam);
-	if(!(p_Key = new char[strlen(Key)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Key, Key);
-	if(!(p_Value = new char[strlen(Value)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Value, Value);
+
+	int size = ( int )strlen( Key );
+	if(!(p_Key = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Key, size, Key, size );
+	#else
+		strncpy(p_Key, Key, size);
+	#endif
+	p_Key[ size ] = 0;
+
+	size = ( int )strlen( Value );
+	if(!(p_Value = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Value, size, Value, size );
+	#else
+		strncpy(p_Value, Value, size);
+	#endif
+	p_Value[ size ] = 0;
 }
 dspNodeOption::~dspNodeOption(){
 	delete [] p_Key; delete [] p_Value;
@@ -477,8 +517,14 @@ void dspNodeOption::DebugPrint(int Level, const char *Prefix){
 //////////////////
 dspNodeRequires::dspNodeRequires(dspBaseNode *RefNode, const char *Package) : dspBaseNode(ntRequires,RefNode){
 	if(!Package) DSTHROW(dueInvalidParam);
-	if(!(p_Package = new char[strlen(Package)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Package, Package);
+	const int size = ( int )strlen( Package );
+	if(!(p_Package = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Package, size, Package, size );
+	#else
+		strncpy(p_Package, Package, size);
+	#endif
+	p_Package[ size ] = 0;
 }
 dspNodeRequires::~dspNodeRequires(){
 	delete [] p_Package;
@@ -496,8 +542,14 @@ void dspNodeRequires::DebugPrint(int Level, const char *Prefix){
 //////////////////
 dspNodeIncludes::dspNodeIncludes(dspBaseNode *RefNode, const char *Package) : dspBaseNode(ntIncludes,RefNode){
 	if(!Package) DSTHROW(dueInvalidParam);
-	if(!(p_Package = new char[strlen(Package)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Package, Package);
+	const int size = ( int )strlen( Package );
+	if(!(p_Package = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Package, size, Package, size );
+	#else
+		strncpy(p_Package, Package, size);
+	#endif
+	p_Package[ size ] = 0;
 }
 dspNodeIncludes::~dspNodeIncludes(){
 	delete [] p_Package;

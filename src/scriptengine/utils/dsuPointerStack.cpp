@@ -23,7 +23,7 @@
 
 // includes
 #include <stdlib.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsuPointerStack.h"
 #include "../exceptions.h"
 

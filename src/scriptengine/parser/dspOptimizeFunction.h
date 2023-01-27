@@ -33,7 +33,7 @@ class dspNodeMembVar;
 /**
  * \brief Optimize functions.
  */
-class dspOptimizeFunction{
+class DS_DLL_EXPORT dspOptimizeFunction{
 private:
 	const dspParserCheckFunction &pCheckFunction;
 	

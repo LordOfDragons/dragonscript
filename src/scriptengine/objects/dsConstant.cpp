@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClass.h"
 #include "dsConstant.h"
 #include "../exceptions.h"
@@ -35,40 +35,70 @@
 // constructor, destructor
 dsConstant::dsConstant(const char *Name, dsClass *Type){
 	if(!Name || !Type) DSTHROW(dseInvalidType);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 	p_Empty();
 }
 dsConstant::dsConstant(const char *Name, dsClass *Type, byte InitValue){
 	if(!Name || !Type) DSTHROW(dueInvalidParam);
 	if(Type->GetPrimitiveType() != DSPT_BYTE) DSTHROW(dseInvalidType);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 	p_Data.SetByte(InitValue);
 }
 dsConstant::dsConstant(const char *Name, dsClass *Type, bool InitValue){
 	if(!Name || !Type) DSTHROW(dueInvalidParam);
 	if(Type->GetPrimitiveType() != DSPT_BOOL) DSTHROW(dseInvalidType);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 	p_Data.SetBool(InitValue);
 }
 dsConstant::dsConstant(const char *Name, dsClass *Type, int InitValue){
 	if(!Name || !Type) DSTHROW(dueInvalidParam);
 	if(Type->GetPrimitiveType() != DSPT_INT) DSTHROW(dseInvalidType);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 	p_Data.SetInt(InitValue);
 }
 dsConstant::dsConstant(const char *Name, dsClass *Type, float InitValue){
 	if(!Name || !Type) DSTHROW(dueInvalidParam);
 	if(Type->GetPrimitiveType() != DSPT_FLOAT) DSTHROW(dseInvalidType);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size, Name, size );
+	#else
+		strncpy(p_Name, Name, size);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 	p_Data.SetFloat(InitValue);
 }

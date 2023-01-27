@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "dspParserCompileCode.h"
@@ -119,8 +119,14 @@ void dspNodeSetStaVar::DebugPrint(int Level, const char *Prefix){
 // enumeration value
 dspNodeEnumValue::dspNodeEnumValue(dspBaseNode *RefNode, const char *name, int order) : dspBaseNode(ntEnumValue,RefNode){
 	if(!name) DSTHROW(dueInvalidParam);
-	if(!(pName = new char[strlen(name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(pName, name);
+	const int size = ( int )strlen( name );
+	if(!(pName = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( pName, size, name, size );
+	#else
+		strncpy(pName, name, size);
+	#endif
+	pName[ size ] = 0;
 	pOrder = order;
 }
 dspNodeEnumValue::~dspNodeEnumValue(){

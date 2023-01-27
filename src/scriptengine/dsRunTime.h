@@ -44,7 +44,7 @@ class dsSignature;
 //definitions
 
 // class dsRunTime
-class dsRunTime{
+class DS_DLL_EXPORT dsRunTime{
 friend class dsClass;
 friend class dsFunction;
 friend class dsVariable;

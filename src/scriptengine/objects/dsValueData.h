@@ -35,7 +35,7 @@ class dsRealObject;
 // -----------------
 // special class containing the actual data of a value.
 // this can be either local like a dsValue or remote like a dsVariable.
-class dsValueData{
+class DS_DLL_EXPORT dsValueData{
 private:
 	union{
 		byte p_Byte;

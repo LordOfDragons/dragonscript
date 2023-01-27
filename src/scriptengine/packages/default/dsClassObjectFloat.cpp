@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassObjectFloat.h"
 
 #include "../../dsEngine.h"
@@ -80,7 +80,7 @@ void dsClassObjectFloat::nfToString::RunFunction( dsRunTime *rt, dsValue *myself
 	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
 	char buffer[ 20 ];
 	
-	sprintf( buffer, "%g", nd.value );
+	snprintf( buffer, sizeof( buffer ), "%g", nd.value );
 	rt->PushString( buffer );
 }
 

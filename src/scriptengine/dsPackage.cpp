@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsScriptSource.h"
 #include "dsPackage.h"
 #include "exceptions.h"
@@ -43,8 +43,14 @@ dsPackage::dsPackage(const char *Name){
 	p_HostClasses = NULL;
 	p_Classes = NULL;
 	try{
-		if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-		strcpy(p_Name, Name);
+		const int size = ( int )strlen( Name );
+		if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+		#ifdef OS_W32_VS
+			strncpy_s( p_Name, size, Name, size );
+		#else
+			strncpy(p_Name, Name, size);
+		#endif
+		p_Name[ size ] = 0;
 		if(!(p_Scripts = new dsuArray)) DSTHROW(dueOutOfMemory);
 		if(!(p_HostClasses = new dsuPointerList)) DSTHROW(dueOutOfMemory);
 		if(!(p_Classes = new dsuPointerList)) DSTHROW(dueOutOfMemory);

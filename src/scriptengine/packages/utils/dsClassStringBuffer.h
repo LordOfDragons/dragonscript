@@ -34,7 +34,7 @@ class dsEngine;
 class dsRealObject;
 
 // class dsClassStringBuffer
-class dsClassStringBuffer : public dsClass {
+class DS_DLL_EXPORT dsClassStringBuffer : public dsClass {
 friend class dsRunTime;
 public:
 	// constructor, destructor

@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassArray.h"
 #include "dsClassObject.h"
 #include "dsClassBlock.h"
@@ -4287,7 +4287,7 @@ void dsClassArray::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 				itemstr = "null";
 			}
 			
-			const int islen = strlen( itemstr );
+			const int islen = ( int )strlen( itemstr );
 			
 			if( i > 0 ){
 				buffer[ curLen++ ] = ',';
@@ -4295,12 +4295,20 @@ void dsClassArray::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 			}
 			
 			if( curLen + islen > maxLen ){
-				strcat( buffer, "..." );
+				#ifdef OS_W32_VS
+					strcat_s( buffer, maxLen + 5, "..." );
+				#else
+					strcat( buffer, "..." );
+				#endif
 				curLen += 3;
 				break;
 				
 			}else{
-				strcat( buffer, itemstr );
+				#ifdef OS_W32_VS
+					strcat_s( buffer, maxLen + 5, itemstr );
+				#else
+					strcat( buffer, itemstr );
+				#endif
 				curLen += islen;
 			}
 		}

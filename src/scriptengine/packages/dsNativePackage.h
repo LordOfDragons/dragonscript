@@ -47,7 +47,7 @@ class dsEngine;
 
 
 // native package
-class dsNativePackage{
+class DS_DLL_EXPORT dsNativePackage{
 private:
 	class cWrapper : public dsPackageWrapper{
 	private:

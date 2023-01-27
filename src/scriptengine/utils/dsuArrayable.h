@@ -25,11 +25,13 @@
 #ifndef _CARRAYABLE_H_
 #define _CARRAYABLE_H_
 
+#include "../dragonscript_export.h"
+
 // class dsuArrayable
 // ----------------
 // Base class for all classes able to be put into the
 // dsuArray object.
-class dsuArrayable{
+class DS_DLL_EXPORT dsuArrayable{
 public:
 	// destructor
 	virtual ~dsuArrayable();

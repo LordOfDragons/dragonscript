@@ -25,6 +25,8 @@
 #ifndef _DSBASEENGINEMANAGER_H_
 #define _DSBASEENGINEMANAGER_H_
 
+#include "dragonscript_export.h"
+
 // predefinitions
 class dsPackage;
 class dsScriptSource;
@@ -32,7 +34,7 @@ class dsScriptSource;
 // class dsBaseEngineManager
 // -------------------------
 // Base class for the engine manager class.
-class dsBaseEngineManager{
+class DS_DLL_EXPORT dsBaseEngineManager{
 public:
 	virtual ~dsBaseEngineManager();
 	// message output

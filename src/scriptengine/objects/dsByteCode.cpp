@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClass.h"
 #include "dsFunction.h"
 #include "dsFuncList.h"

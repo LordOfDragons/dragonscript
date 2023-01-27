@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClassParserInfo.h"
 #include "../exceptions.h"
 
@@ -86,9 +86,15 @@ const char *dsClassParserInfo::GetRequires(int index) const{
 void dsClassParserInfo::SetParent(const char *className){
 	if(!className) DSTHROW(dueInvalidParam);
 	if(!p_IsValid(className)) DSTHROW(dueInvalidParam);
-	char *newStr = new char[strlen(className)+1];
+	const int size = ( int )strlen( className );
+	char *newStr = new char[size+1];
 	if(!newStr) DSTHROW(dueOutOfMemory);
-	strcpy(newStr, className);
+	#ifdef OS_W32_VS
+		strncpy_s( newStr, size, className, size );
+	#else
+		strncpy(newStr, className, size );
+	#endif
+	newStr[ size ] = 0;
 	if(p_parent) delete [] p_parent;
 	p_parent = newStr;
 }
@@ -98,9 +104,15 @@ void dsClassParserInfo::SetParent(const char *className){
 void dsClassParserInfo::SetBase(const char *className){
 	if(!className) DSTHROW(dueInvalidParam);
 	if(!p_IsValid(className)) DSTHROW(dueInvalidParam);
-	char *newStr = new char[strlen(className)+1];
+	const int size = ( int )strlen( className );
+	char *newStr = new char[size+1];
 	if(!newStr) DSTHROW(dueOutOfMemory);
-	strcpy(newStr, className);
+	#ifdef OS_W32_VS
+		strncpy_s( newStr, size, className, size );
+	#else
+		strncpy(newStr, className, size);
+	#endif
+	newStr[ size ] = 0;
 	if(p_base) delete [] p_base;
 	p_base = newStr;
 }
@@ -120,9 +132,15 @@ void dsClassParserInfo::AddInterface(const char *className){
 		p_ifaces = newArray;
 	}
 	// add entry
+	const int size = ( int )strlen( className );
 	p_ifaces[p_ifaceCount] = new char[strlen(className)+1];
 	if(!p_ifaces[p_ifaceCount]) DSTHROW(dueOutOfMemory);
-	strcpy(p_ifaces[p_ifaceCount], className);
+	#ifdef OS_W32_VS
+		strncpy_s( p_ifaces[p_ifaceCount], size, className, size );
+	#else
+		strncpy(p_ifaces[p_ifaceCount], className, size);
+	#endif
+	p_ifaces[ p_ifaceCount ][ size ] = 0;
 	p_ifaceCount++;
 }
 
@@ -140,9 +158,15 @@ void dsClassParserInfo::AddRequiredPackage(const char *packageName){
 		p_reqs = newArray;
 	}
 	// add entry
-	p_reqs[p_reqCount] = new char[strlen(packageName)+1];
+	const int size = ( int )strlen( packageName );
+	p_reqs[p_reqCount] = new char[size+1];
 	if(!p_reqs[p_reqCount]) DSTHROW(dueOutOfMemory);
-	strcpy(p_reqs[p_reqCount], packageName);
+	#ifdef OS_W32_VS
+		strncpy_s( p_reqs[p_reqCount], size, packageName, size );
+	#else
+		strncpy(p_reqs[p_reqCount], packageName, size);
+	#endif
+	p_reqs[ p_reqCount ][ size ] = 0;
 	p_reqCount++;
 }
 

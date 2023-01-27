@@ -21,7 +21,7 @@
 
 #include <time.h>
 #include <stdio.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassTimeDate.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
@@ -95,11 +95,15 @@ misc stuff:
 
 #ifdef OS_W32
 struct tm *localtime_r( const time_t *timep, struct tm *result ){
-	struct tm * const temp = localtime( timep );
-	if( temp ){
-		memcpy( result, temp, sizeof( struct tm ) );
-	}
-	return result;
+	#ifdef OS_W32_VS
+		return localtime_s( result, timep ) ? nullptr : result;
+	#else
+		struct tm * const temp = localtime( timep );
+		if( temp ){
+			memcpy( result, temp, sizeof( struct tm ) );
+		}
+		return result;
+	#endif
 }
 #endif
 

@@ -26,7 +26,7 @@
 #define _DSPNODESKEYWORDS_H_
 
 // keyword node
-class dspNodeKeyword : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeKeyword : public dspBaseNode{
 private:
 	char *p_Keyword;
 public:
@@ -40,7 +40,7 @@ public:
 };
 
 // null object node
-class dspNodeNull : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeNull : public dspBaseNode{
 private:
 	dsClass *pType;
 public:
@@ -55,7 +55,7 @@ public:
 };
 
 // this object node
-class dspNodeThis : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeThis : public dspBaseNode{
 public:
 	dspNodeThis(dsScriptSource *Source, int LineNum, int CharNum);
 	dspNodeThis(dspBaseNode *RefNode);
@@ -68,7 +68,7 @@ public:
 };
 
 // super object node
-class dspNodeSuper : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeSuper : public dspBaseNode{
 public:
 	dspNodeSuper(dsScriptSource *Source, int LineNum, int CharNum);
 	const char *GetTerminalString();

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsEnginePackageSource.h"
 #include "../dsEngine.h"
 #include "../dsFile.h"
@@ -100,10 +100,11 @@ dsPackage *dsEnginePackageSource::LoadPackage(const char *name){
 		if(!pkg) DSTHROW(dueOutOfMemory);
 		try{
 			// create package
-			pakPath = new char[strlen(sharedPath)+strlen(name)+2];
+			const int size = ( int )strlen(sharedPath) + ( int )strlen(name) + 2;
+			pakPath = new char[size];
 			if(!pakPath) DSTHROW(dueOutOfMemory);
 			// add scripts
-			sprintf(pakPath, "%s%s%c", sharedPath, name, PATH_SEPARATOR);
+			snprintf(pakPath, size, "%s%s%c", sharedPath, name, PATH_SEPARATOR);
 			p_AddScripts(pkg, pakPath);
 			// look for a native class library and add it
 			p_AddNativeLib(pkg, pakPath);
@@ -160,8 +161,9 @@ const char *dsEnginePackageSource::p_FindPackage(const char *name){
 		char *buffer = NULL;
 		
 		try{
-			buffer = new char[ strlen( sharedPath ) + strlen( name ) + 1 ];
-			sprintf( buffer, "%s%s", sharedPath, name );
+			const int size = ( int )strlen( sharedPath ) + ( int )strlen( name ) + 1;
+			buffer = new char[ size ];
+			snprintf( buffer, size, "%s%s", sharedPath, name );
 			
 			const int widePathLen = MultiByteToWideChar( CP_UTF8,
 				MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, buffer, -1, NULL, 0 );
@@ -281,9 +283,10 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 	WIN32_FIND_DATAW dirEntry;
 	try{
 		// start search in directory
-		newPath = new char[strlen(path)+strlen(searchPattern)+1];
+		const int size = ( int )strlen(path) + ( int )strlen(searchPattern) + 1;
+		newPath = new char[size];
 		if(!newPath) DSTHROW(dueOutOfMemory);
-		sprintf(newPath, "%s%s", path, searchPattern);
+		snprintf(newPath, size, "%s%s", path, searchPattern);
 		
 		const int widePathLen = MultiByteToWideChar( CP_UTF8,
 			MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, newPath, -1, NULL, 0 );
@@ -325,9 +328,10 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 				// check if the file is a directory
 				if(dirEntry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 					// build pathname
-					newPath = new char[strlen(path)+strlen(utf8)+2];
+					const int size = ( int )strlen(path) + ( int )strlen(utf8) + 2;
+					newPath = new char[size];
 					if(!newPath) DSTHROW(dueOutOfMemory);
-					sprintf(newPath, "%s%s%c", path, utf8, PATH_SEPARATOR);
+					snprintf(newPath, size, "%s%s%c", path, utf8, PATH_SEPARATOR);
 					// descent into directory recursively
 					p_AddScripts(pak, newPath);
 					// clean up
@@ -335,9 +339,10 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 				// otherwise it is a common file of the correct extension
 				}else{
 					// build pathname
-					newPath = new char[strlen(path)+strlen(utf8)+1];
+					const int size = ( int )strlen(path) + ( int )strlen(utf8) + 1;
+					newPath = new char[size];
 					if(!newPath) DSTHROW(dueOutOfMemory);
-					sprintf(newPath, "%s%s", path, utf8);
+					snprintf(newPath, size, "%s%s", path, utf8);
 					// check if this a valid script file '*.ds'
 					if(p_MatchesExt(utf8, matchPattern)){
 						// add script to package
@@ -423,8 +428,9 @@ void dsEnginePackageSource::p_AddNativeLib(dsPackage *pak, const char *path){
 	
 	try{
 		// build name of library. it is fixed so we know what to look for.
-		newPath = new char[ strlen( path ) + strlen( libName ) + 5 ];
-		sprintf( newPath, "%s%s.dll", path, libName );
+		const int size = ( int )strlen( path ) + ( int )strlen( libName ) + 5;
+		newPath = new char[ size ];
+		snprintf( newPath, size, "%s%s.dll", path, libName );
 		
 		const int widePathLen = MultiByteToWideChar( CP_UTF8,
 			MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, newPath, -1, NULL, 0 );

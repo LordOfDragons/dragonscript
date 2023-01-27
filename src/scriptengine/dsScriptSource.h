@@ -29,7 +29,7 @@
 #include "utils/dsuArrayable.h"
 
 // class dsScriptSource
-class dsScriptSource : public dsuArrayable{
+class DS_DLL_EXPORT dsScriptSource : public dsuArrayable{
 public:
 	// get name of script (usually a relative filename)
 	virtual const char *GetName() = 0;

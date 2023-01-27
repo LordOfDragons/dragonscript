@@ -26,7 +26,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
 #include "introspection.h"
 #include "dsClassPackage.h"
 #include "dsClassClass.h"

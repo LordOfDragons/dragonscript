@@ -31,7 +31,7 @@ if envLibrary['TARGET_PLATFORM'] in ['linux', 'android', 'macos']:
 
 conf.Finish()
 
-writeConfigFile(envLibrary.File('#src/config.h').srcnode().abspath, configFileDefines)
+writeConfigFile(envLibrary.File('#src/scriptengine/dragonscript_config.h').srcnode().abspath, configFileDefines)
 
 # update the compile flags
 # format path string to be used as define declaration on the command line.

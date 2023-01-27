@@ -31,7 +31,7 @@
 // class dsuPointerList
 // --------------------
 // Manages a list of pointers.
-class dsuPointerList : public dsuArrayable {
+class DS_DLL_EXPORT dsuPointerList : public dsuArrayable {
 private:
 	void **p_Pointers;
 	int p_EffCount;

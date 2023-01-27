@@ -31,7 +31,7 @@ class dsEngine;
 class dsValue;
 
 // class deClassObjectRef
-class dsClassObjectRef : public dsClass {
+class DS_DLL_EXPORT dsClassObjectRef : public dsClass {
 public:
 	// constructor, destructor
 	   dsClassObjectRef();

@@ -29,7 +29,7 @@
 #include "dsuArrayable.h"
 
 // class dsuStack
-class dsuStack{
+class DS_DLL_EXPORT dsuStack{
 private:
 	dsuArrayable **p_Objects;
 	int p_StackSize;

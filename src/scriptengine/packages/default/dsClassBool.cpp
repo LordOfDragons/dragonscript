@@ -20,7 +20,7 @@
  */
 
 #include <stdio.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassBool.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
