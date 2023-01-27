@@ -52,9 +52,9 @@ jobs:
       - name: Archive
         run: |
           $DistributeDir = "${{ github.workspace }}/vs/x64/Release/Distribute"
-          Compress-Archive -Path "$DistributeDir/Dragengine/Application/*" -DestinationPath "libdscript-${{ inputs.releaseVersion }}-windows64.zip"
-          Compress-Archive -Path "$DistributeDir/Dragengine/SDK/*" -DestinationPath "libdscript-sdk-${{ inputs.releaseVersion }}-windows64.zip"
-          Compress-Archive -Path "$DistributeDir/Dragengine/Debug/*" -DestinationPath "libdscript-dbg-${{ inputs.releaseVersion }}-windows64.zip"
+          Compress-Archive -Path "$DistributeDir/Application/*" -DestinationPath "libdscript-${{ inputs.releaseVersion }}-windows64.zip"
+          Compress-Archive -Path "$DistributeDir/SDK/*" -DestinationPath "libdscript-sdk-${{ inputs.releaseVersion }}-windows64.zip"
+          Compress-Archive -Path "$DistributeDir/Debug/*" -DestinationPath "libdscript-dbg-${{ inputs.releaseVersion }}-windows64.zip"
         
       - name: Store Archives
         uses: actions/upload-artifact@v3

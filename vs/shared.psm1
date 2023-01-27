@@ -66,6 +66,6 @@ New-Variable -Name PathDistSdk -Value "Distribute\SDK" -Scope Global -Option Rea
 New-Variable -Name PathDistSdkInc -Value "$PathDistSdk\@ProgramFiles\DragonScript\SDK\include" -Scope Global -Option ReadOnly -Force
 New-Variable -Name PathDistSdkLib -Value "$PathDistSdk\@ProgramFiles\DragonScript\SDK\lib" -Scope Global -Option ReadOnly -Force
 
-New-Variable -Name PathDistDebug -Value "Distribute\DragonScript\Debug" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistDebug -Value "Distribute\Debug" -Scope Global -Option ReadOnly -Force
 New-Variable -Name PathDistPdb -Value "$PathDistDebug\@ProgramFiles\DragonScript\PDB" -Scope Global -Option ReadOnly -Force
 New-Variable -Name PathDistPdbPackages -Value "$PathDistPdb\Packages" -Scope Global -Option ReadOnly -Force
