@@ -50,5 +50,5 @@ jobs:
         with:
           name: ${{ inputs.artifactArchive }}
           path: |
-            archive/build/libdscript-${{ inputs.releaseVersion }}.tar.bz2
+            archive/build/libdscript-${{ inputs.releaseVersion }}-linux64.tar.bz2
           if-no-files-found: error

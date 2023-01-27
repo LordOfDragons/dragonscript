@@ -33,7 +33,7 @@ jobs:
         
       - name: Restore NuGet packages
         working-directory: vs
-        run: nuget restore vs.sln
+        run: nuget restore dragonscript.sln
       
       - name: Init custom.py
         run: |
