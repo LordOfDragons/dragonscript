@@ -1,0 +1,54 @@
+name: Build Linux
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: false
+        type: string
+        default: master
+      releaseVersion:
+        required: true
+        type: string
+      buildVersion:
+        required: true
+        type: string
+      artifactArchive:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          submodules: 'recursive'
+          ref: ${{ inputs.branch }}
+      
+      - name: Install required packages
+        run: |
+          sudo apt -y install build-essential scons libtool
+      
+      - name: Init custom.py
+        run: |
+          cp ${{ github.workspace }}/.github/workflows/custom_linux.py custom.py
+          sed -i -e 's/{ReleaseVersion}/${{ inputs.releaseVersion }}/g' custom.py
+          sed -i -e 's/{BuildVersion}/${{ inputs.buildVersion }}/g' custom.py
+      
+      - name: Build
+        run: scons -j 14 archive
+      
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        
+      - name: Store Archives
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifactArchive }}
+          path: |
+            archive/build/libdscript-${{ inputs.releaseVersion }}.tar.bz2
+          if-no-files-found: error

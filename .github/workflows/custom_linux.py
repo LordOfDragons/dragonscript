@@ -1,0 +1,7 @@
+build_dsi = 'yes'
+with_debug = 'no'
+with_warnerrors = 'yes'
+with_sanitize = 'no'
+with_optimizations = 'yes'
+version = '{ReleaseVersion}'
+archive_name_library = 'libdscript-{ReleaseVersion}-linux64'
