@@ -267,8 +267,8 @@ void dsuString::Unquote(){
 		#ifdef OS_W32_VS
 			strncpy_s( vString, size, p_String+1, size );
 		#else
-			strncpy(vString, p_String+1, size)
-		#endif;
+			strncpy(vString, p_String+1, size);
+		#endif
 		vString[size] = 0;
 		if(p_String) delete [] p_String;
 		p_String = vString;

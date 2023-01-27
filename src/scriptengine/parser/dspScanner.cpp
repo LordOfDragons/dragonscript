@@ -296,7 +296,7 @@ dspBaseNode *dspScanner::p_ScanString(){
 			#ifdef OS_W32_VS
 				strncpy_s( p_MsgBuf, DSP_MSGBUFSIZE, message, size );
 			#else
-				strncpy(p_MsgBuf, message, size);
+				strncpy(p_MsgBuf, message, size + 1);
 			#endif
 			p_MsgBuf[ size ] = 0;
 			p_Engine->GetEngineManager()->OutputWarning(p_MsgBuf, dsEngine::pwStringMulLineSpawn, p_Source, p_RefLineNum, p_RefCharNum);
@@ -352,7 +352,7 @@ dspBaseNode *dspScanner::p_ScanInlineComment(){
 			#ifdef OS_W32_VS
 				strncpy_s( p_MsgBuf, size, message, size );
 			#else
-				strncpy(p_MsgBuf, message, size);
+				strncpy(p_MsgBuf, message, size + 1);
 			#endif
 			p_MsgBuf[ size ] = 0;
 			p_Engine->GetEngineManager()->OutputWarning(p_MsgBuf, dsEngine::pwUnclosedInlineComment, p_Source, p_RefLineNum, p_RefCharNum);
