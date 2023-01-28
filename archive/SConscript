@@ -18,11 +18,15 @@ globalEnv.targetManager.add('archive', targetArchive)
 
 if envArchive['archive_format'] == 'tarbz2':
 	archiveMethod = targetArchive.formatTarBz2
+	extension = '.tar.bz2'
 elif envArchive['archive_format'] == 'zip':
 	archiveMethod = targetArchive.formatZip
+	extension = '.zip'
 else:
 	raise 'Invalid format {}'.format(envArchive['archive_format'])
 
-targetArchive.archiveFiles(envArchive, envArchive['archive_name_library'], files, archiveMethod)
+filename = '{}{}'.format(envArchive['archive_name_library'], extension)
+
+targetArchive.archiveFiles(envArchive, filename, files, archiveMethod)
 
 targetArchive.alias(envArchive, 'archive')
