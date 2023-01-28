@@ -203,7 +203,7 @@ void dspScanner::p_AddTokenChar(char Char){
 		#ifdef OS_W32_VS
 			strncpy_s(vNewBuf, p_TokenBufLen + 1, p_TokenBuf, p_TokenBufLen);
 		#else
-			strncpy(vNewBuf, p_TokenBuf, p_TokenBufLen);
+			strncpy(vNewBuf, p_TokenBuf, p_TokenBufLen + 1);
 		#endif
 		delete [] p_TokenBuf;
 		p_TokenBuf = vNewBuf;
@@ -219,7 +219,7 @@ void dspScanner::p_AddStringChar(char Char){
 		#ifdef OS_W32_VS
 			strncpy_s(vNewBuf, p_StrBufLen + 1, p_StrBuf, p_StrBufLen);
 		#else
-			strncpy(vNewBuf, p_StrBuf, p_StrBufLen);
+			strncpy(vNewBuf, p_StrBuf, p_StrBufLen + 1);
 		#endif
 		delete [] p_StrBuf;
 		p_StrBuf = vNewBuf;

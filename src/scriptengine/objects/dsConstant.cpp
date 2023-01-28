@@ -40,7 +40,7 @@ dsConstant::dsConstant(const char *Name, dsClass *Type){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type;
@@ -54,7 +54,7 @@ dsConstant::dsConstant(const char *Name, dsClass *Type, byte InitValue){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type;
@@ -68,7 +68,7 @@ dsConstant::dsConstant(const char *Name, dsClass *Type, bool InitValue){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type;
@@ -82,7 +82,7 @@ dsConstant::dsConstant(const char *Name, dsClass *Type, int InitValue){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type;
@@ -96,7 +96,7 @@ dsConstant::dsConstant(const char *Name, dsClass *Type, float InitValue){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type;

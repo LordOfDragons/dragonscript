@@ -44,7 +44,7 @@ dspNodeKeyword::dspNodeKeyword(dsScriptSource *source, int linenum, int charnum,
 	#ifdef OS_W32_VS
 		strncpy_s( p_Keyword, size + 1, Keyword, size );
 	#else
-		strncpy(p_Keyword, Keyword, size);
+		strncpy(p_Keyword, Keyword, size + 1);
 	#endif
 	p_Keyword[ size ] = 0;
 }

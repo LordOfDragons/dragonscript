@@ -43,7 +43,7 @@ dsuString::dsuString(const char *String){
 		#ifdef OS_W32_VS
 			strncpy_s( p_String, vStrLen + 1, String, vStrLen );
 		#else
-			strncpy(p_String, String, vStrLen);
+			strncpy(p_String, String, vStrLen + 1);
 		#endif
 		p_String[vStrLen] = 0;
 	}else{
@@ -59,7 +59,7 @@ dsuString::dsuString(const dsuString &String){
 		#ifdef OS_W32_VS
 			strncpy_s( p_String, vStrLen + 1, String.p_String, vStrLen );
 		#else
-			strncpy(p_String, String.p_String, vStrLen);
+			strncpy(p_String, String.p_String, vStrLen + 1);
 		#endif
 		p_String[vStrLen] = 0;
 	}else{
@@ -155,13 +155,13 @@ void dsuString::Insert(int Index, char Char){
 	#ifdef OS_W32_VS
 		strncpy_s( vString, Index + 1, p_String, Index );
 	#else
-		strncpy(vString, p_String, Index);
+		strncpy(vString, p_String, Index + 1);
 	#endif
 	vString[Index] = Char;
 	#ifdef OS_W32_VS
 		strncpy_s( vString+Index+1, size - Index + 1, p_String+Index, size - Index );
 	#else
-		strncpy(vString+Index+1, p_String+Index, size - Index);
+		strncpy(vString+Index+1, p_String+Index, size - Index + 1);
 	#endif
 	vString[size+1] = 0;
 	if(p_String) delete [] p_String;
@@ -178,9 +178,9 @@ void dsuString::Insert(int Index, const char *String){
 		strncpy_s( vString + Index, size2 + 1, String, size2 );
 		strncpy_s( vString + Index + size2, size1 - Index + 1, p_String + Index, size1 - Index );
 	#else
-		strncpy(vString, p_String, Index);
-		strncpy(vString+Index, String, size2);
-		strncpy(vString+Index+size2, p_String+Index, size1-Index);
+		strncpy(vString, p_String, Index + 1);
+		strncpy(vString+Index, String, size2 + 1);
+		strncpy(vString+Index+size2, p_String+Index, size1-Index + 1);
 	#endif
 	vString[ size1 + size2 ] = 0;
 	if(p_String) delete [] p_String;
@@ -198,8 +198,8 @@ void dsuString::Delete(int Start, int aLength){
 		strncpy_s( vString, Start + 1, p_String, Start );
 		strncpy_s( vString + Start, size2 + 1, p_String + Start + aLength, size2 );
 	#else
-		strncpy(vString, p_String, Start);
-		strncpy(vString+Start, p_String+Start+aLength, size2);
+		strncpy(vString, p_String, Start + 1);
+		strncpy(vString+Start, p_String+Start+aLength, size2 + 1);
 	#endif
 	vString[size1 - aLength] = 0;
 	if(p_String) delete [] p_String;
@@ -215,7 +215,7 @@ void dsuString::SetInt(int Value){
 	#ifdef OS_W32_VS
 		strncpy_s( vString, size + 1, vNum, size );
 	#else
-		strncpy(vString, vNum, size);
+		strncpy(vString, vNum, size + 1);
 	#endif
 	vString[size] = 0;
 	if(p_String) delete [] p_String;
@@ -230,7 +230,7 @@ void dsuString::SetDouble(double Value){
 	#ifdef OS_W32_VS
 		strncpy_s( vString, size + 1, vNum, size );
 	#else
-		strncpy(vString, vNum, size);
+		strncpy(vString, vNum, size + 1);
 	#endif
 	vString[size] = 0;
 	if(p_String) delete [] p_String;
@@ -252,7 +252,7 @@ void dsuString::Quote(){
 	#ifdef OS_W32_VS
 		strncpy_s( vString + 1, size + 1, p_String, size );
 	#else
-		strncpy(vString+1, p_String, size);
+		strncpy(vString+1, p_String, size + 1);
 	#endif
 	vString[size+1] = '"';
 	vString[size+2] = 0;
@@ -267,7 +267,7 @@ void dsuString::Unquote(){
 		#ifdef OS_W32_VS
 			strncpy_s( vString, size + 1, p_String+1, size );
 		#else
-			strncpy(vString, p_String+1, size);
+			strncpy(vString, p_String+1, size + 1);
 		#endif
 		vString[size] = 0;
 		if(p_String) delete [] p_String;
@@ -282,7 +282,7 @@ const dsuString &dsuString::operator=(const char *String){
 	#ifdef OS_W32_VS
 		strncpy_s( vString, size + 1, String, size );
 	#else
-		strncpy(vString, String, size);
+		strncpy(vString, String, size + 1);
 	#endif
 	vString[size] = 0;
 	if(p_String) delete [] p_String;
@@ -296,7 +296,7 @@ const dsuString &dsuString::operator=(const dsuString &String){
 	#ifdef OS_W32_VS
 		strncpy_s( vString, size + 1, String.p_String, size );
 	#else
-		strncpy(vString, String.p_String, size);
+		strncpy(vString, String.p_String, size + 1);
 	#endif
 	vString[size] = 0;
 	if(p_String) delete [] p_String;
@@ -315,14 +315,14 @@ const dsuString &dsuString::operator+=(const char *String){
 			#ifdef OS_W32_VS
 				strncpy_s( vString, size1 + 1, p_String, size1 );
 			#else
-				strncpy(vString, p_String, size1);
+				strncpy(vString, p_String, size1 + 1);
 			#endif
 		}
 		if(size2 > 0){
 			#ifdef OS_W32_VS
 				strncpy_s( vString + size1, size2 + 1, String, size2 );
 			#else
-				strncpy(vString+size1, String, size2);
+				strncpy(vString+size1, String, size2 + 1);
 			#endif
 		}
 		vString[vStrLen] = 0;

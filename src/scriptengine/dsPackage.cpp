@@ -48,7 +48,7 @@ dsPackage::dsPackage(const char *Name){
 		#ifdef OS_W32_VS
 			strncpy_s( p_Name, size + 1, Name, size );
 		#else
-			strncpy(p_Name, Name, size);
+			strncpy(p_Name, Name, size + 1);
 		#endif
 		p_Name[ size ] = 0;
 		if(!(p_Scripts = new dsuArray)) DSTHROW(dueOutOfMemory);

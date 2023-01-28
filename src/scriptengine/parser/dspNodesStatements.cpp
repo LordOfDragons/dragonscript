@@ -54,7 +54,7 @@ dspNodeMembVar::dspNodeMembVar( dspNodeIdent *member, dspBaseNode *obj ) : dspBa
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, member->GetName(), size );
 	#else
-		strncpy(p_Name, member->GetName(), size);
+		strncpy(p_Name, member->GetName(), size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	
@@ -75,7 +75,7 @@ dspNodeMembVar::dspNodeMembVar( dspBaseNode *refnode, const char *name ) : dspBa
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, name, size );
 	#else
-		strncpy(p_Name, name, size);
+		strncpy(p_Name, name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	
@@ -288,7 +288,7 @@ dspNodeMembFunc::dspNodeMembFunc(dspNodeIdent *Member, dspBaseNode *Obj) : dspBa
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Member->GetName(), size );
 	#else
-		strncpy(p_Name, Member->GetName(), size);
+		strncpy(p_Name, Member->GetName(), size + 1);
 	#endif
 	p_Name[ size ] = 0;
 
@@ -1711,7 +1711,7 @@ dspNodeVarDef::dspNodeVarDef(dspNodeIdent *IdentNode, dspBaseNode *Init) : dspBa
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, IdentNode->GetName(), size );
 	#else
-		strncpy(p_Name, IdentNode->GetName(), size);
+		strncpy(p_Name, IdentNode->GetName(), size + 1);
 	#endif
 	p_Name[ size ] = 0;
 
@@ -1874,7 +1874,7 @@ dspNodeCatch::dspNodeCatch(dspBaseNode *refnode, dspBaseNode *Type, const char *
 	#ifdef OS_W32_VS
 		strncpy_s( p_CatchName, size + 1, VarName, size );
 	#else
-		strncpy(p_CatchName, VarName, size);
+		strncpy(p_CatchName, VarName, size + 1);
 	#endif
 	p_CatchName[ size ] = 0;
 

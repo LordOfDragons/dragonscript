@@ -171,7 +171,7 @@ static const char *substring( const char * const str, int start, int end ){
 		#ifdef OS_W32_VS
 			strncpy_s( newstr, count + 1, str + start, count );
 		#else
-			strncpy( newstr, str + start, count );
+			strncpy( newstr, str + start, count + 1 );
 		#endif
 		newstr[ count ] = '\0';
 	}
@@ -275,7 +275,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 			#ifdef OS_W32_VS
 				strncpy_s( string + stringLen, copyLen + 1, format, copyLen );
 			#else
-				strncpy( string + stringLen, format, copyLen );
+				strncpy( string + stringLen, format, copyLen + 1 );
 			#endif
 			stringLen += copyLen;
 			format = deliBegin + 1;
@@ -1323,7 +1323,7 @@ void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
 		#ifdef OS_W32_VS
 			strncpy_s( newstr, len - i + 1, str + i, len - i );
 		#else
-			strncpy( newstr, str + i, len - i );
+			strncpy( newstr, str + i, len - i + 1 );
 		#endif
 		newstr[ len - i ] = '\0';
 		
@@ -1362,7 +1362,7 @@ void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
 		#ifdef OS_W32_VS
 			strncpy_s( newstr, i + 2, str, i + 1 );
 		#else
-			strncpy( newstr, str, i + 1 );
+			strncpy( newstr, str, i + 1 + 1 );
 		#endif
 		newstr[ i + 1 ] = '\0';
 		
@@ -1407,7 +1407,7 @@ void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
 		#ifdef OS_W32_VS
 			strncpy_s( newstr, j - i + 2, str + i, j - i + 1 );
 		#else
-			strncpy( newstr, str + i, j - i + 1 );
+			strncpy( newstr, str + i, j - i + 2 );
 		#endif
 		newstr[ j - i + 1 ] = '\0';
 		
@@ -1730,8 +1730,8 @@ void dsClassString::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 		strncpy_s( newStr, size1 + 1, str, size1 );
 		strncpy_s( newStr + size1, size2 + 1, otherStr, size2 );
 	#else
-		strncpy( newStr, str, size1 );
-		strncpy( newStr + size1, otherStr, size2 );
+		strncpy( newStr, str, size1 + 1 );
+		strncpy( newStr + size1, otherStr, size2 + 1 );
 	#endif
 	newStr[ size1 + size2 ] = 0;
 
@@ -1793,8 +1793,8 @@ void dsClassString::nfOpAddBool::RunFunction( dsRunTime *rt, dsValue *myself ){
 		strncpy_s( newstr, size1 + 1, str, size1 );
 		strncpy_s( newstr + size1, 6, value ? "true\0" : "false", 5 );
 	#else
-		strncpy( newstr, str, size1 );
-		strncpy( newstr + size1, value ? "true\0" : "false", 5 );
+		strncpy( newstr, str, size1 + 1 );
+		strncpy( newstr + size1, value ? "true\0" : "false", 6 );
 	#endif
 	newstr[ size1 + 5 ] = 0;
 
@@ -1888,8 +1888,8 @@ void dsClassString::nfOpAddObject::RunFunction( dsRunTime *rt, dsValue *myself )
 		strncpy_s( newstr, size1 + 1, str, size1 );
 		strncpy_s( newstr + size1, size2 + 1, otherstr, size2 );
 	#else
-		strncpy( newstr, str, size1 );
-		strncpy( newstr + size1, otherstr, size2 );
+		strncpy( newstr, str, size1 + 1 );
+		strncpy( newstr + size1, otherstr, size2 + 1 );
 	#endif
 	newstr[ size1 + size2 ] = 0;
 
@@ -2032,7 +2032,7 @@ void dsClassString::SetRealObjectString( dsRealObject* object, const char* strin
 	#ifdef OS_W32_VS
 		strncpy_s( nd.str, size + 1, string, size );
 	#else
-		strncpy( nd.str, string, size );
+		strncpy( nd.str, string, size + 1 );
 	#endif
 	nd.str[ size ] = 0;
 }

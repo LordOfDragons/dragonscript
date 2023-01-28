@@ -40,7 +40,7 @@ dsFile::dsFile(const char *Filename){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Filename, size + 1, Filename, size );
 	#else
-		strncpy(p_Filename, Filename, size);
+		strncpy(p_Filename, Filename, size + 1);
 	#endif
 	p_Filename[ size ] = 0;
 	// extract file title from filename
@@ -51,7 +51,7 @@ dsFile::dsFile(const char *Filename){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Filetitle, size + 1, vFindSlash, size );
 	#else
-		strncpy(p_Filetitle, vFindSlash, size);
+		strncpy(p_Filetitle, vFindSlash, size + 1);
 	#endif
 	p_Filetitle[ size ] = 0;
 	p_File = NULL;

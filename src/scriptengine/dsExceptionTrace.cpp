@@ -66,7 +66,7 @@ void dsExceptionTrace::SetReason( const char *reason ){
 	#ifdef OS_W32_VS
 		strncpy_s( newStr, size + 1, reason, size );
 	#else
-		strncpy( newStr, reason, size );
+		strncpy( newStr, reason, size + 1 );
 	#endif
 	newStr[ size ] = 0;
 	if( pReason ) delete [] pReason;

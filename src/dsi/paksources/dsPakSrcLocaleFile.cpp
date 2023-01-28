@@ -143,8 +143,8 @@ dsScriptSource *dsPakSrcLocaleFile::p_FindScriptFile(const char *name){
 			strncpy_s( filename + appDirLen, nameLen + 1, name, nameLen );
 			filename[ appDirLen + nameLen ] = 0;
 		#else
-			strncpy(filename, pAppDir, appDirLen);
-			strncpy(filename + appDirLen, name, nameLen);
+			strncpy(filename, pAppDir, appDirLen + 1);
+			strncpy(filename + appDirLen, name, nameLen + 1);
 		#endif
 		
 		if(stat(filename, &fs) != 0){ // not found

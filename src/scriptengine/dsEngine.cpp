@@ -802,7 +802,7 @@ void dsEngine::p_BuildSharePath(){
 					#ifdef OS_W32_VS
 						strncpy_s( buffer, len + 1, envPath, len );
 					#else
-						strncpy( buffer, envPath, len );
+						strncpy( buffer, envPath, len + 1 );
 					#endif
 					buffer[ len ] = '\0';
 					p_AddSharePath( buffer );
@@ -850,7 +850,7 @@ void dsEngine::p_AddSharePath(const char *path){
 		#ifdef OS_W32_VS
 			strncpy_s( newPath, len + 1, path, len );
 		#else
-			strncpy(newPath, path, len);
+			strncpy(newPath, path, len + 1);
 		#endif
 		newPath[ len ] = 0;
 		if(newPath[len-1] != PATH_SEPARATOR){

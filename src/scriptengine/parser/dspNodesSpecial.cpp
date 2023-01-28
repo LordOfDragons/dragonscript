@@ -124,7 +124,7 @@ dspNodeEnumValue::dspNodeEnumValue(dspBaseNode *RefNode, const char *name, int o
 	#ifdef OS_W32_VS
 		strncpy_s( pName, size + 1, name, size );
 	#else
-		strncpy(pName, name, size);
+		strncpy(pName, name, size + 1);
 	#endif
 	pName[ size ] = 0;
 	pOrder = order;
