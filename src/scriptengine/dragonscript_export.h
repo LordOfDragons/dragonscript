@@ -48,6 +48,7 @@
 #else
 	#define DS_DLL_EXPORT
 	#define DS_FUNC_EXPORT_DECL extern
+	#define DS_FUNC_EXPORT_IMPL
 	
 	// for use by package entry points
 	#define PACKAGE_ENTRY_POINT_ATTR
