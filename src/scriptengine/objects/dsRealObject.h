@@ -25,13 +25,13 @@
 #ifndef _DSOBJECT_H_
 #define _DSOBJECT_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsClass;
 
 // class dsRealObject
-class dsRealObject{
+class DS_DLL_EXPORT dsRealObject{
 friend class dsRunTime;
 friend class dsGarbageCollector;
 private:

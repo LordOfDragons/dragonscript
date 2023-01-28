@@ -46,7 +46,7 @@ class dspParserCheckClass;
 class dspParserCheckScript;
 
 // class dspParserCheck
-class dspParserCheck{
+class DS_DLL_EXPORT dspParserCheck{
 private:
 	dspParser *p_Parser;
 	dspParserCheckClass **p_Classes;

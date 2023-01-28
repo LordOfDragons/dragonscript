@@ -25,18 +25,15 @@
 #ifndef _DSEXCEPTIONTRACEPOINT_H_
 #define _DSEXCEPTIONTRACEPOINT_H_
 
+#include "dragonscript_export.h"
+
 // predefinitions
 class dsClass;
 class dsFunction;
 
 
-
-// includes
-
-
-
 // class dsExceptionTracePoint
-class dsExceptionTracePoint{
+class DS_DLL_EXPORT dsExceptionTracePoint{
 private:
 	dsClass *pClass;
 	dsFunction *pFunction;

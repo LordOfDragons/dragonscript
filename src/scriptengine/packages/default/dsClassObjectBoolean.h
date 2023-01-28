@@ -36,7 +36,7 @@ class dsValue;
  * 
  * Wraps a primitive int value. Allows bool values which can be null.
  */
-class dsClassObjectBoolean : public dsClass {
+class DS_DLL_EXPORT dsClassObjectBoolean : public dsClass {
 public:
 	/** \name Constructors and Destructors */
 	/*@{*/

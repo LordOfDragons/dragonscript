@@ -29,7 +29,7 @@
 #include "dsBaseEngineManager.h"
 
 // class dsDefaultEngineManager
-class dsDefaultEngineManager : public dsBaseEngineManager{
+class DS_DLL_EXPORT dsDefaultEngineManager : public dsBaseEngineManager{
 public:
 	// message output
 	void OutputMessage(const char *Message);

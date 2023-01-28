@@ -5,5 +5,4 @@ build
 custom.py
 config.log
 lastConfig.py
-src/config.h
-
+src/scriptengine/dragonscript_config.h

@@ -26,7 +26,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
 #include "introspection.h"
 #include "dsClassVariable.h"
 #include "dsClassClass.h"
@@ -171,9 +170,9 @@ dsFunction(init.clsVar, "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, in
 void dsClassVariable::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sVarNatData *nd = (sVarNatData*)p_GetNativeData(myself);
 	if(nd->constant){
-		rt->PushInt( ( intptr_t )nd->constant );
+		rt->PushInt( ( int )( intptr_t )nd->constant );
 	}else if(nd->variable){
-		rt->PushInt( ( intptr_t )nd->variable );
+		rt->PushInt( ( int )( intptr_t )nd->variable );
 	}else DSTHROW(dueNullPointer);
 }
 
@@ -296,12 +295,12 @@ void dsClassVariable::PushFullName(dsRunTime *rt, dsClass *parent, dsConstant *c
 		name = variable->GetName();
 	}else DSTHROW(dueNullPointer);
 	// create and push full name string
-	int nameLen = strlen(name);
+	int nameLen = ( int )strlen(name);
 	int fullNameLen = parent->GetFullName(NULL, 0);
 	char *fullName = new char[fullNameLen+nameLen+2];
 	try{
 		parent->GetFullName(fullName, fullNameLen);
-		sprintf(fullName+fullNameLen, ".%s", name);
+		snprintf(fullName+fullNameLen, nameLen + 2, ".%s", name);
 		rt->PushString(fullName);
 		delete [] fullName;
 	}catch( ... ){

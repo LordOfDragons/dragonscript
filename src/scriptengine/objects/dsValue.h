@@ -34,7 +34,7 @@ class dsClass;
 class dsRealObject;
 
 // class dsValue
-class dsValue{
+class DS_DLL_EXPORT dsValue{
 friend class dsMemoryManager;
 friend class dsGarbageCollector;
 friend class dsRunTime;

@@ -25,7 +25,7 @@
 #ifndef _DSPPARSERCHECKINTERFACE_H_
 #define _DSPPARSERCHECKINTERFACE_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsClass;
@@ -34,7 +34,7 @@ class dspParserCheckType;
 
 
 // class dspParserCheckInterface
-class dspParserCheckInterface{
+class DS_DLL_EXPORT dspParserCheckInterface{
 private:
 	dspBaseNode *p_node;
 	dsClass *p_class;

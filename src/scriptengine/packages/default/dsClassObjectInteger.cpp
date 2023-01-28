@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassObjectInteger.h"
 
 #include "../../dsEngine.h"
@@ -80,7 +80,7 @@ void dsClassObjectInteger::nfToString::RunFunction( dsRunTime *rt, dsValue *myse
 	const sObjIntNatData &nd = *( ( sObjIntNatData* )p_GetNativeData( myself ) );
 	char buffer[ 20 ];
 	
-	sprintf( buffer, "%i", nd.value );
+	snprintf( buffer, sizeof( buffer ), "%i", nd.value );
 	rt->PushString( buffer );
 }
 

@@ -34,7 +34,7 @@ class dsScriptSource;
 class dspBaseNode;
 
 // class dspScanner
-class dspScanner{
+class DS_DLL_EXPORT dspScanner{
 private:
 	dsEngine *p_Engine;
 	dsScriptSource *p_Source;

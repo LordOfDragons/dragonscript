@@ -33,7 +33,7 @@ class dsEngine;
 class dspBaseNode;
 
 // class dspParserCheckType
-class dspParserCheckType{
+class DS_DLL_EXPORT dspParserCheckType{
 private:
 	char **p_Names;
 	int p_NameCount;

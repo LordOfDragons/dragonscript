@@ -45,7 +45,7 @@ class dsuString;
 class dsplBlock;
 
 // class dspParserCompileCode
-class dspParserCompileCode{
+class DS_DLL_EXPORT dspParserCompileCode{
 public:
 	enum eTargetTypes{ ettElse, ettIfEnd, ettCont, ettNext, ettEnd, ettCase0 };
 	enum eOffsetTypes{ eotByte, eotShort, eotInt };

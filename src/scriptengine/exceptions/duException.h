@@ -33,7 +33,7 @@ class dsRunTime;
 /**
  * \brief Exception class.
  */
-class duException{
+class DS_DLL_EXPORT duException{
 private:
 	const char *p_Name; // name of exception
 	const char *p_Desc; // description of exception
@@ -98,7 +98,7 @@ public:
 /**
  * \brief Generic exception.
  */
-class dueGeneric : public duException{
+class DS_DLL_EXPORT dueGeneric : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -112,7 +112,7 @@ public:
 /**
  * \brief Invalid parameter exception.
  */
-class dueInvalidParam : public duException{
+class DS_DLL_EXPORT dueInvalidParam : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -126,7 +126,7 @@ public:
 /**
  * \brief Out of memory exception.
  */
-class dueOutOfMemory : public duException{
+class DS_DLL_EXPORT dueOutOfMemory : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -140,7 +140,7 @@ public:
 /**
  * \brief Out of boundary exception.
  */
-class dueOutOfBoundary : public duException{
+class DS_DLL_EXPORT dueOutOfBoundary : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -154,7 +154,7 @@ public:
 /**
  * \brief Stack empty exception.
  */
-class dueStackEmpty : public duException{
+class DS_DLL_EXPORT dueStackEmpty : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -168,7 +168,7 @@ public:
 /**
  * \brief Stack overflow exception.
  */
-class dueStackOverflow : public duException{
+class DS_DLL_EXPORT dueStackOverflow : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -182,7 +182,7 @@ public:
 /**
  * \brief Divison by zero exception.
  */
-class dueDivisionByZero : public duException{
+class DS_DLL_EXPORT dueDivisionByZero : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -196,7 +196,7 @@ public:
 /**
  * \brief Null pointer exception.
  */
-class dueNullPointer : public duException{
+class DS_DLL_EXPORT dueNullPointer : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -210,7 +210,7 @@ public:
 /**
  * \brief Invalid action exception.
  */
-class dueInvalidAction : public duException{
+class DS_DLL_EXPORT dueInvalidAction : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -226,7 +226,7 @@ public:
 /**
  * \brief File not found exception.
  */
-class dueFileNotFound : public duException{
+class DS_DLL_EXPORT dueFileNotFound : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -240,7 +240,7 @@ public:
 /**
  * \brief File exists exception.
  */
-class dueFileExists : public duException{
+class DS_DLL_EXPORT dueFileExists : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -254,7 +254,7 @@ public:
 /**
  * \brief Open file exception.
  */
-class dueOpenFile : public duException{
+class DS_DLL_EXPORT dueOpenFile : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -268,7 +268,7 @@ public:
 /**
  * \brief Read file exception.
  */
-class dueReadFile : public duException{
+class DS_DLL_EXPORT dueReadFile : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -282,7 +282,7 @@ public:
 /**
  * \brief Write file exception.
  */
-class dueWriteFile : public duException{
+class DS_DLL_EXPORT dueWriteFile : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -298,7 +298,7 @@ public:
 /**
  * \brief Test case failed exception.
  */
-class dueTestFailed : public duException{
+class DS_DLL_EXPORT dueTestFailed : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.
@@ -312,7 +312,7 @@ public:
 /**
  * \brief Test assertion failed exception.
  */
-class dueAssertion : public duException{
+class DS_DLL_EXPORT dueAssertion : public duException{
 public:
 	/**
 	 * \brief Create a new exception object.

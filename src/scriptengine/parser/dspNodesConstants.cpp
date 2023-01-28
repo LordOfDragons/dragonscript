@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "dspParserCompileCode.h"
@@ -36,13 +36,19 @@
 //////////////
 dspNodeByte::dspNodeByte(dsScriptSource *Source, int LineNum, int CharNum, const char *Token, byte Value) : dspBaseNode(ntByte,Source,LineNum,CharNum) {
 	p_Value = Value;
-	if(!(p_Token = new char[strlen(Token)+1])) DSTHROW(dueInvalidParam);
-	strcpy(p_Token, Token);
+	const int size = ( int )strlen( Token );
+	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Token, size + 1, Token, size );
+	#else
+		strncpy(p_Token, Token, size);
+	#endif
+	p_Token[ size ] = 0;
 }
 dspNodeByte::dspNodeByte(dspBaseNode *RefNode, byte Value) : dspBaseNode(ntByte,RefNode) {
 	p_Value = Value;
 	if(!(p_Token = new char[5])) DSTHROW(dueInvalidParam);
-	sprintf(p_Token, "%i", Value);
+	snprintf(p_Token, 5, "%i", Value);
 }
 dspNodeByte::~dspNodeByte(){ delete [] p_Token; }
 const char *dspNodeByte::GetTerminalString(){ return (const char *)p_Token; }
@@ -98,13 +104,19 @@ void dspNodeBool::DebugPrint(int Level, const char *Prefix){
 /////////////////
 dspNodeInt::dspNodeInt(dsScriptSource *Source, int LineNum, int CharNum, const char *Token, int Value) : dspBaseNode(ntInt,Source,LineNum,CharNum) {
 	p_Value = Value;
-	if(!(p_Token = new char[strlen(Token)+1])) DSTHROW(dueInvalidParam);
-	strcpy(p_Token, Token);
+	const int size = ( int )strlen( Token );
+	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Token, size + 1, Token, size );
+	#else
+		strncpy(p_Token, Token, size);
+	#endif
+	p_Token[ size ] = 0;
 }
 dspNodeInt::dspNodeInt(dspBaseNode *RefNode, int Value) : dspBaseNode(ntInt,RefNode) {
 	p_Value = Value;
 	if(!(p_Token = new char[20])) DSTHROW(dueInvalidParam);
-	sprintf(p_Token, "%i", Value);
+	snprintf(p_Token, 20, "%i", Value);
 }
 dspNodeInt::~dspNodeInt(){ delete [] p_Token; }
 const char *dspNodeInt::GetTerminalString(){ return (const char *)p_Token; }
@@ -132,13 +144,19 @@ void dspNodeInt::DebugPrint(int Level, const char *Prefix){
 ///////////////
 dspNodeFloat::dspNodeFloat(dsScriptSource *Source, int LineNum, int CharNum, const char *Token, float Value) : dspBaseNode(ntFloat,Source,LineNum,CharNum) {
 	p_Value = Value;
-	if(!(p_Token = new char[strlen(Token)+1])) DSTHROW(dueInvalidParam);
-	strcpy(p_Token, Token);
+	const int size = ( int )strlen( Token );
+	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Token, size + 1, Token, size );
+	#else
+		strncpy(p_Token, Token, size);
+	#endif
+	p_Token[ size ] = 0;
 }
 dspNodeFloat::dspNodeFloat(dspBaseNode *RefNode, float Value) : dspBaseNode(ntFloat,RefNode) {
 	p_Value = Value;
 	if(!(p_Token = new char[20])) DSTHROW(dueInvalidParam);
-	sprintf(p_Token, "%f", Value);
+	snprintf(p_Token, 20, "%f", Value);
 }
 dspNodeFloat::~dspNodeFloat(){ delete [] p_Token; }
 const char *dspNodeFloat::GetTerminalString(){ return (const char *)p_Token; }
@@ -166,8 +184,14 @@ void dspNodeFloat::DebugPrint(int Level, const char *Prefix){
 ////////////////
 dspNodeString::dspNodeString(dsScriptSource *Source, int LineNum, int CharNum, const char *String) : dspBaseNode(ntString,Source,LineNum,CharNum) {
 	if(!String) DSTHROW(dueInvalidParam);
-	if(!(p_String = new char[strlen(String)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_String, String);
+	const int size = ( int )strlen( String );
+	if(!(p_String = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_String, size + 1, String, size );
+	#else
+		strncpy(p_String, String, size);
+	#endif
+	p_String[ size ] = 0;
 }
 dspNodeString::~dspNodeString(){ delete [] p_String; }
 const char *dspNodeString::GetTerminalString(){ return p_String; }

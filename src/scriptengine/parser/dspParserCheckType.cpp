@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckType.h"
 #include "../dsEngine.h"
@@ -67,17 +67,29 @@ void dspParserCheckType::AddName(const char *Name){
 		delete [] p_Names;
 	}
 	p_Names = vNewNames;
-	if(!(p_Names[p_NameCount] = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Names[p_NameCount], Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Names[p_NameCount] = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Names[p_NameCount], size + 1, Name, size );
+	#else
+		strncpy(p_Names[p_NameCount], Name, size);
+	#endif
+	p_Names[p_NameCount][ size ] = 0;
 	p_NameCount++;
 }
 void dspParserCheckType::AddNameFront(const char *Name){
 	if(!Name || Name[0]=='\0') DSTHROW(dueInvalidParam);
 	char **vNewNames = new char*[p_NameCount+1];
 	if(!vNewNames) DSTHROW(dueOutOfMemory);
-	char *vNewName = new char[strlen(Name)+1];
+	const int size = ( int )strlen( Name );
+	char *vNewName = new char[size+1];
 	if(!vNewName){ delete [] vNewNames; DSTHROW(dueOutOfMemory); }
-	strcpy(vNewName, Name);
+	#ifdef OS_W32_VS
+		strncpy_s( vNewName, size + 1, Name, size );
+	#else
+		strncpy(vNewName, Name, size);
+	#endif
+	vNewName[ size ] = 0;
 	if(p_Names){
 		for(int i=0; i<p_NameCount; i++) vNewNames[i+1] = p_Names[i];
 		delete [] p_Names;
@@ -222,7 +234,7 @@ dspParserCheckType *dspParserCheckType::GetTypeFromNode(dspBaseNode *Node){
 dspParserCheckType *dspParserCheckType::GetTypeFromFullName(const char *name){
 	if(!name) DSTHROW(dueInvalidParam);
 	dspParserCheckType *newType=NULL;
-	int orgLen=strlen(name);
+	int orgLen=( int )strlen(name);
 	char *curName=NULL, *curPos, *nextPos, *endPos=(char*)(name+orgLen);
 	if(orgLen == 0) return NULL;
 	try{
@@ -236,7 +248,11 @@ dspParserCheckType *dspParserCheckType::GetTypeFromFullName(const char *name){
 			// if part is of 0 length there's something wrong
 			if(nextPos == curPos) DSTHROW(dueInvalidParam);
 			// copy name part to name buffer
-			strncpy(curName, curPos, nextPos - curPos);
+			#ifdef OS_W32_VS
+				strncpy_s(curName, nextPos - curPos + 1, curPos, nextPos - curPos);
+			#else
+				strncpy(curName, curPos, nextPos - curPos);
+			#endif
 			curName[nextPos-curPos] = '\0';
 			// add to type
 			if(newType){

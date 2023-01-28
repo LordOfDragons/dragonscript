@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsEngine.h"
 #include "dsExceptionTrace.h"
 #include "dsExceptionTracePoint.h"
@@ -60,9 +60,15 @@ dsExceptionTrace::~dsExceptionTrace(){
 // management
 void dsExceptionTrace::SetReason( const char *reason ){
 	if( ! reason ) DSTHROW( dueInvalidParam );
-	char *newStr = new char[ strlen( reason ) + 1 ];
+	const int size = ( int )strlen( reason );
+	char *newStr = new char[ size + 1 ];
 	if( ! newStr ) DSTHROW( dueOutOfMemory );
-	strcpy( newStr, reason );
+	#ifdef OS_W32_VS
+		strncpy_s( newStr, size + 1, reason, size );
+	#else
+		strncpy( newStr, reason, size );
+	#endif
+	newStr[ size ] = 0;
 	if( pReason ) delete [] pReason;
 	pReason = newStr;
 }

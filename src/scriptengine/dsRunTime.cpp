@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <stdlib.h>
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsEngine.h"
 #include "dsRunTime.h"
 #include "dsMemoryManager.h"
@@ -585,7 +585,7 @@ void dsRunTime::CastValueTo( dsValue *from, dsValue *to, dsClass *toType ){
 			break;
 			
 		case DSPT_FLOAT:
-			SetFloat( to, from->GetBool() ? 1 : 0 );
+			SetFloat( to, from->GetBool() ? 1.0f : 0.0f );
 			break;
 			
 		case DSPT_BOOL:

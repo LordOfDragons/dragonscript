@@ -25,6 +25,8 @@
 #ifndef _DSGARBAGECOLLECTOR_H_
 #define _DSGARBAGECOLLECTOR_H_
 
+#include "dragonscript_export.h"
+
 // predefinitions
 class dsMemoryManager;
 class dsClass;
@@ -35,7 +37,7 @@ class dsValue;
 
 
 // class dsGarbageCollector
-class dsGarbageCollector{
+class DS_DLL_EXPORT dsGarbageCollector{
 private:
 	dsMemoryManager *pMemMgr;
 	dsClass *pClsObj;

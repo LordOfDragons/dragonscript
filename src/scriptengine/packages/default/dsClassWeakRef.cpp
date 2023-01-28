@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassWeakRef.h"
 #include "dsClassBlock.h"
 #include "../../dsEngine.h"
@@ -159,7 +159,7 @@ dsClassWeakRef::nfHashCode::nfHashCode(const sInitData &init) : dsFunction(init.
 }
 void dsClassWeakRef::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sWeakNatData *nd = (sWeakNatData*)p_GetNativeData(myself);
-	rt->PushInt( ( intptr_t )nd->obj );
+	rt->PushInt( ( int )( intptr_t )nd->obj );
 }
 
 // public func bool equals(Object obj)

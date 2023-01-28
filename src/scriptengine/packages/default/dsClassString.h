@@ -38,7 +38,7 @@ class dsValue;
  * \version 1.0
  * \date 2015
  */
-class dsClassString : public dsClass {
+class DS_DLL_EXPORT dsClassString : public dsClass {
 friend class dsRunTime;
 public:
 	/** \name Constructors and Destructors */

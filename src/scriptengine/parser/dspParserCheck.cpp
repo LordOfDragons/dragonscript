@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParser.h"
 #include "dspParserCheck.h"
@@ -485,9 +485,9 @@ void dspParserCheck::ErrorClassExists(dspNodeClass *NodeClass, dspParserCheckTyp
 	if(!NodeClass) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
 	if(TypeParent){
-		sprintf(p_MsgBuf, "Inner Class '%s' exists already in '%s'", NodeClass->GetName(), TypeParent->GetName(TypeParent->GetNameCount()-1));
+		snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Inner Class '%s' exists already in '%s'", NodeClass->GetName(), TypeParent->GetName(TypeParent->GetNameCount()-1));
 	}else{
-		sprintf(p_MsgBuf, "Global Class '%s' exists already", NodeClass->GetName());
+		snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Global Class '%s' exists already", NodeClass->GetName());
 	}
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peClassExists, NodeClass->GetSource(), NodeClass->GetLineNum(), NodeClass->GetCharNum());
 	p_Parser->IncErrCount();
@@ -496,7 +496,7 @@ void dspParserCheck::ErrorInheritanceLoop(dspParserCheckClass *Class){
 	if(!Class) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
 	dspNodeClass *vNode = Class->GetNode();
-	sprintf(p_MsgBuf, "Class '%s' is involved in a Inheritance Loop", vNode->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Class '%s' is involved in a Inheritance Loop", vNode->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInheritanceLoop, Class->GetScript()->GetScript()->GetSource(), vNode->GetLineNum(), vNode->GetCharNum());
 	p_Parser->IncErrCount();
 }
@@ -512,9 +512,9 @@ void dspParserCheck::ErrorClassNotExist(dspBaseNode *Node, dspParserCheckType *T
 		}
 		if(!vCurClass){
 			if(i == 0){
-				sprintf(p_MsgBuf, "Class '%s' does not exist", Type->GetName(0));
+				snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Class '%s' does not exist", Type->GetName(0));
 			}else{
-				sprintf(p_MsgBuf, "Class '%s' does not exist in '%s'", Type->GetName(i), Type->GetName(i-1));
+				snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Class '%s' does not exist in '%s'", Type->GetName(i), Type->GetName(i-1));
 			}
 			break;
 		}
@@ -525,133 +525,133 @@ void dspParserCheck::ErrorClassNotExist(dspBaseNode *Node, dspParserCheckType *T
 void dspParserCheck::ErrorClassIsFixed(dspBaseNode *Node, dspParserCheckType *Type){
 	if(!Node || !Type) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Class '%s' is fixed and can not be extended", Type->GetName(Type->GetNameCount()-1));
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Class '%s' is fixed and can not be extended", Type->GetName(Type->GetNameCount()-1));
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peClassIsFixed, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupDestructor(dspBaseNode *Node, const char *ClassName){
 	if(!Node || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already a destructor in '%s'", ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already a destructor in '%s'", ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassDestr, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupFunction(dspBaseNode *Node, const char *FuncName, const char *ClassName){
 	if(!Node || !FuncName || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already a function '%s' with the same signature in '%s'", FuncName, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already a function '%s' with the same signature in '%s'", FuncName, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassFunc, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupOperator(dspBaseNode *Node, const char *Op, const char *ClassName){
 	if(!Node || !Op || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already an operator '%s' in '%s'", Op, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already an operator '%s' in '%s'", Op, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassOp, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvDupFuncSig(dspBaseNode *Node, const char *FuncName, const char *ClassName){
 	if(!Node || !FuncName || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already a function '%s' with the same signature but a different return type in '%s'", FuncName, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already a function '%s' with the same signature but a different return type in '%s'", FuncName, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassFunc, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvDestrSig(dspBaseNode *Node, const char *Name){
 	if(!Node || !Name) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Destructor '%s' cannot have arguments", Name);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Destructor '%s' cannot have arguments", Name);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInvalidDestrSig, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupVariable(dspBaseNode *Node, const char *ClassName, const char *VarName){
 	if(!Node || !ClassName || !VarName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already a variable '%s' in '%s'", VarName, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already a variable '%s' in '%s'", VarName, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassVar, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupConstant(dspBaseNode *Node, const char *ClassName, const char *ConstName){
 	if(!Node || !ClassName || !ConstName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "There exists already a constant '%s' in '%s'", ConstName, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "There exists already a constant '%s' in '%s'", ConstName, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupClassConst, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvVarTypeVoid(dspBaseNode *Node, const char *VarName){
 	if(!Node || !VarName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Invalid type 'void' for variable '%s'", VarName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Invalid type 'void' for variable '%s'", VarName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInvalidVarTypeVoid, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvLocVarTypeVoid(dspBaseNode *Node, const char *VarName){
 	if(!Node || !VarName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Invalid type 'void' for local variable '%s'", VarName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Invalid type 'void' for local variable '%s'", VarName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInvalidLocVarTypeVoid, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupLocVar(dspNodeVarDef *Node){
 	if(!Node) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Local variable '%s' has already been defined in this context", Node->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Local variable '%s' has already been defined in this context", Node->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupLocVar, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvOpArgCount(dspBaseNode *Node, const char *Op, const char *ClassName){
 	if(!Node || !Op || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Operator %s in class %s has incorrect number of arguments", Op, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Operator %s in class %s has incorrect number of arguments", Op, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInvalidOpArgCount, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorNoStaVarInit(dspNodeClassVariable *Node, const char *ClassName){
 	if(!Node || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Missing init value for variable %s in %s", Node->GetName(), ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Missing init value for variable %s in %s", Node->GetName(), ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peNoStaVarInit, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorInvalidVarInit(dspNodeClassVariable *Node, const char *ClassName){
 	if(!Node || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Invalid init value for variable %s in %s", Node->GetName(), ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Invalid init value for variable %s in %s", Node->GetName(), ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peInvalidVarInit, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorMissingReturn(dspBaseNode *Node, const char *FuncName, const char *ClassName){
 	if(!Node || !FuncName || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Not all control path do have a return statement in function %s in %s", FuncName, ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Not all control path do have a return statement in function %s in %s", FuncName, ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peMissingReturn, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorNotInterface(dspBaseNode *Node, dsClass *Class){
 	if(!Node || !Class) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "%s is not an Interface", Class->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "%s is not an Interface", Class->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peNotInterface, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorBaseNotSameType(dspBaseNode *Node, dsClass *Base, dsClass *Class){
 	if(!Node || !Class) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Base class %s is not of the same type (class/interface) as %s", Base->GetName(), Class->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Base class %s is not of the same type (class/interface) as %s", Base->GetName(), Class->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peBaseNotSameType, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorDupImplement(dspBaseNode *Node, dsClass *Class, dsClass *ImplClass){
 	if(!Node || !Class || !ImplClass) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Interface %s is already included in %s", ImplClass->GetName(), Class->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Interface %s is already included in %s", ImplClass->GetName(), Class->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peDupImplement, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorFuncNotImplemented(dspBaseNode *Node, dsClass *OwnerClass, dsFunction *Function){
 	if(!Node || !OwnerClass || !Function) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Abstract Function %s in %s has not been implemented in class %s", Function->GetName(), Function->GetOwnerClass()->GetName(), OwnerClass->GetName());
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Abstract Function %s in %s has not been implemented in class %s", Function->GetName(), Function->GetOwnerClass()->GetName(), OwnerClass->GetName());
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peFuncNotImplemented, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
@@ -659,9 +659,9 @@ void dspParserCheck::ErrorNSMemberNotNS(dspBaseNode *Node, dsClass *OwnerNS, con
 	if(!Node || !MemberClass) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
 	if(OwnerNS){
-		sprintf(p_MsgBuf, "Namespace member %s in %s has to be a namespace itself", MemberClass, OwnerNS->GetName());
+		snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Namespace member %s in %s has to be a namespace itself", MemberClass, OwnerNS->GetName());
 	}else{
-		sprintf(p_MsgBuf, "%s has to be a namespace", MemberClass);
+		snprintf(p_MsgBuf, SE_MSGBUFSIZE, "%s has to be a namespace", MemberClass);
 	}
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peNSMemberNotNS, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
@@ -669,14 +669,14 @@ void dspParserCheck::ErrorNSMemberNotNS(dspBaseNode *Node, dsClass *OwnerNS, con
 void dspParserCheck::ErrorConstLoop(dspNodeClassVariable *Node, const char *ClassName){
 	if(!Node || !ClassName) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Constant %s in %s cannot be resolved due to an init loop", Node->GetName(), ClassName);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Constant %s in %s cannot be resolved due to an init loop", Node->GetName(), ClassName);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::peConstLoop, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
 void dspParserCheck::ErrorPackageNotFound(dspBaseNode *Node, const char *Package){
 	if(!Node || !Package) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Package %s can not be found", Package);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Package %s can not be found", Package);
 	vEngMgr->OutputError(p_MsgBuf, dsEngine::pePackageNotFound, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncErrCount();
 }
@@ -700,7 +700,7 @@ void dspParserCheck::ErrorFuncInvTypeMods( dspBaseNode *node, const char *classN
 void dspParserCheck::WarnPackageEmpty(dspBaseNode *Node, const char *Package){
 	if(!Node || !Package) DSTHROW(dueInvalidParam);
 	dsBaseEngineManager *vEngMgr = p_Parser->GetEngine()->GetEngineManager();
-	sprintf(p_MsgBuf, "Package %s is empty and will not be added", Package);
+	snprintf(p_MsgBuf, SE_MSGBUFSIZE, "Package %s is empty and will not be added", Package);
 	vEngMgr->OutputWarning(p_MsgBuf, dsEngine::pwPackageEmpty, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_Parser->IncWarnCount();
 }

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheck.h"
 #include "dspParserCheckType.h"
@@ -117,8 +117,14 @@ void dspParserCheckFunction::AddArgName(const char *Name){
 		delete [] p_ArgNames;
 	}
 	p_ArgNames = vNewArray;
-	if(!(p_ArgNames[p_ArgNameCount] = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_ArgNames[p_ArgNameCount], Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_ArgNames[p_ArgNameCount] = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_ArgNames[p_ArgNameCount], size + 1, Name, size );
+	#else
+		strncpy(p_ArgNames[p_ArgNameCount], Name, size);
+	#endif
+	p_ArgNames[p_ArgNameCount][ size ] = 0;
 	p_ArgNameCount++;
 }
 

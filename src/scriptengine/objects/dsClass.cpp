@@ -23,7 +23,7 @@
 
 // includes
 #include <stdio.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClass.h"
 #include "dsImplClass.h"
 #include "dsFunction.h"
@@ -84,8 +84,14 @@ dsClass::dsClass(const char *Name, int ClassType, int TypeModifiers, int Primiti
 	p_DestrFunc = NULL;
 	p_parserInfo = NULL;
 	try{
-		if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-		strcpy(p_Name, Name);
+		const int size = ( int )strlen( Name );
+		if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+		#ifdef OS_W32_VS
+			strncpy_s( p_Name, size + 1, Name, size );
+		#else
+			strncpy(p_Name, Name, size);
+		#endif
+		p_Name[ size ] = 0;
 		if(!(p_Implements = new dsuArray)) DSTHROW(dueOutOfMemory);
 		if(!(p_InnerClasses = new dsuArray)) DSTHROW(dueOutOfMemory);
 		if(!(p_Variables = new dsuArray)) DSTHROW(dueOutOfMemory);
@@ -246,7 +252,7 @@ dsClass *dsClass::GetInnerClass(const char *Name) const{
 	const char *checkName;
 	// determine name parts
 	const char *nextClass = (const char *)strchr(Name, '.');
-	int nameLen = nextClass ? (int)(nextClass - Name) : strlen(Name);
+	int nameLen = nextClass ? (int)(nextClass - Name) : ( int )strlen(Name);
 	// find inner class
 	for(int i=0; i<p_InnerClasses->Length(); i++){
 		vClass = (dsClass*)p_InnerClasses->GetObject(i);
@@ -581,7 +587,7 @@ int dsClass::GetFullName(char *buffer, int len){
 	int fullNameLen=0, nameLen, curLen;
 	dsClass *curClass = this;
 	while(curClass){
-		fullNameLen += strlen(curClass->GetName()) + 1;
+		fullNameLen += ( int )strlen(curClass->GetName()) + 1;
 		curClass = curClass->GetParent();
 	}
 	fullNameLen--;
@@ -594,7 +600,7 @@ int dsClass::GetFullName(char *buffer, int len){
 		buffer[curLen] = '\0';
 		curClass = this;
 		while(curClass){
-			nameLen = strlen(curClass->GetName());
+			nameLen = ( int )strlen(curClass->GetName());
 			curLen -= nameLen;
 			// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
 			// strncpy. seriously... how brain dead is this?!

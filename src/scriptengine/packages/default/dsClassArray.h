@@ -34,7 +34,7 @@ class dsEngine;
 class dsValue;
 
 // class dsClassArray
-class dsClassArray : public dsClass {
+class DS_DLL_EXPORT dsClassArray : public dsClass {
 private:
 	dsClass *p_ClsObj;
 public:

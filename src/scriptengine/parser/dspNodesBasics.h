@@ -26,7 +26,7 @@
 #define _DSPNODESBASICS_H_
 
 // node array class
-class dspListNodeEntry{
+class DS_DLL_EXPORT dspListNodeEntry{
 friend class dspListNodes;
 private:
 	dspBaseNode *p_Node;
@@ -39,7 +39,7 @@ public:
 	inline dspListNodeEntry *GetNextNode() const{ return p_NextNode; }
 	inline void SetNextNode(dspListNodeEntry *next){ p_NextNode = next; }
 };
-class dspListNodes{
+class DS_DLL_EXPORT dspListNodes{
 friend class dspListNodeIterator;
 private:
 	dspListNodeEntry *p_TopNode, *p_TailNode;
@@ -52,7 +52,7 @@ public:
 	void AddNode(dspBaseNode *Node);
 	dspBaseNode *PopNode();
 };
-class dspListNodeIterator{
+class DS_DLL_EXPORT dspListNodeIterator{
 private:
 	dspListNodes *p_List;
 	dspListNodeEntry *p_CurNode;
@@ -67,7 +67,7 @@ public:
 
 
 // basic node class
-class dspBaseNode : public dsuArrayable{
+class DS_DLL_EXPORT dspBaseNode : public dsuArrayable{
 private:
 	int p_NodeType, p_LineNum, p_CharNum;
 	dsScriptSource *p_Source;
@@ -94,7 +94,7 @@ protected:
 };
 
 // error indication node
-class dspNodeError : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeError : public dspBaseNode{
 public:
 	dspNodeError(dspBaseNode *RefNode);
 #ifndef __NODBGPRINTF__
@@ -103,7 +103,7 @@ public:
 };
 
 // native class error node
-class dspNodeNatClassErr : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeNatClassErr : public dspBaseNode{
 private:
 	class DummySource : public dsScriptSource{
 	public:
@@ -121,7 +121,7 @@ public:
 };
 
 // ident node
-class dspNodeIdent : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeIdent : public dspBaseNode{
 private:
 	char *p_Name;
 public:

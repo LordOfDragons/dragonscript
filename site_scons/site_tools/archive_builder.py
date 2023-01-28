@@ -55,8 +55,13 @@ def generate(env):
 				info.gid = 0
 				info.uname = 'root'
 				info.gname = 'root'
-				with open(node.abspath, 'rb') as nf:
-					arcfile.addfile(info, nf)
+				if node.islink():
+					info.linkname = os.readlink(node.abspath)
+					info.type = tarfile.SYMTYPE
+					arcfile.addfile(info)
+				else:
+					with open(node.abspath, 'rb') as nf:
+						arcfile.addfile(info, nf)
 	
 	def buildArchiveZip(env, target, source):
 		with zipfile.ZipFile(target[0].abspath, 'w', zipfile.ZIP_DEFLATED) as arcfile:
@@ -64,7 +69,7 @@ def generate(env):
 				arcfile.write(node.abspath, normalizePath(path))
 	
 	env.Append(BUILDERS={'ArchiveTarBz2': Builder(action=Action(
-		buildArchiveTarBz2, '$ARCHIVETARBZ2COMSTR'), suffix='.tarbz2', src_suffix='')})
+		buildArchiveTarBz2, '$ARCHIVETARBZ2COMSTR'), suffix='.tar.bz2', src_suffix='')})
 	env['ARCHIVETARBZ2COM'] = 'Archiving "$TARGET"'
 	env['ARCHIVETARBZ2COMSTR'] = env['ARCHIVETARBZ2COM']
 	

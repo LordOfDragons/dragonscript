@@ -34,7 +34,7 @@ class dsEngine;
 class dsValue;
 
 // class dsClassWeakRef
-class dsClassWeakRef : public dsClass {
+class DS_DLL_EXPORT dsClassWeakRef : public dsClass {
 public:
 	// constructor, destructor
 	dsClassWeakRef();

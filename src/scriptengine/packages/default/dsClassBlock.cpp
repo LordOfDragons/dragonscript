@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <stdint.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassBlock.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
@@ -236,7 +236,7 @@ dsClassBlock::nfHashCode::nfHashCode(const sInitData &init) : dsFunction(init.cl
 }
 void dsClassBlock::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sBlockNatData *nd = (sBlockNatData*)p_GetNativeData(myself);
-	rt->PushInt( ( intptr_t )nd->function );
+	rt->PushInt( ( int )( intptr_t )nd->function );
 }
 
 // public func bool equals(Object obj)

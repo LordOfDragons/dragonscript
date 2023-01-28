@@ -28,7 +28,7 @@
 #include "../objects/optimized/dsFunctionOptimized.h"
 
 // function argument node
-class dspNodeFuncArg : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeFuncArg : public dspBaseNode{
 private:
 	char *p_Name;
 	dspBaseNode *p_Type;
@@ -44,7 +44,7 @@ public:
 };
 
 // init constructor call node
-class dspNodeInitConstrCall : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeInitConstrCall : public dspBaseNode{
 private:
 	dspListNodes p_Args;
 	dsFunction *p_DSClsFunc;
@@ -62,7 +62,7 @@ public:
 };
 
 // function node
-class dspNodeClassFunction : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeClassFunction : public dspBaseNode{
 private:
 	char *p_Name;
 	int p_FuncType, p_TypeMods, p_Flags;
@@ -96,7 +96,7 @@ public:
 };
 
 // class variable nodes
-class dspNodeClassVariableList : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeClassVariableList : public dspBaseNode{
 private:
 	int p_TypeMods;
 	dspBaseNode *p_Type;
@@ -115,7 +115,7 @@ public:
 #endif
 };
 
-class dspNodeClassVariable : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeClassVariable : public dspBaseNode{
 private:
 	char *p_Name;
 	dspBaseNode *p_Init;
@@ -135,7 +135,7 @@ public:
 
 
 // class node
-class dspNodeClass : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeClass : public dspBaseNode{
 private:
 	char *p_Name;
 	int p_ClsType, p_TypeMods;
@@ -162,7 +162,7 @@ public:
 };
 
 // class dspNodeEnumeration
-class dspNodeEnumeration : public dspNodeClass{
+class DS_DLL_EXPORT dspNodeEnumeration : public dspNodeClass{
 public:
 	dspNodeEnumeration(dspBaseNode *RefNode, const char *Name, int TypeMods);
 	~dspNodeEnumeration();
@@ -172,7 +172,7 @@ public:
 };
 
 // pin node
-class dspNodePin : public dspBaseNode{
+class DS_DLL_EXPORT dspNodePin : public dspBaseNode{
 private:
 	dspBaseNode *p_Namespace;
 public:
@@ -185,7 +185,7 @@ public:
 };
 
 // namespace node
-class dspNodeNamespace : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeNamespace : public dspBaseNode{
 private:
 	dspBaseNode *p_Namespace;
 public:
@@ -198,7 +198,7 @@ public:
 };
 
 // option node
-class dspNodeOption : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeOption : public dspBaseNode{
 private:
 	char *p_Key;
 	char *p_Value;
@@ -213,7 +213,7 @@ public:
 };
 
 // requires node
-class dspNodeRequires : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeRequires : public dspBaseNode{
 private:
 	char *p_Package;
 public:
@@ -226,7 +226,7 @@ public:
 };
 
 // includes node
-class dspNodeIncludes : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeIncludes : public dspBaseNode{
 private:
 	char *p_Package;
 public:
@@ -239,7 +239,7 @@ public:
 };
 
 // script node
-class dspNodeScript : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeScript : public dspBaseNode{
 private:
 	dspListNodes p_Nodes;
 public:

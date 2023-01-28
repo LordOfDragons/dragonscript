@@ -30,7 +30,7 @@ class dsVariable;
 /**
  * \brief Function optimizing getter returning static class variable.
  */
-class dsFOGetClassVarStatic : public dsFunctionOptimized{
+class DS_DLL_EXPORT dsFOGetClassVarStatic : public dsFunctionOptimized{
 private:
 	dsVariable &pVariable;
 	

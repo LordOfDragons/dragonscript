@@ -31,7 +31,7 @@
 // class dsuIndexList
 // ----------------
 // Manages a list of indices.
-class dsuIndexList : public dsuArrayable {
+class DS_DLL_EXPORT dsuIndexList : public dsuArrayable {
 private:
 	int *p_Indices;
 	int p_EffIndCount;

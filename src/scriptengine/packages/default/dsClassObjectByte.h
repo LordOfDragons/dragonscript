@@ -36,7 +36,7 @@ class dsValue;
  * 
  * Wraps a primitive int value. Allows byte values which can be null.
  */
-class dsClassObjectByte : public dsClass {
+class DS_DLL_EXPORT dsClassObjectByte : public dsClass {
 public:
 	/** \name Constructors and Destructors */
 	/*@{*/

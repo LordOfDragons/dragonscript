@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParser.h"
 #include "dspScanner.h"
@@ -299,27 +299,27 @@ void dspParser::p_ErrorUnexpEOF(){
 }
 void dspParser::p_ErrorUnexpNode(const char *Expected, dspBaseNode *Found){
 //	if(Found->GetLineNum() == p_LastErrLine) return;
-	sprintf(p_MsgBuf, "Unexpected token '%s' found (Expected '%s')", Found->GetTerminalString(), Expected);
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Unexpected token '%s' found (Expected '%s')", Found->GetTerminalString(), Expected);
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, dsEngine::peUnexpectedToken, Found->GetSource(), Found->GetLineNum(), Found->GetCharNum());
 	p_ErrCount++; //p_LastErrLine = Found->GetLineNum();
 }
 void dspParser::p_ErrorInvName(const char *ErrName, dspBaseNode *Node, int ErrID){
-	sprintf(p_MsgBuf, "Invalid %s name '%s' found", ErrName, Node->GetTerminalString());
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Invalid %s name '%s' found", ErrName, Node->GetTerminalString());
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, ErrID, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_ErrCount++;
 }
 void dspParser::p_ErrorInvOperator(const char *ErrName, dspBaseNode *Node, int ErrID){
-	sprintf(p_MsgBuf, "Invalid %s '%s' found", ErrName, Node->GetTerminalString());
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Invalid %s '%s' found", ErrName, Node->GetTerminalString());
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, ErrID, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_ErrCount++;
 }
 void dspParser::p_ErrorInvTypeMod(dspBaseNode *Node){
-	sprintf(p_MsgBuf, "Invalid type modifier '%s' specified", Node->GetTerminalString());
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Invalid type modifier '%s' specified", Node->GetTerminalString());
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, dsEngine::peInvalidTypeModifier, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_ErrCount++;
 }
 void dspParser::p_ErrorIncompTypeMod(dspBaseNode *Node, const char *TypeMod){
-	sprintf(p_MsgBuf, "Type modifier '%s' cannot be used together with '%s'", Node->GetTerminalString(), TypeMod);
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Type modifier '%s' cannot be used together with '%s'", Node->GetTerminalString(), TypeMod);
 	p_Engine->GetEngineManager()->OutputError(p_MsgBuf, dsEngine::peIncompatibleTypeModifier, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_ErrCount++;
 }
@@ -329,14 +329,14 @@ void dspParser::p_ErrorNonEmptyIFFunc(dspBaseNode *Node){
 }
 
 void dspParser::p_ErrorUnexpectedToken( dspBaseNode *node ){
-	sprintf( p_MsgBuf, "Unexpected token '%s' found", node->GetTerminalString() );
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Unexpected token '%s' found", node->GetTerminalString() );
 	p_Engine->GetEngineManager()->OutputError( p_MsgBuf, dsEngine::peInvalidToken, node->GetSource(), node->GetLineNum(), node->GetCharNum() );
 	p_ErrCount++;
 }
 
 // warning functions
 void dspParser::p_WarnDupTypeMod(dspBaseNode *Node){
-	sprintf(p_MsgBuf, "Duplicate type modifier '%s' specified", Node->GetTerminalString());
+	snprintf(p_MsgBuf, DSP_MSGBUFSIZE, "Duplicate type modifier '%s' specified", Node->GetTerminalString());
 	p_Engine->GetEngineManager()->OutputWarning(p_MsgBuf, dsEngine::pwDuplicateTypeModifier, Node->GetSource(), Node->GetLineNum(), Node->GetCharNum());
 	p_WarnCount++;
 }

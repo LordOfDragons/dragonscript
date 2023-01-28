@@ -35,7 +35,7 @@ class dsValue;
 class dsRunTime;
 
 // class dsVariable
-class dsVariable : public dsuArrayable {
+class DS_DLL_EXPORT dsVariable : public dsuArrayable {
 private:
 	dsClass *p_OwnerClass;
 	char *p_Name;

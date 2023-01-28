@@ -26,7 +26,7 @@
 #define _DSPNODESOPERATIONS_H_
 
 // operator node
-class dspNodeOperator : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeOperator : public dspBaseNode{
 private:
 	char *p_Op;
 public:
@@ -40,7 +40,7 @@ public:
 };
 
 // unary operation node
-class dspNodeUnaryOperation : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeUnaryOperation : public dspBaseNode{
 private:
 	char *p_Op;
 	dspBaseNode *p_Obj;
@@ -60,7 +60,7 @@ public:
 };
 
 // post increment node
-class dspNodePostIncrement : public dspBaseNode{
+class DS_DLL_EXPORT dspNodePostIncrement : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj;
 	dsClass *p_ObjClass;
@@ -76,7 +76,7 @@ public:
 };
 
 // post decrement node
-class dspNodePostDecrement : public dspBaseNode{
+class DS_DLL_EXPORT dspNodePostDecrement : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj;
 	dsClass *p_ObjClass;
@@ -92,7 +92,7 @@ public:
 };
 
 // binary operation node
-class dspNodeBinaryOperation : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeBinaryOperation : public dspBaseNode{
 private:
 	char *p_Op;
 	dspBaseNode *p_Obj, *p_Arg;
@@ -112,7 +112,7 @@ public:
 };
 
 // inline if node
-class dspNodeInlineIf : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeInlineIf : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond, *p_If, *p_Else;
 public:
@@ -126,7 +126,7 @@ public:
 };
 
 // logical and node
-class dspNodeLogicalAnd : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeLogicalAnd : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond1, *p_Cond2;
 public:
@@ -140,7 +140,7 @@ public:
 };
 
 // logical or node
-class dspNodeLogicalOr : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeLogicalOr : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond1, *p_Cond2;
 public:
@@ -154,7 +154,7 @@ public:
 };
 
 // logical not node
-class dspNodeLogicalNot : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeLogicalNot : public dspBaseNode{
 private:
 	dspBaseNode *p_Cond;
 public:
@@ -168,7 +168,7 @@ public:
 };
 
 // cast to node
-class dspNodeCastTo : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeCastTo : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj, *p_Type;
 	dsClass *p_DSClass;
@@ -185,7 +185,7 @@ public:
 };
 
 // castable to node
-class dspNodeCastableTo : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeCastableTo : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj, *p_Type;
 	dsClass *p_DSClass;
@@ -201,7 +201,7 @@ public:
 };
 
 // is type of node
-class dspNodeIsTypeOf : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeIsTypeOf : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj, *p_Type;
 	dsClass *p_DSClass;

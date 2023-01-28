@@ -41,7 +41,7 @@ class dsuString;
 
 
 // class dspParserCheckCode
-class dspParserCheckCode{
+class DS_DLL_EXPORT dspParserCheckCode{
 private:
 	dspParserCheck *p_ParserCheck;
 	dspParserCheckCode *p_Precedor;

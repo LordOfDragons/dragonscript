@@ -20,30 +20,33 @@
  */
 
 
+#include "../../scriptengine/libdscript.h"
 
-// includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <errno.h>
-#include "../../config.h"
 #include "dsPakSrcLocaleFile.h"
-#include "../../scriptengine/libdscript.h"
 #include "../../scriptengine/dsFile.h"
 
-
-#define DSI_PATH_SEPARATOR		'/'
+#ifdef OS_W32_VS
+	#include <direct.h>
+	#include <windows.h>
+	#define DSI_PATH_SEPARATOR '\\'
+#else
+	#include <unistd.h>
+	#define DSI_PATH_SEPARATOR '/'
+#endif
 
 
 // class dsPakSrcLocaleFile
 ////////////////////////////////
 // constructor, destructor
 dsPakSrcLocaleFile::dsPakSrcLocaleFile(){
-	int bufLen=100, pathLen;
+	int bufLen=FILENAME_MAX, pathLen;
 	pAppDir = NULL;
 	try{
 		// determine the current working directory
@@ -51,12 +54,28 @@ dsPakSrcLocaleFile::dsPakSrcLocaleFile(){
 			pAppDir = new char[bufLen+2];
 			if(!pAppDir) DSTHROW(dueOutOfMemory);
 			errno = 0;
-			if(getcwd(pAppDir, bufLen)) break;
+
+			#ifdef OS_W32_VS
+				wchar_t buffer[ FILENAME_MAX ];
+				if( ! _wgetcwd( buffer, FILENAME_MAX ) ){
+					DSTHROW( dueInvalidAction );
+				}
+
+				size_t size = 0;
+				if( wcstombs_s( &size, pAppDir, FILENAME_MAX + 1, buffer, wcslen( buffer ) + 1 ) ){
+					DSTHROW( dueInvalidAction );
+				}
+
+				break;
+			#else
+				if(getcwd(pAppDir, bufLen)) break;
+			#endif
+
 			delete [] pAppDir;
 			pAppDir = NULL;
 			bufLen += 100;
 		}
-		pathLen = strlen(pAppDir);
+		pathLen = ( int )strlen(pAppDir);
 		if(pAppDir[pathLen-1] != DSI_PATH_SEPARATOR){
 			pAppDir[pathLen] = DSI_PATH_SEPARATOR;
 			pAppDir[pathLen+1] = '\0';
@@ -110,24 +129,49 @@ dsPackage *dsPakSrcLocaleFile::LoadPackage(const char *name){
  */
 dsScriptSource *dsPakSrcLocaleFile::p_FindScriptFile(const char *name){
 	char *filename=NULL;
-	int appDirLen=strlen(pAppDir);
-	int nameLen=strlen(name);
+	int appDirLen=( int )strlen(pAppDir);
+	int nameLen=( int )strlen(name);
 	dsScriptSource *sourceFile=NULL;
 	struct stat fs;
 	try{
 		// try to find the file in the current working directory
 		filename = new char[appDirLen+nameLen+1];
 		if(!filename) DSTHROW(dueOutOfMemory);
-		strcpy(filename, pAppDir);
-		strcat(filename, name);
+
+		#ifdef OS_W32_VS
+			strncpy_s( filename, appDirLen + 1, pAppDir, appDirLen );
+			strncpy_s( filename + appDirLen, nameLen + 1, name, nameLen );
+			filename[ appDirLen + nameLen ] = 0;
+		#else
+			strncpy(filename, pAppDir, appDirLen);
+			strncpy(filename + appDirLen, name, nameLen);
+		#endif
+		
 		if(stat(filename, &fs) != 0){ // not found
 			delete [] filename; filename=NULL;
 		}
+
 		// try to find the file in some other place (todo)
 		// if(!filename){ ... }
 		
 		// verify that the file is a regular file
-		if( !S_ISREG(fs.st_mode) ) DSTHROW_INFO(dueInvalidAction, "Not A regular file");
+		if( ! filename ){
+			DSTHROW( dueInvalidAction );
+		}
+
+		#ifdef OS_W32_VS
+			TCHAR bufFileName[ 256 ];
+			size_t size = 0;
+			if( mbstowcs_s( &size, bufFileName, 256, filename, strlen( filename ) + 1 ) ){
+				DSTHROW( dueInvalidAction );
+			}
+			const DWORD fileAttrs = GetFileAttributes( bufFileName );
+			if( ( fileAttrs & ( FILE_ATTRIBUTE_DEVICE | FILE_ATTRIBUTE_DIRECTORY ) ) != 0 ){
+				DSTHROW( dueInvalidAction );
+			}
+		#else
+			if( !S_ISREG(fs.st_mode) ) DSTHROW_INFO(dueInvalidAction, "Not A regular file");
+		#endif
 		// create source
 		sourceFile = new dsFile(filename);
 		delete [] filename; filename=NULL;

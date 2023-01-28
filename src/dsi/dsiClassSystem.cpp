@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "../config.h"
 #include "dsiClassSystem.h"
 
 // native functions
@@ -58,7 +57,7 @@ void dsiClassSystem::nfGetString::RunFunction( dsRunTime *rt, dsValue *myself ){
 			DSTHROW( dueInvalidAction );
 		}
 		
-		const int last = strlen( buffer );
+		const int last = ( int )strlen( buffer );
 		if( last > 0 && buffer[ last - 1 ] == '\n' ){
 			buffer[ last - 1 ] = '\0';
 		}

@@ -47,7 +47,7 @@ class dsuString;
 class dsClassParserInfo;
 
 // class dsClass
-class dsClass : public dsuArrayable {
+class DS_DLL_EXPORT dsClass : public dsuArrayable {
 friend class dsEngine;
 friend class dsFunction;
 private:

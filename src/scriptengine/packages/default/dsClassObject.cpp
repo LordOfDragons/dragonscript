@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassObject.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
@@ -57,7 +57,7 @@ void dsClassObject::nfClassName::RunFunction( dsRunTime *rt, dsValue *myself ){
 	int fullNameLen = 0;
 	
 	while( curClass ){
-		fullNameLen += strlen( curClass->GetName() ) + 1;
+		fullNameLen += ( int )strlen( curClass->GetName() ) + 1;
 		curClass = curClass->GetParent();
 	}
 	fullNameLen--;
@@ -73,7 +73,7 @@ void dsClassObject::nfClassName::RunFunction( dsRunTime *rt, dsValue *myself ){
 		curClass = type;
 		
 		while( curClass ){
-			const int nameLen = strlen( curClass->GetName() );
+			const int nameLen = ( int )strlen( curClass->GetName() );
 			fullNameLen -= nameLen;
 			// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
 			// strncpy. seriously... how brain dead is this?!
@@ -119,12 +119,13 @@ void dsClassObject::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	char *buffer = NULL;
 	
 	try{
-		buffer = new char[ 10 + strlen( className ) ];
+		const int size = 10 + ( int )strlen( className );
+		buffer = new char[ size ];
 		if( ! buffer ){
 			DSTHROW( dueOutOfMemory );
 		}
 		
-		sprintf( buffer, "Class=%s", className );
+		snprintf( buffer, size, "Class=%s", className );
 		rt->PushString( buffer );
 		delete [] buffer;
 		
@@ -147,7 +148,7 @@ void dsClassObject::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "object is primitive type: %s", ErrorObjectType( myself ).Pointer() );
 	}
 	
-	rt->PushInt( ( intptr_t )myself->GetRealObject() );
+	rt->PushInt( ( int )( intptr_t )myself->GetRealObject() );
 }
 
 // public func bool equals( Object obj )

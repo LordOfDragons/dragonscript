@@ -1,4 +1,5 @@
 from ternary_variable import TernaryVariable
+from string_variable import StringVariable
 from glob_files import globFiles
 import os
 import sys
@@ -54,12 +55,16 @@ if sys.platform == 'haiku1':
 
 # parameters
 params = Variables(globalEnv['PARAMETER_SOURCE'], ARGUMENTS)
+params.Add(StringVariable('version', 'Version', '9999'))
 params.Add(BoolVariable('with_debug', 'Build with debug symbols for GDB usage', False))
 params.Add(BoolVariable('with_warnerrors', 'Treat warnings as errors (dev-builds)', False))
 params.Add(BoolVariable('with_sanitize', 'Enable sanitizing (dev-builds)', False))
 params.Add(BoolVariable('with_optimizations', 'Enable run-time optimizations', True))
 params.Add(TernaryVariable('build_dsi', 'Build DragonScript Interpreter'))
 params.Add(BoolVariable('dsi_measure_runtime', 'Enable DSI run-time measuring (dev-builds)', False))
+
+params.Add(EnumVariable('archive_format', 'Archive file format', 'tarbz2', ['tarbz2', 'zip']))
+params.Add(StringVariable('archive_name_library', 'Archive file name without extension for library archive', 'libdscript'))
 
 if globalEnv['TARGET_PLATFORM'] in ['linux', 'android']:
 	params.Add(PathVariable('prefix', 'System path', '/usr', PathVariable.PathAccept))

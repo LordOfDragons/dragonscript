@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "../dsPackage.h"
 #include "dsNativePackage.h"
 #include "../dsPackageWrapper.h"
@@ -63,9 +63,15 @@ dsNativePackage::dsNativePackage(const char *filename){
 	// init
 	try{
 		// store filename
-		pFilename = new char[strlen(filename)+1];
+		const int size = ( int )strlen( filename );
+		pFilename = new char[size+1];
 		if(!pFilename) DSTHROW(dueOutOfMemory);
-		strcpy(pFilename, filename);
+		#ifdef OS_W32_VS
+			strncpy_s( pFilename, size + 1, filename, size );
+		#else
+			strncpy(pFilename, filename, size);
+		#endif
+		pFilename[ size ] = 0;
 		// try loading module located at pFilename
 #if defined HAVE_DLFCN_H
 		pHandle = dlopen(pFilename, RTLD_NOW);

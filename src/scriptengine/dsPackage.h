@@ -36,7 +36,7 @@ class dsuPointerList;
 class dsEngine;
 
 // class dsPackage
-class dsPackage : public dsuArrayable{
+class DS_DLL_EXPORT dsPackage : public dsuArrayable{
 friend class dsEngine;
 friend class dspParser;
 friend class dspParserCheck;

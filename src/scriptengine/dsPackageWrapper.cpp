@@ -22,7 +22,7 @@
 
 
 // includes
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsPackageWrapper.h"
 
 // predefinitions

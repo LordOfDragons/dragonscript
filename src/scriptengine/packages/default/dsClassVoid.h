@@ -34,7 +34,7 @@ class dsEngine;
 class dsValue;
 
 // class dsClassVoid
-class dsClassVoid : public dsClass {
+class DS_DLL_EXPORT dsClassVoid : public dsClass {
 public:
 	// constructor, destructor
 	dsClassVoid();

@@ -22,6 +22,8 @@
 #ifndef _DSFUNCTIONOPTIMIZED_H_
 #define _DSFUNCTIONOPTIMIZED_H_
 
+#include "../../dragonscript_export.h"
+
 class dsRunTime;
 class dsValue;
 
@@ -29,7 +31,7 @@ class dsValue;
 /**
  * \brief Base class for optimized functions.
  */
-class dsFunctionOptimized{
+class DS_DLL_EXPORT dsFunctionOptimized{
 public:
 	/** \brief Optimization type. */
 	enum eType{

@@ -31,7 +31,7 @@ class dsValue;
 /**
  * \brief Immutable enumeration class.
  */
-class dsClassEnumeration : public dsClass {
+class DS_DLL_EXPORT dsClassEnumeration : public dsClass {
 public:
 	/** \name Constructors and Destructors */
 	/*@{*/

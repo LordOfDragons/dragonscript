@@ -32,7 +32,7 @@ class dsValue;
 /**
  * \brief Set script class.
  */
-class dsClassSet : public dsClass {
+class DS_DLL_EXPORT dsClassSet : public dsClass {
 private:
 	dsClass *p_ClsObj;
 	

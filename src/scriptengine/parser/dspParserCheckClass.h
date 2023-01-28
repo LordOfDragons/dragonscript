@@ -46,7 +46,7 @@ class dspParserCheckScript;
 
 
 // class dspParserCheckClass
-class dspParserCheckClass{
+class DS_DLL_EXPORT dspParserCheckClass{
 private:
 	dspParserCheckScript *p_Script;
 	dspNodeNatClassErr *p_natErrNode;

@@ -26,7 +26,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
 #include "introspection.h"
 #include "dsClassFunction.h"
 #include "dsClassClass.h"
@@ -159,7 +158,7 @@ dsFunction(init.clsFunc, "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, i
 void dsClassFunction::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sFuncNatData *nd = (sFuncNatData*)p_GetNativeData(myself);
 	if(!nd->function) DSTHROW(dueNullPointer);
-	rt->PushInt( ( intptr_t )nd->function );
+	rt->PushInt( ( int )( intptr_t )nd->function );
 }
 
 // public func bool equals(Object obj)
@@ -283,12 +282,12 @@ void dsClassFunction::PushFullName(dsRunTime *rt, dsFunction *function){
 	if(!rt || !function) DSTHROW(dueInvalidParam);
 	const char *name = function->GetName();
 	// create and push full name string
-	int nameLen = strlen(name);
+	int nameLen = ( int )strlen(name);
 	int fullNameLen = function->GetOwnerClass()->GetFullName(NULL, 0);
 	char *fullName = new char[fullNameLen+nameLen+2];
 	try{
 		function->GetOwnerClass()->GetFullName(fullName, fullNameLen);
-		sprintf(fullName+fullNameLen, ".%s", name);
+		snprintf(fullName+fullNameLen, nameLen + 2, ".%s", name);
 		rt->PushString(fullName);
 		delete [] fullName;
 	}catch( ... ){

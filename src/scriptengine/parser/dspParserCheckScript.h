@@ -33,7 +33,7 @@ class dsEngine;
 class dspNodeScript;
 
 // class dspParserCheckScript
-class dspParserCheckScript{
+class DS_DLL_EXPORT dspParserCheckScript{
 private:
 	dspNodeScript *p_Script;
 	dsClass **p_Pins;
