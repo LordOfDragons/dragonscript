@@ -67,6 +67,4 @@ jobs:
             See https://developer.dragondreams.ch/wiki/doku.php/dragengine:modules:dragonscript:api for documentation.
           artifacts: >
             libdscript-${{ github.event.inputs.version }}-linux64.tar.bz2,
-            libdscript-${{ github.event.inputs.version }}-windows64.zip,
-            libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip,
-            libdscript-dbg-${{ github.event.inputs.version }}-windows64.zip
+            libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip

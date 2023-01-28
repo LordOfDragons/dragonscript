@@ -6,7 +6,7 @@
 Import-Module "$PSScriptRoot\..\..\shared.psm1"
 
 # application
-$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistDataPackages\Math"
+$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistRuntimePackages\Math"
 
 Write-Host "Package Math: Copy Library to '$TargetDir'"
 Install-Files -Path (Join-Path -Path $OutputDir -ChildPath "Math.dll") -Destination $TargetDir

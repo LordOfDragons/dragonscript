@@ -6,7 +6,7 @@
 Import-Module "$PSScriptRoot\..\..\shared.psm1"
 
 # application
-$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistDataPackages\Introspection"
+$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistRuntimePackages\Introspection"
 
 Write-Host "Package Introspection: Copy Library to '$TargetDir'"
 Install-Files -Path (Join-Path -Path $OutputDir -ChildPath "Introspection.dll") -Destination $TargetDir
