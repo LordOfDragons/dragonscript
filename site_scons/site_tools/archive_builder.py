@@ -55,8 +55,13 @@ def generate(env):
 				info.gid = 0
 				info.uname = 'root'
 				info.gname = 'root'
-				with open(node.abspath, 'rb') as nf:
-					arcfile.addfile(info, nf)
+				if node.islink():
+					info.linkname = os.readlink(node.abspath)
+					info.type = tarfile.SYMTYPE
+					arcfile.addfile(info)
+				else:
+					with open(node.abspath, 'rb') as nf:
+						arcfile.addfile(info, nf)
 	
 	def buildArchiveZip(env, target, source):
 		with zipfile.ZipFile(target[0].abspath, 'w', zipfile.ZIP_DEFLATED) as arcfile:

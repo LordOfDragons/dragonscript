@@ -88,8 +88,22 @@ def generate(env):
 		#  \param path Path to archive library in
 		#  \param library Library to archive
 		def archiveLibrary(self, env, path, library):
-			self.archive.update({os.path.normpath(os.path.join(path, l.name)): l for l in library})
-			# todo: support library versioning
+			for l in library:
+				self.archive[os.path.normpath(os.path.join(path, l.name))] = l
+				
+				if 'SHLIBVERSION' not in env:
+					continue
+				
+				version = env['SHLIBVERSION'].split('.')
+				lname = l.name.split('.')
+				
+				if len(version) > 1:
+					symlname = '.'.join(lname[0:1-len(version)])
+					self.archive[os.path.normpath(os.path.join(path, symlname))] = env.File(symlname)
+				
+				if len(version) > 0:
+					symlname = '.'.join(lname[0:-len(version)])
+					self.archive[os.path.normpath(os.path.join(path, symlname))] = env.File(symlname)
 		
 		## Create build alias for all build targets stored so far
 		def aliasBuild(self, env, name):
