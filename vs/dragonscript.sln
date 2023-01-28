@@ -20,8 +20,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "package utils", "packages\u
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsi", "dsi\dsi.vcxproj", "{D41B6A9E-38C1-4DEF-9EDF-E4E5D79B793F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dragonscript_static", "dragonscript static\dragonscript_static.vcxproj", "{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prepare_build", "prepare_build\prepare_build.vcxproj", "{8F663AE1-1C76-4A04-A24D-369E66BAD6B5}"
 EndProject
 Global
@@ -72,14 +70,6 @@ Global
 		{D41B6A9E-38C1-4DEF-9EDF-E4E5D79B793F}.Release|x64.Build.0 = Release|x64
 		{D41B6A9E-38C1-4DEF-9EDF-E4E5D79B793F}.Release|x86.ActiveCfg = Release|Win32
 		{D41B6A9E-38C1-4DEF-9EDF-E4E5D79B793F}.Release|x86.Build.0 = Release|Win32
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Debug|x64.ActiveCfg = Debug|x64
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Debug|x64.Build.0 = Debug|x64
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Debug|x86.ActiveCfg = Debug|Win32
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Debug|x86.Build.0 = Debug|Win32
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Release|x64.ActiveCfg = Release|x64
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Release|x64.Build.0 = Release|x64
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Release|x86.ActiveCfg = Release|Win32
-		{BFDB5D3E-AE63-4723-BA56-BF27DAD6537E}.Release|x86.Build.0 = Release|Win32
 		{8F663AE1-1C76-4A04-A24D-369E66BAD6B5}.Debug|x64.ActiveCfg = Debug|x64
 		{8F663AE1-1C76-4A04-A24D-369E66BAD6B5}.Debug|x64.Build.0 = Debug|x64
 		{8F663AE1-1C76-4A04-A24D-369E66BAD6B5}.Debug|x86.ActiveCfg = Debug|Win32
