@@ -46,7 +46,7 @@ dspNodeFuncArg::dspNodeFuncArg(dspBaseNode *RefNode, const char *Name, dspBaseNo
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Type = Type; p_DefVal = DefValue;
@@ -185,7 +185,7 @@ dspBaseNode( ntClassFunc, RefNode )
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	if(Type){
@@ -332,7 +332,7 @@ dspNodeClassVariable::dspNodeClassVariable(dspNodeIdent *IdentNode, dspBaseNode 
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, IdentNode->GetName(), size );
 	#else
-		strncpy(p_Name, IdentNode->GetName(), size);
+		strncpy(p_Name, IdentNode->GetName(), size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_Init = Init;
@@ -398,7 +398,7 @@ dspNodeClass::dspNodeClass(dspBaseNode *RefNode, const char *Name, int ClassType
 	#ifdef OS_W32_VS
 		strncpy_s( p_Name, size + 1, Name, size );
 	#else
-		strncpy(p_Name, Name, size);
+		strncpy(p_Name, Name, size + 1);
 	#endif
 	p_Name[ size ] = 0;
 	p_BaseClass = NULL;
@@ -488,7 +488,7 @@ dspNodeOption::dspNodeOption(dspBaseNode *RefNode, const char *Key, const char *
 	#ifdef OS_W32_VS
 		strncpy_s( p_Key, size + 1, Key, size );
 	#else
-		strncpy(p_Key, Key, size);
+		strncpy(p_Key, Key, size + 1);
 	#endif
 	p_Key[ size ] = 0;
 
@@ -497,7 +497,7 @@ dspNodeOption::dspNodeOption(dspBaseNode *RefNode, const char *Key, const char *
 	#ifdef OS_W32_VS
 		strncpy_s( p_Value, size + 1, Value, size );
 	#else
-		strncpy(p_Value, Value, size);
+		strncpy(p_Value, Value, size + 1);
 	#endif
 	p_Value[ size ] = 0;
 }
@@ -522,7 +522,7 @@ dspNodeRequires::dspNodeRequires(dspBaseNode *RefNode, const char *Package) : ds
 	#ifdef OS_W32_VS
 		strncpy_s( p_Package, size + 1, Package, size );
 	#else
-		strncpy(p_Package, Package, size);
+		strncpy(p_Package, Package, size + 1);
 	#endif
 	p_Package[ size ] = 0;
 }
@@ -547,7 +547,7 @@ dspNodeIncludes::dspNodeIncludes(dspBaseNode *RefNode, const char *Package) : ds
 	#ifdef OS_W32_VS
 		strncpy_s( p_Package, size + 1, Package, size );
 	#else
-		strncpy(p_Package, Package, size);
+		strncpy(p_Package, Package, size + 1);
 	#endif
 	p_Package[ size ] = 0;
 }

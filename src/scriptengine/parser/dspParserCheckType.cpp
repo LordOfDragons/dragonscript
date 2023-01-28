@@ -72,7 +72,7 @@ void dspParserCheckType::AddName(const char *Name){
 	#ifdef OS_W32_VS
 		strncpy_s( p_Names[p_NameCount], size + 1, Name, size );
 	#else
-		strncpy(p_Names[p_NameCount], Name, size);
+		strncpy(p_Names[p_NameCount], Name, size + 1);
 	#endif
 	p_Names[p_NameCount][ size ] = 0;
 	p_NameCount++;
@@ -87,7 +87,7 @@ void dspParserCheckType::AddNameFront(const char *Name){
 	#ifdef OS_W32_VS
 		strncpy_s( vNewName, size + 1, Name, size );
 	#else
-		strncpy(vNewName, Name, size);
+		strncpy(vNewName, Name, size + 1);
 	#endif
 	vNewName[ size ] = 0;
 	if(p_Names){
@@ -251,7 +251,7 @@ dspParserCheckType *dspParserCheckType::GetTypeFromFullName(const char *name){
 			#ifdef OS_W32_VS
 				strncpy_s(curName, nextPos - curPos + 1, curPos, nextPos - curPos);
 			#else
-				strncpy(curName, curPos, nextPos - curPos);
+				strncpy(curName, curPos, nextPos - curPos + 1);
 			#endif
 			curName[nextPos-curPos] = '\0';
 			// add to type

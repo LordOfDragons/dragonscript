@@ -122,7 +122,7 @@ void dspParserCheckFunction::AddArgName(const char *Name){
 	#ifdef OS_W32_VS
 		strncpy_s( p_ArgNames[p_ArgNameCount], size + 1, Name, size );
 	#else
-		strncpy(p_ArgNames[p_ArgNameCount], Name, size);
+		strncpy(p_ArgNames[p_ArgNameCount], Name, size + 1);
 	#endif
 	p_ArgNames[p_ArgNameCount][ size ] = 0;
 	p_ArgNameCount++;

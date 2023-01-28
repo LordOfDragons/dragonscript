@@ -41,7 +41,7 @@ dspNodeByte::dspNodeByte(dsScriptSource *Source, int LineNum, int CharNum, const
 	#ifdef OS_W32_VS
 		strncpy_s( p_Token, size + 1, Token, size );
 	#else
-		strncpy(p_Token, Token, size);
+		strncpy(p_Token, Token, size + 1);
 	#endif
 	p_Token[ size ] = 0;
 }
@@ -109,7 +109,7 @@ dspNodeInt::dspNodeInt(dsScriptSource *Source, int LineNum, int CharNum, const c
 	#ifdef OS_W32_VS
 		strncpy_s( p_Token, size + 1, Token, size );
 	#else
-		strncpy(p_Token, Token, size);
+		strncpy(p_Token, Token, size + 1);
 	#endif
 	p_Token[ size ] = 0;
 }
@@ -149,7 +149,7 @@ dspNodeFloat::dspNodeFloat(dsScriptSource *Source, int LineNum, int CharNum, con
 	#ifdef OS_W32_VS
 		strncpy_s( p_Token, size + 1, Token, size );
 	#else
-		strncpy(p_Token, Token, size);
+		strncpy(p_Token, Token, size + 1);
 	#endif
 	p_Token[ size ] = 0;
 }
@@ -189,7 +189,7 @@ dspNodeString::dspNodeString(dsScriptSource *Source, int LineNum, int CharNum, c
 	#ifdef OS_W32_VS
 		strncpy_s( p_String, size + 1, String, size );
 	#else
-		strncpy(p_String, String, size);
+		strncpy(p_String, String, size + 1);
 	#endif
 	p_String[ size ] = 0;
 }

@@ -45,7 +45,7 @@ dspNodeOperator::dspNodeOperator(dsScriptSource *Source, int LineNum, int CharNu
 	#ifdef OS_W32_VS
 		strncpy_s( p_Op, size + 1, Operator, size );
 	#else
-		strncpy(p_Op, Operator, size);
+		strncpy(p_Op, Operator, size + 1);
 	#endif
 	p_Op[ size ] = 0;
 }
@@ -70,7 +70,7 @@ dspNodeUnaryOperation::dspNodeUnaryOperation(dspNodeOperator *OpNode, dspBaseNod
 	#ifdef OS_W32_VS
 		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
 	#else
-		strncpy(p_Op, OpNode->GetOperator(), size);
+		strncpy(p_Op, OpNode->GetOperator(), size + 1);
 	#endif
 	p_Op[ size ] = 0;
 	p_Obj = Obj;
@@ -84,7 +84,7 @@ dspNodeUnaryOperation::dspNodeUnaryOperation(dspBaseNode *RefNode, const char *O
 	#ifdef OS_W32_VS
 		strncpy_s( p_Op, size + 1, Op, size );
 	#else
-		strncpy(p_Op, Op, size);
+		strncpy(p_Op, Op, size + 1);
 	#endif
 	p_Op[ size ] = 0;
 	p_Obj = Obj;
@@ -327,7 +327,7 @@ dspNodeBinaryOperation::dspNodeBinaryOperation(dspNodeOperator *OpNode, dspBaseN
 	#ifdef OS_W32_VS
 		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
 	#else
-		strncpy(p_Op, OpNode->GetOperator(), size);
+		strncpy(p_Op, OpNode->GetOperator(), size + 1);
 	#endif
 	p_Op[ size ] = 0;
 	p_Obj = Obj; p_Arg = Arg;
@@ -341,7 +341,7 @@ dspNodeBinaryOperation::dspNodeBinaryOperation(dspBaseNode *RefNode, const char 
 	#ifdef OS_W32_VS
 		strncpy_s( p_Op, size + 1, Op, size );
 	#else
-		strncpy(p_Op, Op, size);
+		strncpy(p_Op, Op, size + 1);
 	#endif
 	p_Op[ size ] = 0;
 	p_Obj = Obj; p_Arg = Arg;

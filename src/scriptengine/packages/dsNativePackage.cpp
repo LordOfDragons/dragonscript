@@ -69,7 +69,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 		#ifdef OS_W32_VS
 			strncpy_s( pFilename, size + 1, filename, size );
 		#else
-			strncpy(pFilename, filename, size);
+			strncpy(pFilename, filename, size + 1);
 		#endif
 		pFilename[ size ] = 0;
 		// try loading module located at pFilename

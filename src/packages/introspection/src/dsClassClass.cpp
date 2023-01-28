@@ -518,7 +518,7 @@ void dsClassClass::PushFullName(dsRunTime *rt, dsClass *theClass){
 			#ifdef OS_W32_VS
 				strncpy_s( fullName + fullNameLen, nameLen + 1, curClass->GetName(), nameLen );
 			#else
-				strncpy(fullName+fullNameLen, curClass->GetName(), nameLen);
+				strncpy(fullName+fullNameLen, curClass->GetName(), nameLen + 1);
 			#endif
 			curClass = curClass->GetParent();
 			if(curClass){
