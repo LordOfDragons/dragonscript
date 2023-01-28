@@ -116,7 +116,7 @@ dsFunction(init.clsPak, "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, in
 void dsClassPackage::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sPakNatData *nd = (sPakNatData*)p_GetNativeData(myself);
 	if(!nd->package) DSTHROW(dueNullPointer);
-	rt->PushInt( ( intptr_t )nd->package );
+	rt->PushInt( ( int )( intptr_t )nd->package );
 }
 
 // public func bool equals(Object obj)

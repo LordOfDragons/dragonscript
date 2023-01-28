@@ -57,7 +57,7 @@ void dsiClassSystem::nfGetString::RunFunction( dsRunTime *rt, dsValue *myself ){
 			DSTHROW( dueInvalidAction );
 		}
 		
-		const int last = strlen( buffer );
+		const int last = ( int )strlen( buffer );
 		if( last > 0 && buffer[ last - 1 ] == '\n' ){
 			buffer[ last - 1 ] = '\0';
 		}

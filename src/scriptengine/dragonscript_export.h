@@ -31,12 +31,21 @@
 	#else
 		#define DS_DLL_EXPORT __declspec(dllimport)
 	#endif
-
+	
+	// for use by package entry points
+	#define PACKAGE_ENTRY_POINT_ATTR __declspec(dllexport)
+	
 	// disable warning about "class X needs to have dll-interface to be used by clients of class Y"
 	#pragma warning( disable: 4251 )
 	
+	// disable warning about "nonstandard extension used: zero-sized array in stuct/union"
+	#pragma warning( disable: 4200 )
+
 #else
 	#define DS_DLL_EXPORT
+
+	// for use by package entry points
+	#define PACKAGE_ENTRY_POINT_ATTR
 #endif
 
 #endif

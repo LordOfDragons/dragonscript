@@ -376,7 +376,7 @@ dsFunction(init.clsClass, "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, 
 void dsClassClass::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sClassNatData *nd = (sClassNatData*)p_GetNativeData(myself);
 	if(!nd->theClass) DSTHROW(dueNullPointer);
-	rt->PushInt( ( intptr_t )nd->theClass );
+	rt->PushInt( ( int )( intptr_t )nd->theClass );
 }
 
 // public func bool equals(Object obj)
@@ -502,7 +502,7 @@ void dsClassClass::PushFullName(dsRunTime *rt, dsClass *theClass){
 	int fullNameLen=0, nameLen;
 	dsClass *curClass = theClass;
 	while(curClass){
-		fullNameLen += strlen(curClass->GetName()) + 1;
+		fullNameLen += ( int )strlen(curClass->GetName()) + 1;
 		curClass = curClass->GetParent();
 	}
 	fullNameLen--;
@@ -513,9 +513,13 @@ void dsClassClass::PushFullName(dsRunTime *rt, dsClass *theClass){
 		fullName[fullNameLen] = '\0';
 		curClass = theClass;
 		while(curClass){
-			nameLen = strlen(curClass->GetName());
+			nameLen = ( int )strlen(curClass->GetName());
 			fullNameLen -= nameLen;
-			strncpy(fullName+fullNameLen, curClass->GetName(), nameLen);
+			#ifdef OS_W32_VS
+				strncpy_s( fullName + fullNameLen, nameLen, curClass->GetName(), nameLen );
+			#else
+				strncpy(fullName+fullNameLen, curClass->GetName(), nameLen);
+			#endif
 			curClass = curClass->GetParent();
 			if(curClass){
 				fullNameLen--;

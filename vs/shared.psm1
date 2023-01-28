@@ -60,6 +60,8 @@ function Copy-Files {
 
 New-Variable -Name PathDist -Value "Distribute\Application" -Scope Global -Option ReadOnly -Force
 New-Variable -Name PathDistData -Value "$PathDist\@ProgramFiles\DragonScript" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistDataPackages -Value "$PathDistData" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistBin -Value "$PathDistData" -Scope Global -Option ReadOnly -Force
 New-Variable -Name PathDistSystem -Value "$PathDist\@System" -Scope Global -Option ReadOnly -Force
 
 New-Variable -Name PathDistSdk -Value "Distribute\SDK" -Scope Global -Option ReadOnly -Force
