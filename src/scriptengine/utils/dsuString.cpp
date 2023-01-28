@@ -41,7 +41,7 @@ dsuString::dsuString(const char *String){
 		p_String = new char[vStrLen+1];
 		if(!p_String) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s( p_String, vStrLen, String, vStrLen );
+			strncpy_s( p_String, vStrLen + 1, String, vStrLen );
 		#else
 			strncpy(p_String, String, vStrLen);
 		#endif
@@ -57,7 +57,7 @@ dsuString::dsuString(const dsuString &String){
 		p_String = new char[vStrLen+1];
 		if(!p_String) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s( p_String, vStrLen, String.p_String, vStrLen );
+			strncpy_s( p_String, vStrLen + 1, String.p_String, vStrLen );
 		#else
 			strncpy(p_String, String.p_String, vStrLen);
 		#endif
@@ -153,13 +153,13 @@ void dsuString::Insert(int Index, char Char){
 	char *vString = new char[size + 2];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, Index, p_String, Index );
+		strncpy_s( vString, Index + 1, p_String, Index );
 	#else
 		strncpy(vString, p_String, Index);
 	#endif
 	vString[Index] = Char;
 	#ifdef OS_W32_VS
-		strncpy_s( vString+Index+1, size - Index, p_String+Index, size - Index );
+		strncpy_s( vString+Index+1, size - Index + 1, p_String+Index, size - Index );
 	#else
 		strncpy(vString+Index+1, p_String+Index, size - Index);
 	#endif
@@ -174,9 +174,9 @@ void dsuString::Insert(int Index, const char *String){
 	char *vString = new char[size1 + size2 + 1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, Index, p_String, Index );
-		strncpy_s( vString + Index, size2, String, size2 );
-		strncpy_s( vString + Index + size2, size1 - Index, p_String + Index, size1 - Index );
+		strncpy_s( vString, Index + 1, p_String, Index );
+		strncpy_s( vString + Index, size2 + 1, String, size2 );
+		strncpy_s( vString + Index + size2, size1 - Index + 1, p_String + Index, size1 - Index );
 	#else
 		strncpy(vString, p_String, Index);
 		strncpy(vString+Index, String, size2);
@@ -195,8 +195,8 @@ void dsuString::Delete(int Start, int aLength){
 	char *vString = new char[size1 - aLength + 1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, Start, p_String, Start );
-		strncpy_s( vString + Start, size2, p_String + Start + aLength, size2 );
+		strncpy_s( vString, Start + 1, p_String, Start );
+		strncpy_s( vString + Start, size2 + 1, p_String + Start + aLength, size2 );
 	#else
 		strncpy(vString, p_String, Start);
 		strncpy(vString+Start, p_String+Start+aLength, size2);
@@ -213,7 +213,7 @@ void dsuString::SetInt(int Value){
 	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, size, vNum, size );
+		strncpy_s( vString, size + 1, vNum, size );
 	#else
 		strncpy(vString, vNum, size);
 	#endif
@@ -228,7 +228,7 @@ void dsuString::SetDouble(double Value){
 	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, size, vNum, size );
+		strncpy_s( vString, size + 1, vNum, size );
 	#else
 		strncpy(vString, vNum, size);
 	#endif
@@ -250,7 +250,7 @@ void dsuString::Quote(){
 	const int size = Length();
 	vString[0] = '"';
 	#ifdef OS_W32_VS
-		strncpy_s( vString + 1, size, p_String, size );
+		strncpy_s( vString + 1, size + 1, p_String, size );
 	#else
 		strncpy(vString+1, p_String, size);
 	#endif
@@ -265,7 +265,7 @@ void dsuString::Unquote(){
 		if(!vString) DSTHROW(dueOutOfMemory);
 		const int size = Length() - 2;
 		#ifdef OS_W32_VS
-			strncpy_s( vString, size, p_String+1, size );
+			strncpy_s( vString, size + 1, p_String+1, size );
 		#else
 			strncpy(vString, p_String+1, size);
 		#endif
@@ -280,7 +280,7 @@ const dsuString &dsuString::operator=(const char *String){
 	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, size, String, size );
+		strncpy_s( vString, size + 1, String, size );
 	#else
 		strncpy(vString, String, size);
 	#endif
@@ -294,7 +294,7 @@ const dsuString &dsuString::operator=(const dsuString &String){
 	char *vString = new char[size+1];
 	if(!vString) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( vString, size, String.p_String, size );
+		strncpy_s( vString, size + 1, String.p_String, size );
 	#else
 		strncpy(vString, String.p_String, size);
 	#endif
@@ -313,14 +313,14 @@ const dsuString &dsuString::operator+=(const char *String){
 		if(!vString) DSTHROW(dueOutOfMemory);
 		if(size1 > 0){
 			#ifdef OS_W32_VS
-				strncpy_s( vString, size1, p_String, size1 );
+				strncpy_s( vString, size1 + 1, p_String, size1 );
 			#else
 				strncpy(vString, p_String, size1);
 			#endif
 		}
 		if(size2 > 0){
 			#ifdef OS_W32_VS
-				strncpy_s( vString + size1, size2, String, size2 );
+				strncpy_s( vString + size1, size2 + 1, String, size2 );
 			#else
 				strncpy(vString+size1, String, size2);
 			#endif

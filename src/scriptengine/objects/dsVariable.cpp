@@ -54,7 +54,7 @@ dsVariable::dsVariable(dsClass *OwnerClass, const char *Name, dsClass *Type, int
 	const int size = ( int )strlen( Name );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, Name, size );
+		strncpy_s( p_Name, size + 1, Name, size );
 	#else
 		strncpy(p_Name, Name, size);
 	#endif

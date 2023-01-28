@@ -800,7 +800,7 @@ void dsEngine::p_BuildSharePath(){
 				if( len > 0 ){
 					buffer = new char[ len + 1 ];
 					#ifdef OS_W32_VS
-						strncpy_s( buffer, len, envPath, len );
+						strncpy_s( buffer, len + 1, envPath, len );
 					#else
 						strncpy( buffer, envPath, len );
 					#endif
@@ -848,7 +848,7 @@ void dsEngine::p_AddSharePath(const char *path){
 		newPath = new char[len+2];
 		if(!newPath) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s( newPath, len, path, len );
+			strncpy_s( newPath, len + 1, path, len );
 		#else
 			strncpy(newPath, path, len);
 		#endif

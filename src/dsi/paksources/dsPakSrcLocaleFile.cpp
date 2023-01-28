@@ -65,6 +65,8 @@ dsPakSrcLocaleFile::dsPakSrcLocaleFile(){
 				if( wcstombs_s( &size, pAppDir, FILENAME_MAX + 1, buffer, wcslen( buffer ) + 1 ) ){
 					DSTHROW( dueInvalidAction );
 				}
+
+				break;
 			#else
 				if(getcwd(pAppDir, bufLen)) break;
 			#endif
@@ -137,8 +139,8 @@ dsScriptSource *dsPakSrcLocaleFile::p_FindScriptFile(const char *name){
 		if(!filename) DSTHROW(dueOutOfMemory);
 
 		#ifdef OS_W32_VS
-			strncpy_s( filename, appDirLen, pAppDir, appDirLen );
-			strncpy_s( filename + appDirLen, nameLen, name, nameLen );
+			strncpy_s( filename, appDirLen + 1, pAppDir, appDirLen );
+			strncpy_s( filename + appDirLen, nameLen + 1, name, nameLen );
 			filename[ appDirLen + nameLen ] = 0;
 		#else
 			strncpy(filename, pAppDir, appDirLen);

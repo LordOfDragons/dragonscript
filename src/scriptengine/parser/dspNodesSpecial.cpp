@@ -122,7 +122,7 @@ dspNodeEnumValue::dspNodeEnumValue(dspBaseNode *RefNode, const char *name, int o
 	const int size = ( int )strlen( name );
 	if(!(pName = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( pName, size, name, size );
+		strncpy_s( pName, size + 1, name, size );
 	#else
 		strncpy(pName, name, size);
 	#endif

@@ -90,7 +90,7 @@ void dsClassParserInfo::SetParent(const char *className){
 	char *newStr = new char[size+1];
 	if(!newStr) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( newStr, size, className, size );
+		strncpy_s( newStr, size + 1, className, size );
 	#else
 		strncpy(newStr, className, size );
 	#endif
@@ -108,7 +108,7 @@ void dsClassParserInfo::SetBase(const char *className){
 	char *newStr = new char[size+1];
 	if(!newStr) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( newStr, size, className, size );
+		strncpy_s( newStr, size + 1, className, size );
 	#else
 		strncpy(newStr, className, size);
 	#endif
@@ -133,10 +133,10 @@ void dsClassParserInfo::AddInterface(const char *className){
 	}
 	// add entry
 	const int size = ( int )strlen( className );
-	p_ifaces[p_ifaceCount] = new char[strlen(className)+1];
+	p_ifaces[p_ifaceCount] = new char[size+1];
 	if(!p_ifaces[p_ifaceCount]) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_ifaces[p_ifaceCount], size, className, size );
+		strncpy_s( p_ifaces[p_ifaceCount], size + 1, className, size );
 	#else
 		strncpy(p_ifaces[p_ifaceCount], className, size);
 	#endif
@@ -162,7 +162,7 @@ void dsClassParserInfo::AddRequiredPackage(const char *packageName){
 	p_reqs[p_reqCount] = new char[size+1];
 	if(!p_reqs[p_reqCount]) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_reqs[p_reqCount], size, packageName, size );
+		strncpy_s( p_reqs[p_reqCount], size + 1, packageName, size );
 	#else
 		strncpy(p_reqs[p_reqCount], packageName, size);
 	#endif

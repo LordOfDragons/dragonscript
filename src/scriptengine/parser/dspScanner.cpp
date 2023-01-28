@@ -201,7 +201,7 @@ void dspScanner::p_AddTokenChar(char Char){
 		char *vNewBuf = new char[p_TokenBufLen + DSP_TOKENBUFSIZE];
 		if(!vNewBuf) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s(vNewBuf, p_TokenBufLen, p_TokenBuf, p_TokenBufLen);
+			strncpy_s(vNewBuf, p_TokenBufLen + 1, p_TokenBuf, p_TokenBufLen);
 		#else
 			strncpy(vNewBuf, p_TokenBuf, p_TokenBufLen);
 		#endif
@@ -217,7 +217,7 @@ void dspScanner::p_AddStringChar(char Char){
 		char *vNewBuf = new char[p_StrBufLen+DSP_STRINGBUFSIZE];
 		if(!vNewBuf) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s(vNewBuf, p_StrBufLen, p_StrBuf, p_StrBufLen);
+			strncpy_s(vNewBuf, p_StrBufLen + 1, p_StrBuf, p_StrBufLen);
 		#else
 			strncpy(vNewBuf, p_StrBuf, p_StrBufLen);
 		#endif
@@ -350,7 +350,7 @@ dspBaseNode *dspScanner::p_ScanInlineComment(){
 			const char * const message = "Unclosed inline comment found.";
 			const int size = ( int )strlen( message );
 			#ifdef OS_W32_VS
-				strncpy_s( p_MsgBuf, size, message, size );
+				strncpy_s( p_MsgBuf, DSP_MSGBUFSIZE, message, size );
 			#else
 				strncpy(p_MsgBuf, message, size + 1);
 			#endif

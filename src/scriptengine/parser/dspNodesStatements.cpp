@@ -52,7 +52,7 @@ dspNodeMembVar::dspNodeMembVar( dspNodeIdent *member, dspBaseNode *obj ) : dspBa
 	const int size = ( int )strlen( member->GetName() );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, member->GetName(), size );
+		strncpy_s( p_Name, size + 1, member->GetName(), size );
 	#else
 		strncpy(p_Name, member->GetName(), size);
 	#endif
@@ -73,7 +73,7 @@ dspNodeMembVar::dspNodeMembVar( dspBaseNode *refnode, const char *name ) : dspBa
 	const int size = ( int )strlen( name );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, name, size );
+		strncpy_s( p_Name, size + 1, name, size );
 	#else
 		strncpy(p_Name, name, size);
 	#endif
@@ -286,7 +286,7 @@ dspNodeMembFunc::dspNodeMembFunc(dspNodeIdent *Member, dspBaseNode *Obj) : dspBa
 	const int size = ( int )strlen( Member->GetName() );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, Member->GetName(), size );
+		strncpy_s( p_Name, size + 1, Member->GetName(), size );
 	#else
 		strncpy(p_Name, Member->GetName(), size);
 	#endif
@@ -1709,7 +1709,7 @@ dspNodeVarDef::dspNodeVarDef(dspNodeIdent *IdentNode, dspBaseNode *Init) : dspBa
 	const int size = ( int )strlen( IdentNode->GetName() );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, IdentNode->GetName(), size );
+		strncpy_s( p_Name, size + 1, IdentNode->GetName(), size );
 	#else
 		strncpy(p_Name, IdentNode->GetName(), size);
 	#endif
@@ -1872,7 +1872,7 @@ dspNodeCatch::dspNodeCatch(dspBaseNode *refnode, dspBaseNode *Type, const char *
 	const int size = ( int )strlen( VarName );
 	if(!(p_CatchName = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_CatchName, size, VarName, size );
+		strncpy_s( p_CatchName, size + 1, VarName, size );
 	#else
 		strncpy(p_CatchName, VarName, size);
 	#endif

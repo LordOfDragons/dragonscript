@@ -169,7 +169,7 @@ static const char *substring( const char * const str, int start, int end ){
 		
 		newstr = new char[ count + 1 ];
 		#ifdef OS_W32_VS
-			strncpy_s( newstr, count, str + start, count );
+			strncpy_s( newstr, count + 1, str + start, count );
 		#else
 			strncpy( newstr, str + start, count );
 		#endif
@@ -273,7 +273,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 			}
 			string = ( char* )realloc( string, stringLen + copyLen + 1 );
 			#ifdef OS_W32_VS
-				strncpy_s( string + stringLen, copyLen, format, copyLen );
+				strncpy_s( string + stringLen, copyLen + 1, format, copyLen );
 			#else
 				strncpy( string + stringLen, format, copyLen );
 			#endif
@@ -1321,7 +1321,7 @@ void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( i < len ){
 		char * const newstr = new char[ len - i + 1 ];
 		#ifdef OS_W32_VS
-			strncpy_s( newstr, len - i, str + i, len - i );
+			strncpy_s( newstr, len - i + 1, str + i, len - i );
 		#else
 			strncpy( newstr, str + i, len - i );
 		#endif
@@ -1360,7 +1360,7 @@ void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( i >= 0 ){
 		char * const newstr = new char[ i + 2 ];
 		#ifdef OS_W32_VS
-			strncpy_s( newstr, i + i, str, i + 1 );
+			strncpy_s( newstr, i + 2, str, i + 1 );
 		#else
 			strncpy( newstr, str, i + 1 );
 		#endif
@@ -1405,7 +1405,7 @@ void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
 	if( j >= i ){
 		char * const newstr = new char[ j - i + 2 ];
 		#ifdef OS_W32_VS
-			strncpy_s( newstr, j - i + 1, str + i, j - i + 1 );
+			strncpy_s( newstr, j - i + 2, str + i, j - i + 1 );
 		#else
 			strncpy( newstr, str + i, j - i + 1 );
 		#endif
@@ -1727,8 +1727,8 @@ void dsClassString::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW( dueOutOfMemory );
 	}
 	#ifdef OS_W32_VS
-		strncpy_s( newStr, size1, str, size1 );
-		strncpy_s( newStr + size1, size2, otherStr, size2 );
+		strncpy_s( newStr, size1 + 1, str, size1 );
+		strncpy_s( newStr + size1, size2 + 1, otherStr, size2 );
 	#else
 		strncpy( newStr, str, size1 );
 		strncpy( newStr + size1, otherStr, size2 );
@@ -1790,8 +1790,8 @@ void dsClassString::nfOpAddBool::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW( dueOutOfMemory );
 	}
 	#ifdef OS_W32_VS
-		strncpy_s( newstr, size1, str, size1 );
-		strncpy_s( newstr + size1, 5, value ? "true\0" : "false", 5 );
+		strncpy_s( newstr, size1 + 1, str, size1 );
+		strncpy_s( newstr + size1, 6, value ? "true\0" : "false", 5 );
 	#else
 		strncpy( newstr, str, size1 );
 		strncpy( newstr + size1, value ? "true\0" : "false", 5 );
@@ -1885,8 +1885,8 @@ void dsClassString::nfOpAddObject::RunFunction( dsRunTime *rt, dsValue *myself )
 		DSTHROW( dueOutOfMemory );
 	}
 	#ifdef OS_W32_VS
-		strncpy_s( newstr, size1, str, size1 );
-		strncpy_s( newstr + size1, size2, otherstr, size2 );
+		strncpy_s( newstr, size1 + 1, str, size1 );
+		strncpy_s( newstr + size1, size2 + 1, otherstr, size2 );
 	#else
 		strncpy( newstr, str, size1 );
 		strncpy( newstr + size1, otherstr, size2 );
@@ -2030,7 +2030,7 @@ void dsClassString::SetRealObjectString( dsRealObject* object, const char* strin
 		DSTHROW( dueOutOfMemory );
 	}
 	#ifdef OS_W32_VS
-		strncpy_s( nd.str, size, string, size );
+		strncpy_s( nd.str, size + 1, string, size );
 	#else
 		strncpy( nd.str, string, size );
 	#endif

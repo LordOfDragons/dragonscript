@@ -64,7 +64,7 @@ void dsExceptionTrace::SetReason( const char *reason ){
 	char *newStr = new char[ size + 1 ];
 	if( ! newStr ) DSTHROW( dueOutOfMemory );
 	#ifdef OS_W32_VS
-		strncpy_s( newStr, size, reason, size );
+		strncpy_s( newStr, size + 1, reason, size );
 	#else
 		strncpy( newStr, reason, size );
 	#endif

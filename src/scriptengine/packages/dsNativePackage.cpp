@@ -67,7 +67,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 		pFilename = new char[size+1];
 		if(!pFilename) DSTHROW(dueOutOfMemory);
 		#ifdef OS_W32_VS
-			strncpy_s( pFilename, size, filename, size );
+			strncpy_s( pFilename, size + 1, filename, size );
 		#else
 			strncpy(pFilename, filename, size);
 		#endif

@@ -42,7 +42,7 @@ dspNodeKeyword::dspNodeKeyword(dsScriptSource *source, int linenum, int charnum,
 	const int size = ( int )strlen( Keyword );
 	if(!(p_Keyword = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Keyword, size, Keyword, size );
+		strncpy_s( p_Keyword, size + 1, Keyword, size );
 	#else
 		strncpy(p_Keyword, Keyword, size);
 	#endif

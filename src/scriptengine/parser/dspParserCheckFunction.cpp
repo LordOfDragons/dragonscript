@@ -120,7 +120,7 @@ void dspParserCheckFunction::AddArgName(const char *Name){
 	const int size = ( int )strlen( Name );
 	if(!(p_ArgNames[p_ArgNameCount] = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_ArgNames[p_ArgNameCount], size, Name, size );
+		strncpy_s( p_ArgNames[p_ArgNameCount], size + 1, Name, size );
 	#else
 		strncpy(p_ArgNames[p_ArgNameCount], Name, size);
 	#endif

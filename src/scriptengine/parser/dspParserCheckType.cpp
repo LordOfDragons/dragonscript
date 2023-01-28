@@ -70,7 +70,7 @@ void dspParserCheckType::AddName(const char *Name){
 	const int size = ( int )strlen( Name );
 	if(!(p_Names[p_NameCount] = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Names[p_NameCount], size, Name, size );
+		strncpy_s( p_Names[p_NameCount], size + 1, Name, size );
 	#else
 		strncpy(p_Names[p_NameCount], Name, size);
 	#endif
@@ -85,7 +85,7 @@ void dspParserCheckType::AddNameFront(const char *Name){
 	char *vNewName = new char[size+1];
 	if(!vNewName){ delete [] vNewNames; DSTHROW(dueOutOfMemory); }
 	#ifdef OS_W32_VS
-		strncpy_s( vNewName, size, Name, size );
+		strncpy_s( vNewName, size + 1, Name, size );
 	#else
 		strncpy(vNewName, Name, size);
 	#endif
@@ -249,7 +249,7 @@ dspParserCheckType *dspParserCheckType::GetTypeFromFullName(const char *name){
 			if(nextPos == curPos) DSTHROW(dueInvalidParam);
 			// copy name part to name buffer
 			#ifdef OS_W32_VS
-				strncpy_s(curName, nextPos - curPos, curPos, nextPos - curPos);
+				strncpy_s(curName, nextPos - curPos + 1, curPos, nextPos - curPos);
 			#else
 				strncpy(curName, curPos, nextPos - curPos);
 			#endif

@@ -39,7 +39,7 @@ dspNodeByte::dspNodeByte(dsScriptSource *Source, int LineNum, int CharNum, const
 	const int size = ( int )strlen( Token );
 	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Token, size, Token, size );
+		strncpy_s( p_Token, size + 1, Token, size );
 	#else
 		strncpy(p_Token, Token, size);
 	#endif
@@ -107,7 +107,7 @@ dspNodeInt::dspNodeInt(dsScriptSource *Source, int LineNum, int CharNum, const c
 	const int size = ( int )strlen( Token );
 	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Token, size, Token, size );
+		strncpy_s( p_Token, size + 1, Token, size );
 	#else
 		strncpy(p_Token, Token, size);
 	#endif
@@ -147,7 +147,7 @@ dspNodeFloat::dspNodeFloat(dsScriptSource *Source, int LineNum, int CharNum, con
 	const int size = ( int )strlen( Token );
 	if(!(p_Token = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Token, size, Token, size );
+		strncpy_s( p_Token, size + 1, Token, size );
 	#else
 		strncpy(p_Token, Token, size);
 	#endif
@@ -187,7 +187,7 @@ dspNodeString::dspNodeString(dsScriptSource *Source, int LineNum, int CharNum, c
 	const int size = ( int )strlen( String );
 	if(!(p_String = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_String, size, String, size );
+		strncpy_s( p_String, size + 1, String, size );
 	#else
 		strncpy(p_String, String, size);
 	#endif

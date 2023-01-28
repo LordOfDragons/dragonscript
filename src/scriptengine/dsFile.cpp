@@ -38,7 +38,7 @@ dsFile::dsFile(const char *Filename){
 	int size = ( int )strlen( Filename );
 	if(!(p_Filename = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Filename, size, Filename, size );
+		strncpy_s( p_Filename, size + 1, Filename, size );
 	#else
 		strncpy(p_Filename, Filename, size);
 	#endif
@@ -49,7 +49,7 @@ dsFile::dsFile(const char *Filename){
 	size = ( int )strlen( vFindSlash );
 	if(!(p_Filetitle = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Filetitle, size, vFindSlash, size );
+		strncpy_s( p_Filetitle, size + 1, vFindSlash, size );
 	#else
 		strncpy(p_Filetitle, vFindSlash, size);
 	#endif

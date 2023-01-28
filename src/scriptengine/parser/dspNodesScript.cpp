@@ -44,7 +44,7 @@ dspNodeFuncArg::dspNodeFuncArg(dspBaseNode *RefNode, const char *Name, dspBaseNo
 	const int size = ( int )strlen( Name );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, Name, size );
+		strncpy_s( p_Name, size + 1, Name, size );
 	#else
 		strncpy(p_Name, Name, size);
 	#endif
@@ -183,7 +183,7 @@ dspBaseNode( ntClassFunc, RefNode )
 	const int size = ( int )strlen( Name );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, Name, size );
+		strncpy_s( p_Name, size + 1, Name, size );
 	#else
 		strncpy(p_Name, Name, size);
 	#endif
@@ -330,7 +330,7 @@ dspNodeClassVariable::dspNodeClassVariable(dspNodeIdent *IdentNode, dspBaseNode 
 	const int size = ( int )strlen( IdentNode->GetName() );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, IdentNode->GetName(), size );
+		strncpy_s( p_Name, size + 1, IdentNode->GetName(), size );
 	#else
 		strncpy(p_Name, IdentNode->GetName(), size);
 	#endif
@@ -396,7 +396,7 @@ dspNodeClass::dspNodeClass(dspBaseNode *RefNode, const char *Name, int ClassType
 	const int size = ( int )strlen( Name );
 	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Name, size, Name, size );
+		strncpy_s( p_Name, size + 1, Name, size );
 	#else
 		strncpy(p_Name, Name, size);
 	#endif
@@ -486,7 +486,7 @@ dspNodeOption::dspNodeOption(dspBaseNode *RefNode, const char *Key, const char *
 	int size = ( int )strlen( Key );
 	if(!(p_Key = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Key, size, Key, size );
+		strncpy_s( p_Key, size + 1, Key, size );
 	#else
 		strncpy(p_Key, Key, size);
 	#endif
@@ -495,7 +495,7 @@ dspNodeOption::dspNodeOption(dspBaseNode *RefNode, const char *Key, const char *
 	size = ( int )strlen( Value );
 	if(!(p_Value = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Value, size, Value, size );
+		strncpy_s( p_Value, size + 1, Value, size );
 	#else
 		strncpy(p_Value, Value, size);
 	#endif
@@ -520,7 +520,7 @@ dspNodeRequires::dspNodeRequires(dspBaseNode *RefNode, const char *Package) : ds
 	const int size = ( int )strlen( Package );
 	if(!(p_Package = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Package, size, Package, size );
+		strncpy_s( p_Package, size + 1, Package, size );
 	#else
 		strncpy(p_Package, Package, size);
 	#endif
@@ -545,7 +545,7 @@ dspNodeIncludes::dspNodeIncludes(dspBaseNode *RefNode, const char *Package) : ds
 	const int size = ( int )strlen( Package );
 	if(!(p_Package = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Package, size, Package, size );
+		strncpy_s( p_Package, size + 1, Package, size );
 	#else
 		strncpy(p_Package, Package, size);
 	#endif

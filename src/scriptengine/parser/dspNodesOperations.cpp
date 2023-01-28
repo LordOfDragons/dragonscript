@@ -43,7 +43,7 @@ dspNodeOperator::dspNodeOperator(dsScriptSource *Source, int LineNum, int CharNu
 	const int size = ( int )strlen( Operator );
 	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Op, size, Operator, size );
+		strncpy_s( p_Op, size + 1, Operator, size );
 	#else
 		strncpy(p_Op, Operator, size);
 	#endif
@@ -68,7 +68,7 @@ dspNodeUnaryOperation::dspNodeUnaryOperation(dspNodeOperator *OpNode, dspBaseNod
 	const int size = ( int )strlen( OpNode->GetOperator() );
 	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Op, size, OpNode->GetOperator(), size );
+		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
 	#else
 		strncpy(p_Op, OpNode->GetOperator(), size);
 	#endif
@@ -82,7 +82,7 @@ dspNodeUnaryOperation::dspNodeUnaryOperation(dspBaseNode *RefNode, const char *O
 	const int size = ( int )strlen( Op );
 	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Op, size, Op, size );
+		strncpy_s( p_Op, size + 1, Op, size );
 	#else
 		strncpy(p_Op, Op, size);
 	#endif
@@ -325,7 +325,7 @@ dspNodeBinaryOperation::dspNodeBinaryOperation(dspNodeOperator *OpNode, dspBaseN
 	const int size = ( int )strlen( OpNode->GetOperator() );
 	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Op, size, OpNode->GetOperator(), size );
+		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
 	#else
 		strncpy(p_Op, OpNode->GetOperator(), size);
 	#endif
@@ -339,7 +339,7 @@ dspNodeBinaryOperation::dspNodeBinaryOperation(dspBaseNode *RefNode, const char 
 	const int size = ( int )strlen( Op );
 	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
 	#ifdef OS_W32_VS
-		strncpy_s( p_Op, size, Op, size );
+		strncpy_s( p_Op, size + 1, Op, size );
 	#else
 		strncpy(p_Op, Op, size);
 	#endif
