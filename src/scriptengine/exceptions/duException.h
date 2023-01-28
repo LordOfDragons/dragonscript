@@ -323,11 +323,11 @@ public:
 	dueAssertion( const char *info, const char *file, int line );
 };
 
-extern dsuString ErrorBuildInfo( const char *format, ... );
-extern dsuString ErrorObjectType( const dsValue *value );
-extern dsuString ErrorCastInfo( const dsValue *from, const dsClass *to );
-extern dsuString ErrorCastInfo( const dsClass *from, const dsClass *to );
-extern dsuString ErrorValueInfo( const dsRunTime &rt, const dsValue *value );
+DS_FUNC_EXPORT_DECL dsuString ErrorBuildInfo( const char *format, ... );
+DS_FUNC_EXPORT_DECL dsuString ErrorObjectType( const dsValue *value );
+DS_FUNC_EXPORT_DECL dsuString ErrorCastInfo( const dsValue *from, const dsClass *to );
+DS_FUNC_EXPORT_DECL dsuString ErrorCastInfo( const dsClass *from, const dsClass *to );
+DS_FUNC_EXPORT_DECL dsuString ErrorValueInfo( const dsRunTime &rt, const dsValue *value );
 
 
 
