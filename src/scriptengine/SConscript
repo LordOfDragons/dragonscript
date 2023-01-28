@@ -37,7 +37,8 @@ if envLibrary['TARGET_PLATFORM'] in ['linux', 'android', 'macos']:
 
 conf.Finish()
 
-writeConfigFile(envLibrary.File('#src/scriptengine/dragonscript_config.h').srcnode().abspath, configFileDefines)
+fileConfig = envLibrary.File('#src/scriptengine/dragonscript_config.h').srcnode()
+writeConfigFile(fileConfig.abspath, configFileDefines)
 
 # update the compile flags
 # format path string to be used as define declaration on the command line.
@@ -86,6 +87,8 @@ if envLibrary['TARGET_PLATFORM'] != 'windows':
 library = envLibrary.SharedLibrary(target='dscript', source=objects)
 targetLibrary.build.extend(library)
 targetLibrary.aliasBuild(envLibrary, 'dscript_build')
+
+envLibrary.Clean(library, fileConfig)
 
 if 'SHLIBVERSION' in envLibrary:
 	targetLibrary.install.extend(envLibrary.InstallVersionedLib(pathLib, library))
