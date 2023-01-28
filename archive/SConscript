@@ -20,6 +20,8 @@ if envArchive['archive_format'] == 'tarbz2':
 	archiveMethod = targetArchive.formatTarBz2
 elif envArchive['archive_format'] == 'zip':
 	archiveMethod = targetArchive.formatZip
+else:
+	raise 'Invalid format {}'.format(envArchive['archive_format'])
 
 targetArchive.archiveFiles(envArchive, envArchive['archive_name_library'], files, archiveMethod)
 
