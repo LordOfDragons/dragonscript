@@ -23,7 +23,7 @@ Install-Files -Path (Join-Path -Path $OutputDir -ChildPath "libdscript.dll") -De
 
 
 # sdk
-$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistSdkInc\dscript"
+$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistSdkInc\libdscript"
 if (Test-Path $TargetDir) {
     Remove-Item $TargetDir -Force -Recurse
 }
