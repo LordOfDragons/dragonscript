@@ -47,6 +47,7 @@ class StringTests extends Application
 		this.testEndsWith()
 		this.testGetAt()
 		this.testFormat()
+		this.testEquals()
 		
 		return 0
 	end
@@ -157,5 +158,10 @@ class StringTests extends Application
 		System.print( "format: should 'this is a test' is: " + "this {:s} test".format(Array.newWith("is a")) + "\n" )
 		System.print( "format: should 'this (null) test' is: " + "this {:s} test".format(Array.newWith(null)) + "\n" )
 	end
+	
+	protected func void testEquals()
+		System.print( "equals(a,null): should false: " + "a".equals(null) + "\n" )
+		System.print( "equals(a,a): should true: " + "a".equals("a") + "\n" )
+		System.print( "equals(a,b): should false: " + "a".equals("b") + "\n" )
+	end
 end
-
