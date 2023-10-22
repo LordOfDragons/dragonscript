@@ -1148,6 +1148,132 @@ void dsClassString::nfSplit2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 }
 
+// public func Array splitExact( byte character )
+dsClassString::nfSplitExact::nfSplitExact( const sInitData &init ) : dsFunction( init.clsStr,
+"splitExact", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsByte ); // character
+}
+void dsClassString::nfSplitExact::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
+	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const byte character = rt->GetValue( 0 )->GetByte();
+	const int len = ( int )strlen( str );
+	const char *splitstr = NULL;
+	dsValue *valsplitstr = NULL;
+	dsValue *vallist = NULL;
+	int i, start = 0;
+	
+	try{
+		vallist = clsArray->CreateArray( rt );
+		valsplitstr = rt->CreateValue( clsString );
+		
+		for( i=0; i<len; i++ ){
+			if( str[ i ] == character ){
+				splitstr = substring( str, start, i );
+				rt->SetString( valsplitstr, splitstr );
+				delete [] splitstr;
+				splitstr = NULL;
+				
+				clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+				
+				start = i + 1;
+			}
+		}
+		
+		splitstr = substring( str, start, len );
+		rt->SetString( valsplitstr, splitstr );
+		delete [] splitstr;
+		splitstr = NULL;
+		
+		clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+		
+		// push the result and clean up
+		rt->FreeValue( valsplitstr );
+		valsplitstr = NULL;
+		
+		rt->PushValue( vallist );
+		rt->FreeValue( vallist );
+		
+	}catch( ... ){
+		if( splitstr ){
+			delete [] splitstr;
+		}
+		if( valsplitstr ){
+			rt->FreeValue( valsplitstr );
+		}
+		if( vallist ){
+			rt->FreeValue( vallist );
+		}
+		throw;
+	}
+}
+
+// public func Array splitExact( String characters )
+dsClassString::nfSplitExact2::nfSplitExact2( const sInitData &init ) : dsFunction( init.clsStr,
+"splitExact", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsStr ); // characters
+}
+void dsClassString::nfSplitExact2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
+	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const characters = rt->GetValue( 0 )->GetString();
+	const int clen = ( int )strlen( characters );
+	const int len = ( int )strlen( str );
+	const char *splitstr = NULL;
+	dsValue *valsplitstr = NULL;
+	dsValue *vallist = NULL;
+	int i, j, start = 0;
+	
+	try{
+		vallist = clsArray->CreateArray( rt );
+		valsplitstr = rt->CreateValue( clsString );
+		
+		for( i=0; i<len; i++ ){
+			for( j=0; j<clen; j++ ){
+				if( str[ i ] == characters[ j ] ){
+					splitstr = substring( str, start, i );
+					rt->SetString( valsplitstr, splitstr );
+					delete [] splitstr;
+					splitstr = NULL;
+					
+					clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+					
+					start = i + 1;
+					break;
+				}
+			}
+		}
+		
+		splitstr = substring( str, start, len );
+		rt->SetString( valsplitstr, splitstr );
+		delete [] splitstr;
+		splitstr = NULL;
+		
+		clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+		
+		// push the result and clean up
+		rt->FreeValue( valsplitstr );
+		valsplitstr = NULL;
+		
+		rt->PushValue( vallist );
+		rt->FreeValue( vallist );
+		
+	}catch( ... ){
+		if( splitstr ){
+			delete [] splitstr;
+		}
+		if( valsplitstr ){
+			rt->FreeValue( valsplitstr );
+		}
+		if( vallist ){
+			rt->FreeValue( vallist );
+		}
+		throw;
+	}
+}
+
 // public func String replace( byte replace, byte with )
 dsClassString::nfReplace::nfReplace( const sInitData &init ) : dsFunction( init.clsStr,
 "replace", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
@@ -1972,6 +2098,8 @@ void dsClassString::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfReverse( init ) );
 	AddFunction( new nfSplit( init ) );
 	AddFunction( new nfSplit2( init ) );
+	AddFunction( new nfSplitExact( init ) );
+	AddFunction( new nfSplitExact2( init ) );
 	AddFunction( new nfReplace( init ) );
 	AddFunction( new nfReplace2( init ) );
 	AddFunction( new nfReplaceString( init ) );

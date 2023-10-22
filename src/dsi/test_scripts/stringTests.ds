@@ -37,12 +37,7 @@ class StringTests extends Application
 		System.print( "replaceString: should 'HollaHollaHolla' is '" + "aaa".replaceString( "a", "Holla" ) + "'\n" )
 		System.print( "replaceString: should 'HollaHollaa' is '" + "ababa".replaceString( "ab", "Holla" ) + "'\n" )
 		
-		System.print( "split: should [this,is,a,test] is " + str1.split( ' ' ) + "\n" )
-		var String str2 = "this_is-aXtest"
-		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
-		var String str3 = "this_--X_is-_-aXXXXtest__-X"
-		System.print( "split: should [this,is,a,test] is " + str2.split( "X-_" ) + "\n" )
-		
+		this.testSplit()
 		this.testStartsWith()
 		this.testEndsWith()
 		this.testGetAt()
@@ -163,5 +158,31 @@ class StringTests extends Application
 		System.print( "equals(a,null): should false: " + "a".equals(null) + "\n" )
 		System.print( "equals(a,a): should true: " + "a".equals("a") + "\n" )
 		System.print( "equals(a,b): should false: " + "a".equals("b") + "\n" )
+	end
+	
+	protected func void testSplit()
+		var String str1 = "this is a test"
+		System.print( "split: should [this,is,a,test] is " + str1.split( ' ' ) + "\n" )
+		System.print( "splitExact: should [this,is,a,test] is " + str1.splitExact( ' ' ) + "\n" )
+		
+		str1 = " this is   a test "
+		System.print( "split: should [this,is,a,test] is " + str1.split( ' ' ) + "\n" )
+		System.print( "splitExact: should [,this,is,,,a,test,] is " + str1.splitExact( ' ' ) + "\n" )
+		
+		str1 = "this_is-aXtest"
+		System.print( "split: should [this,is,a,test] is " + str1.split( "X-_" ) + "\n" )
+		System.print( "splitExact: should [this,is,a,test] is " + str1.splitExact( "X-_" ) + "\n" )
+		
+		str1 = "-Xthis_--X_is-_-aXXXXtest__-X"
+		System.print( "split: should [this,is,a,test] is " + str1.split( "X-_" ) + "\n" )
+		System.print( "splitExact: should [,,this,,,,,is,,,a,,,,test,,,,] is " + str1.splitExact( "X-_" ) + "\n" )
+		
+		str1 = ""
+		System.print( "split: should 0 is " + str1.split( '.' ).getCount() + "\n" )
+		System.print( "splitExact: should 1 [] is " + str1.splitExact( '.' ).getCount() + " " + str1.splitExact( '.' ) + "\n" )
+		
+		str1 = "..."
+		System.print( "split: should 0 is " + str1.split( '.' ).getCount() + "\n" )
+		System.print( "splitExact: should [,,,] is " + str1.splitExact( '.' ) + "\n" )
 	end
 end
