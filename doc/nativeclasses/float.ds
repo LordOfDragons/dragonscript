@@ -28,7 +28,7 @@ fixed class float
 	/** \name Constructors */
 	/*@{*/
 	/** \brief Create float. */
-	public func new()
+	func new()
 	end
 	/*@}*/
 	
@@ -43,7 +43,7 @@ fixed class float
 	 * \retval <0 This float value is less than the other float value.
 	 * \retval >0 This float value is greater than the other float value.
 	 */
-	public func int compare( Object other )
+	func int compare(Object other)
 		return 0
 	end
 	
@@ -51,17 +51,17 @@ fixed class float
 	 * \brief Integer is equal to another float.
 	 * \returns \em true if \em other is of type float and both are equal.
 	 */
-	public func bool equals( Object other )
+	func bool equals(Object other)
 		return false
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
-	public func int hashCode()
+	func int hashCode()
 		return 0
 	end
 	
 	/** \brief String representation of float value. */
-	public func String toString()
+	func String toString()
 		return null
 	end
 	/*@}*/
@@ -70,63 +70,179 @@ fixed class float
 	
 	/** \name Operators */
 	/*@{*/
-	/** \brief Integer value is less than another float value. */
-	public func bool <( float other )
+	/** \brief Float value is less than another float value. */
+	func bool <(float other)
 		return false
 	end
 	
-	/** \brief Integer value is less than or equal to another float value. */
-	public func bool <=( float other )
+	/** \brief Float value is less than another int value. */
+	func bool <(int other)
 		return false
 	end
 	
-	/** \brief Integer value is greater than another float value. */
-	public func bool >( float other )
+	/** \brief Float value is less than another byte value. */
+	func bool <(byte other)
 		return false
 	end
 	
-	/** \brief Integer value is greater than or equal to another float value. */
-	public func bool >=( float other )
+	/** \brief Float value is less than or equal to another float value. */
+	func bool <=(float other)
+		return false
+	end
+	
+	/** \brief Float value is less than or equal to another integer value. */
+	func bool <=(int other)
+		return false
+	end
+	
+	/** \brief Float value is less than or equal to another byte value. */
+	func bool <=(byte other)
+		return false
+	end
+	
+	/** \brief Float value is greater than another float value. */
+	func bool >(float other)
+		return false
+	end
+	
+	/** \brief Float value is greater than another integer value. */
+	func bool >(int other)
+		return false
+	end
+	
+	/** \brief Float value is greater than another byte value. */
+	func bool >(byte other)
+		return false
+	end
+	
+	/** \brief Float value is greater than or equal to another float value. */
+	func bool >=(float other)
+		return false
+	end
+	
+	/** \brief Float value is greater than or equal to another int value. */
+	func bool >=(int other)
+		return false
+	end
+	
+	/** \brief Float value is greater than or equal to another byte value. */
+	func bool >=(byte other)
 		return false
 	end
 	
 	
 	
-	/** \brief Integer plus another float value. */
-	public func float +( float other )
+	/** \brief Float plus another float value. */
+	func float +(float other)
 		return 0.0
 	end
 	
-	/** \brief Integer minus another float value. */
-	public func float -( float other )
+	/** \brief Float plus another integer value. */
+	func float +(int other)
 		return 0.0
 	end
 	
-	/** \brief Integer value timer another float value. */
-	public func float *( float other )
+	/** \brief Float plus another byte value. */
+	func float +(byte other)
+		return 0.0
+	end
+	
+	/** \brief Float minus another float value. */
+	func float -(float other)
+		return 0.0
+	end
+	
+	/** \brief Float minus another integer value. */
+	func float -(int other)
+		return 0.0
+	end
+	
+	/** \brief Float minus another byte value. */
+	func float -(byte other)
+		return 0.0
+	end
+	
+	/** \brief Float value timer another float value. */
+	func float *(float other)
+		return 0.0
+	end
+	
+	/** \brief Float value timer another integer value. */
+	func float *(int other)
+		return 0.0
+	end
+	
+	/** \brief Float value timer another byte value. */
+	func float *(byte other)
 		return 0.0
 	end
 	
 	/**
-	 * \brief Integer value divided by another float value.
+	 * \brief Float value divided by another float value.
 	 * \throws EDivisionByZero \em other is 0.
 	 */
-	public func float /( float other )
+	func float /(float other)
+		return 0.0
+	end
+	
+	/**
+	 * \brief Float value divided by another integer value.
+	 * \throws EDivisionByZero \em other is 0.
+	 */
+	func float /(int other)
+		return 0.0
+	end
+	
+	/**
+	 * \brief Float value divided by another byte value.
+	 * \throws EDivisionByZero \em other is 0.
+	 */
+	func float /(byte other)
 		return 0.0
 	end
 	
 	/** \brief Set float value to float value plus another float value. */
-	public func float +=( float other )
+	func float +=(float other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value plus another integer value. */
+	func float +=(int other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value plus another byte value. */
+	func float +=(byte other)
 		return 0.0
 	end
 	
 	/** \brief Set float value to float value minus another float value. */
-	public func float -=( float other )
+	func float -=(float other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value minus another integer value. */
+	func float -=(int other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value minus another byte value. */
+	func float -=(byte other)
 		return 0.0
 	end
 	
 	/** \brief Set float value to float value timer another float value. */
-	public func float *=( float other )
+	func float *=(float other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value timer another integer value. */
+	func float *=(int other)
+		return 0.0
+	end
+	
+	/** \brief Set float value to float value timer another byte value. */
+	func float *=(byte other)
 		return 0.0
 	end
 	
@@ -134,24 +250,40 @@ fixed class float
 	 * \brief Set float value to float value divided by another float value.
 	 * \throws EDivisionByZero \em other is 0.
 	 */
-	public func float /=( float other )
+	func float /=(float other)
+		return 0.0
+	end
+	
+	/**
+	 * \brief Set float value to float value divided by another integer value.
+	 * \throws EDivisionByZero \em other is 0.
+	 */
+	func float /=(int other)
+		return 0.0
+	end
+	
+	/**
+	 * \brief Set float value to float value divided by another byte value.
+	 * \throws EDivisionByZero \em other is 0.
+	 */
+	func float /=(byte other)
 		return 0.0
 	end
 	
 	
 	
 	/** \brief Increment float value by one. */
-	public func float ++()
+	func float ++()
 		return 0.0
 	end
 	
 	/** \brief Decrement float value by one. */
-	public func float --()
+	func float --()
 		return 0.0
 	end
 	
 	/** \brief Negated value. */
-	public func float -()
+	func float -()
 		return 0.0
 	end
 end
@@ -167,7 +299,7 @@ fixed class Float
 	/** \name Constructors */
 	/*@{*/
 	/** \brief Create float. */
-	public func new( float value )
+	func new(float value)
 	end
 	/*@}*/
 	
@@ -176,7 +308,7 @@ fixed class Float
 	/** \name Management */
 	/*@{*/
 	/** \brief Float value. */
-	public func float value()
+	func float value()
 		return 0.0
 	end
 	
@@ -184,22 +316,22 @@ fixed class Float
 	 * \brief Float is equal to another float.
 	 * \returns \em true if \em other is of type Float and both are equal.
 	 */
-	public func bool equals( Object other )
+	func bool equals(Object other)
 		return false
 	end
 	
 	/** \brief Value difference between objects. */
-	public func int compare( Object other )
+	func int compare(Object other)
 		return 0
 	end
 	
 	/** \brief Hash code for use as dictionary keys. */
-	public func int hashCode()
+	func int hashCode()
 		return 0
 	end
 	
 	/** \brief String representation of float value. */
-	public func String toString()
+	func String toString()
 		return null
 	end
 	/*@}*/

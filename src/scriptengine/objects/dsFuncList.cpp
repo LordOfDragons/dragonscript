@@ -155,11 +155,11 @@ dsFunction *dsFuncList::FindBestFunction(dsClass *Class, const char *Name, dsSig
 		if(vBestFunc == vCurFunc) continue;
 		if(strcmp(vCurFunc->GetName(), Name) != 0) continue;
 		if(Class && !Class->IsEqualTo(vCurFunc->GetOwnerClass())) continue;
-		// get signature and check if the func-sig has at least the same number of args as the check-sig
+		// get signature and check if the func-sig has at the same number of args as the check-sig
 		vCurSig = vCurFunc->GetSignature();
 		vCurParamCount = vCurSig->GetCount();
 		vCurMatch = 0;
-		if(vCurParamCount < vCheckParamCount) continue;
+		if(vCurParamCount != vCheckParamCount) continue;
 		// check if the args do match
 		for(j=0; j<vCurParamCount; j++){
 			vCurParam = vCurSig->GetParameter(j);
