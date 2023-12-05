@@ -25,6 +25,8 @@
 #ifndef _DSMEMORYMANAGER_H_
 #define _DSMEMORYMANAGER_H_
 
+#include "dragonscript_export.h"
+
 // predefinitions
 class dsEngine;
 class dsClass;
@@ -32,7 +34,6 @@ class dsValue;
 class dsRealObject;
 class dsValue;
 
-// includes
 
 
 //definitions
@@ -40,7 +41,7 @@ class dsValue;
 
 
 // class dsMemoryManager
-class dsMemoryManager{
+class DS_DLL_EXPORT dsMemoryManager{
 friend class dsGarbageCollector;
 private:
 	struct sHole{

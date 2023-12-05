@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch'
+        required: true
+        type: string
+        default: 'master'
+      version:
+        description: 'Version'
+        required: true
+        type: string
+        default: 'X.Y{.Z}'
+
+jobs:
+  build_linux:
+    uses: ./.github/workflows/build_linux.yml
+    with:
+      branch: ${{ github.event.inputs.branch }}
+      releaseVersion: ${{ github.event.inputs.version }}
+      buildVersion: ${{ github.event.inputs.version }}
+      artifactArchive: archives-linux
+  
+  build_windows:
+    uses: ./.github/workflows/build_windows.yml
+    with:
+      branch: ${{ github.event.inputs.branch }}
+      releaseVersion: ${{ github.event.inputs.version }}
+      buildVersion: ${{ github.event.inputs.version }}
+      artifactArchive: archives-windows
+
+  upload:
+    needs: [build_linux, build_windows]
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Get Linux Archives
+        uses: actions/download-artifact@v3
+        with:
+          name: archives-linux
+      
+      - name: Get Windows Archives
+        uses: actions/download-artifact@v3
+        with:
+          name: archives-windows
+      
+      - name: Upload Artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: false
+          artifactErrorsFailBuild: true
+          draft: false
+          prerelease: false
+          commit: ${{ github.event.inputs.branch }}
+          tag: 'v${{ github.event.inputs.version }}'
+          name: 'DragonScript Release ${{ github.event.inputs.version }}'
+          body: |
+            ${{ github.event.inputs.version }} release of the DragonScript Scripting Language.
+            
+            Contains SDK for developers and Application files for End-Users usage.
+            
+            See https://developer.dragondreams.ch/wiki/doku.php/dragengine:modules:dragonscript:main for information.
+            
+            See https://developer.dragondreams.ch/wiki/doku.php/dragengine:modules:dragonscript:api for documentation.
+          artifacts: >
+            libdscript-${{ github.event.inputs.version }}-linux64.tar.bz2,
+            libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip

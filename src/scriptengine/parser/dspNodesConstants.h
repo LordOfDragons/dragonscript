@@ -26,7 +26,7 @@
 #define _DSPNODESCONSTANTS_H_
 
 // byte node
-class dspNodeByte : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeByte : public dspBaseNode{
 private:
 	byte p_Value;
 	char *p_Token;
@@ -45,7 +45,7 @@ public:
 };
 
 // boolean node
-class dspNodeBool : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeBool : public dspBaseNode{
 private:
 	bool p_Value;
 public:
@@ -62,7 +62,7 @@ public:
 };
 
 // int node
-class dspNodeInt : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeInt : public dspBaseNode{
 private:
 	int p_Value;
 	char *p_Token;
@@ -81,7 +81,7 @@ public:
 };
 
 // float node
-class dspNodeFloat : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeFloat : public dspBaseNode{
 private:
 	float p_Value;
 	char *p_Token;
@@ -100,7 +100,7 @@ public:
 };
 
 // string node
-class dspNodeString : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeString : public dspBaseNode{
 private:
 	char *p_String;
 public:

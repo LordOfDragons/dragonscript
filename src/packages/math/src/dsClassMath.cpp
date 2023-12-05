@@ -25,7 +25,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "../../../config.h"
 #include "dsClassMath.h"
 
 // native functions

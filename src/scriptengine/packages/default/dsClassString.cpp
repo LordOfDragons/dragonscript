@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 
 #include "dsClassString.h"
 #include "dsClassArray.h"
@@ -121,7 +121,7 @@ DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
 void dsClassString::nfGetLength::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	
-	rt->PushInt( strlen( str ) );
+	rt->PushInt( ( int )strlen( str ) );
 }
 
 // public func byte getAt( int index )
@@ -132,7 +132,7 @@ dsClassString::nfGetAt::nfGetAt( const sInitData &init ) : dsFunction( init.clsS
 void dsClassString::nfGetAt::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	int index = rt->GetValue( 0 )->GetInt();
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	
 	if( index < 0 ){
 		index += len;
@@ -146,7 +146,7 @@ void dsClassString::nfGetAt::RunFunction( dsRunTime *rt, dsValue *myself ){
 
 // get substring
 static const char *substring( const char * const str, int start, int end ){
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	
 	char *newstr = NULL;
 	
@@ -168,7 +168,11 @@ static const char *substring( const char * const str, int start, int end ){
 		const int count = end - start;
 		
 		newstr = new char[ count + 1 ];
-		strncpy( newstr, str + start, count );
+		#ifdef OS_W32_VS
+			strncpy_s( newstr, count + 1, str + start, count );
+		#else
+			strncpy( newstr, str + start, count + 1 );
+		#endif
 		newstr[ count ] = '\0';
 	}
 	
@@ -188,7 +192,7 @@ dsClassString::nfSubString::nfSubString( const sInitData &init ) : dsFunction( i
 void dsClassString::nfSubString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const int start = rt->GetValue( 0 )->GetInt();
-	const char * const newstr = substring( str, start, strlen( str ) );
+	const char * const newstr = substring( str, start, ( int )strlen( str ) );
 	
 	try{
 		rt->PushString( newstr );
@@ -268,7 +272,11 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 				copyLen++;
 			}
 			string = ( char* )realloc( string, stringLen + copyLen + 1 );
-			strncpy( string + stringLen, format, copyLen );
+			#ifdef OS_W32_VS
+				strncpy_s( string + stringLen, copyLen + 1, format, copyLen );
+			#else
+				strncpy( string + stringLen, format, copyLen + 1 );
+			#endif
 			stringLen += copyLen;
 			format = deliBegin + 1;
 			if( escaped ){
@@ -427,7 +435,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 					DSTHROW_INFO_FMT( dseInvalidCast, "non-matching parameter for format token %s", nextIndex );
 				}
 				
-				sprintf( cformat, "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
+				snprintf( cformat, sizeof( cformat ), "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
 				
 				const int requiredLen = snprintf( NULL, 0, cformat, value );
 				if( requiredLen < 0 ){
@@ -449,7 +457,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 				float value;
 				switch( parameter->GetType()->GetPrimitiveType() ){
 				case DSPT_INT:
-					value = parameter->GetInt();
+					value = ( float )parameter->GetInt();
 					break;
 					
 				case DSPT_BYTE:
@@ -468,10 +476,10 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 					DSTHROW_INFO_FMT( dseInvalidCast, "non-matching parameter for format token %s", nextIndex );
 				}
 				if( hasPrecision ){
-					sprintf( cformat, "%%%s%hu.%hhu%c", cformatFlags, fieldWidth, precision, formatCode );
+					snprintf( cformat, sizeof( cformat ), "%%%s%hu.%hhu%c", cformatFlags, fieldWidth, precision, formatCode );
 					
 				}else{
-					sprintf( cformat, "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
+					snprintf( cformat, sizeof( cformat ), "%%%s%hu%c", cformatFlags, fieldWidth, formatCode );
 				}
 				
 				const int requiredLen = snprintf( NULL, 0, cformat, value );
@@ -513,7 +521,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 				if( value < 0 || value > 255 ){
 					DSTHROW_INFO_FMT( dseInvalidCast, "parameter value out of range for format token %s", nextIndex );
 				}
-				sprintf( cformat, "%%%sc", cformatFlags );
+				snprintf( cformat, sizeof( cformat ), "%%%sc", cformatFlags );
 				
 				const int requiredLen = snprintf( NULL, 0, cformat, ( char )( unsigned char )value );
 				if( requiredLen < 0 ){
@@ -534,10 +542,10 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 				}
 				
 				if( hasPrecision ){
-					sprintf( cformat, "%%%s%hu.%hhus", cformatFlags, fieldWidth, precision );
+					snprintf( cformat, sizeof( cformat ), "%%%s%hu.%hhus", cformatFlags, fieldWidth, precision );
 					
 				}else{
-					sprintf( cformat, "%%%s%hus", cformatFlags, fieldWidth );
+					snprintf( cformat, sizeof( cformat ), "%%%s%hus", cformatFlags, fieldWidth );
 				}
 				
 				const int requiredLen = snprintf( NULL, 0, cformat, value );
@@ -573,7 +581,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 
 // find character in string
 static int findInString( const char * const str, int character, int start, int end ){
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	if( start < 0 ){
@@ -607,7 +615,7 @@ dsClassString::nfFind::nfFind( const sInitData &init ) : dsFunction( init.clsStr
 void dsClassString::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
-	rt->PushInt( findInString( str, character, 0, strlen( str ) ) );
+	rt->PushInt( findInString( str, character, 0, ( int )strlen( str ) ) );
 }
 
 // public func int find( byte character, int start )
@@ -620,7 +628,7 @@ void dsClassString::nfFind2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findInString( str, character, start, strlen( str ) ) );
+	rt->PushInt( findInString( str, character, start, ( int )strlen( str ) ) );
 }
 
 // public func int find( byte character, int start, int end )
@@ -640,7 +648,7 @@ void dsClassString::nfFind3::RunFunction( dsRunTime *rt, dsValue *myself ){
 
 // fins character using a list of characters
 static int findAnyInString( const char * const str, const char * const characters, int start, int end ){
-	const int ccount = strlen( characters );
+	const int ccount = ( int )strlen( characters );
 	int i, found, foundBest = -1;
 	
 	for( i=0; i<ccount; i++ ){
@@ -662,7 +670,7 @@ dsClassString::nfFindAny::nfFindAny( const sInitData &init ) : dsFunction( init.
 void dsClassString::nfFindAny::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
-	rt->PushInt( findAnyInString( str, characters, 0, strlen( str ) ) );
+	rt->PushInt( findAnyInString( str, characters, 0, ( int )strlen( str ) ) );
 }
 
 // public func int findAny( String characters, int start )
@@ -675,7 +683,7 @@ void dsClassString::nfFindAny2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findAnyInString( str, characters, start, strlen( str ) ) );
+	rt->PushInt( findAnyInString( str, characters, start, ( int )strlen( str ) ) );
 }
 
 // public func int findAny( String characters, int start, int end )
@@ -695,8 +703,8 @@ void dsClassString::nfFindAny3::RunFunction( dsRunTime *rt, dsValue *myself ){
 
 // find character in string
 static int findStringInString( const char * const str, const char * const findstr, int start, int end ){
-	const int slen = strlen( findstr );
-	const int len = strlen( str ) - slen + 1;
+	const int slen = ( int )strlen( findstr );
+	const int len = ( int )strlen( str ) - slen + 1;
 	int i;
 	
 	if( len < 0 ){
@@ -734,7 +742,7 @@ dsClassString::nfFindString::nfFindString( const sInitData &init ) : dsFunction(
 void dsClassString::nfFindString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
-	rt->PushInt( findStringInString( str, findstr, 0, strlen( str ) ) );
+	rt->PushInt( findStringInString( str, findstr, 0, ( int )strlen( str ) ) );
 }
 
 // public func int findString( String string, int start )
@@ -747,7 +755,7 @@ void dsClassString::nfFindString2::RunFunction( dsRunTime *rt, dsValue *myself )
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findStringInString( str, findstr, start, strlen( str ) ) );
+	rt->PushInt( findStringInString( str, findstr, start, ( int )strlen( str ) ) );
 }
 
 // public func int findString( String string, int start, int end )
@@ -767,7 +775,7 @@ void dsClassString::nfFindString3::RunFunction( dsRunTime *rt, dsValue *myself )
 
 // find character in string in reverse order
 static int findInStringReverse( const char * const str, int character, int start, int end ){
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	if( start < 0 ){
@@ -801,7 +809,7 @@ dsClassString::nfFindReverse::nfFindReverse( const sInitData &init ) : dsFunctio
 void dsClassString::nfFindReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
-	rt->PushInt( findInStringReverse( str, character, 0, strlen( str ) ) );
+	rt->PushInt( findInStringReverse( str, character, 0, ( int )strlen( str ) ) );
 }
 
 // public func int findReverse( byte character, int start )
@@ -814,7 +822,7 @@ void dsClassString::nfFindReverse2::RunFunction( dsRunTime *rt, dsValue *myself 
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findInStringReverse( str, character, start, strlen( str ) ) );
+	rt->PushInt( findInStringReverse( str, character, start, ( int )strlen( str ) ) );
 }
 
 // public func int findReverse( byte character, int start, int end )
@@ -834,7 +842,7 @@ void dsClassString::nfFindReverse3::RunFunction( dsRunTime *rt, dsValue *myself 
 
 // find any character in string in reverse
 static int findAnyInStringReverse( const char * const str, const char * const characters, int start, int end ){
-	const int ccount = strlen( characters );
+	const int ccount = ( int )strlen( characters );
 	int i, found, foundBest = -1;
 	
 	for( i=0; i<ccount; i++ ){
@@ -856,7 +864,7 @@ dsClassString::nfFindAnyReverse::nfFindAnyReverse( const sInitData &init ) : dsF
 void dsClassString::nfFindAnyReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
-	rt->PushInt( findAnyInStringReverse( str, characters, 0, strlen( str ) ) );
+	rt->PushInt( findAnyInStringReverse( str, characters, 0, ( int )strlen( str ) ) );
 }
 
 // public func int findAnyReverse( String characters, int start )
@@ -869,7 +877,7 @@ void dsClassString::nfFindAnyReverse2::RunFunction( dsRunTime *rt, dsValue *myse
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findAnyInStringReverse( str, characters, start, strlen( str ) ) );
+	rt->PushInt( findAnyInStringReverse( str, characters, start, ( int )strlen( str ) ) );
 }
 
 // public func int findAnyReverse( String characters, int start, int end )
@@ -889,8 +897,8 @@ void dsClassString::nfFindAnyReverse3::RunFunction( dsRunTime *rt, dsValue *myse
 
 // find character in string in reverse order
 static int findStringInStringReverse( const char * const str, const char * const findstr, int start, int end ){
-	const int slen = strlen( findstr );
-	const int len = strlen( str ) - slen + 1;
+	const int slen = ( int )strlen( findstr );
+	const int len = ( int )strlen( str ) - slen + 1;
 	int i;
 	
 	if( len < 0 ){
@@ -928,7 +936,7 @@ dsClassString::nfFindStringReverse::nfFindStringReverse( const sInitData &init )
 void dsClassString::nfFindStringReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
-	rt->PushInt( findStringInStringReverse( str, findstr, 0, strlen( str ) ) );
+	rt->PushInt( findStringInStringReverse( str, findstr, 0, ( int )strlen( str ) ) );
 }
 
 // public func int findStringReverse( String string, int start )
@@ -941,7 +949,7 @@ void dsClassString::nfFindStringReverse2::RunFunction( dsRunTime *rt, dsValue *m
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
-	rt->PushInt( findStringInStringReverse( str, findstr, start, strlen( str ) ) );
+	rt->PushInt( findStringInStringReverse( str, findstr, start, ( int )strlen( str ) ) );
 }
 
 // public func int findStringReverse( String string, int start, int end )
@@ -967,7 +975,7 @@ dsClassString::nfReverse::nfReverse( const sInitData &init ) : dsFunction( init.
 }
 void dsClassString::nfReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	
 	char * const newstr = new char[ len + 1 ];
 	if( ! newstr ){
@@ -1001,7 +1009,7 @@ void dsClassString::nfSplit::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	const char *splitstr = NULL;
 	dsValue *valsplitstr = NULL;
 	dsValue *vallist = NULL;
@@ -1071,8 +1079,8 @@ void dsClassString::nfSplit2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
-	const int clen = strlen( characters );
-	const int len = strlen( str );
+	const int clen = ( int )strlen( characters );
+	const int len = ( int )strlen( str );
 	const char *splitstr = NULL;
 	dsValue *valsplitstr = NULL;
 	dsValue *vallist = NULL;
@@ -1140,6 +1148,132 @@ void dsClassString::nfSplit2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 }
 
+// public func Array splitExact( byte character )
+dsClassString::nfSplitExact::nfSplitExact( const sInitData &init ) : dsFunction( init.clsStr,
+"splitExact", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsByte ); // character
+}
+void dsClassString::nfSplitExact::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
+	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const byte character = rt->GetValue( 0 )->GetByte();
+	const int len = ( int )strlen( str );
+	const char *splitstr = NULL;
+	dsValue *valsplitstr = NULL;
+	dsValue *vallist = NULL;
+	int i, start = 0;
+	
+	try{
+		vallist = clsArray->CreateArray( rt );
+		valsplitstr = rt->CreateValue( clsString );
+		
+		for( i=0; i<len; i++ ){
+			if( str[ i ] == character ){
+				splitstr = substring( str, start, i );
+				rt->SetString( valsplitstr, splitstr );
+				delete [] splitstr;
+				splitstr = NULL;
+				
+				clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+				
+				start = i + 1;
+			}
+		}
+		
+		splitstr = substring( str, start, len );
+		rt->SetString( valsplitstr, splitstr );
+		delete [] splitstr;
+		splitstr = NULL;
+		
+		clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+		
+		// push the result and clean up
+		rt->FreeValue( valsplitstr );
+		valsplitstr = NULL;
+		
+		rt->PushValue( vallist );
+		rt->FreeValue( vallist );
+		
+	}catch( ... ){
+		if( splitstr ){
+			delete [] splitstr;
+		}
+		if( valsplitstr ){
+			rt->FreeValue( valsplitstr );
+		}
+		if( vallist ){
+			rt->FreeValue( vallist );
+		}
+		throw;
+	}
+}
+
+// public func Array splitExact( String characters )
+dsClassString::nfSplitExact2::nfSplitExact2( const sInitData &init ) : dsFunction( init.clsStr,
+"splitExact", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
+	p_AddParameter( init.clsStr ); // characters
+}
+void dsClassString::nfSplitExact2::RunFunction( dsRunTime *rt, dsValue *myself ){
+	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
+	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
+	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const characters = rt->GetValue( 0 )->GetString();
+	const int clen = ( int )strlen( characters );
+	const int len = ( int )strlen( str );
+	const char *splitstr = NULL;
+	dsValue *valsplitstr = NULL;
+	dsValue *vallist = NULL;
+	int i, j, start = 0;
+	
+	try{
+		vallist = clsArray->CreateArray( rt );
+		valsplitstr = rt->CreateValue( clsString );
+		
+		for( i=0; i<len; i++ ){
+			for( j=0; j<clen; j++ ){
+				if( str[ i ] == characters[ j ] ){
+					splitstr = substring( str, start, i );
+					rt->SetString( valsplitstr, splitstr );
+					delete [] splitstr;
+					splitstr = NULL;
+					
+					clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+					
+					start = i + 1;
+					break;
+				}
+			}
+		}
+		
+		splitstr = substring( str, start, len );
+		rt->SetString( valsplitstr, splitstr );
+		delete [] splitstr;
+		splitstr = NULL;
+		
+		clsArray->AddObject( rt, vallist->GetRealObject(), valsplitstr );
+		
+		// push the result and clean up
+		rt->FreeValue( valsplitstr );
+		valsplitstr = NULL;
+		
+		rt->PushValue( vallist );
+		rt->FreeValue( vallist );
+		
+	}catch( ... ){
+		if( splitstr ){
+			delete [] splitstr;
+		}
+		if( valsplitstr ){
+			rt->FreeValue( valsplitstr );
+		}
+		if( vallist ){
+			rt->FreeValue( vallist );
+		}
+		throw;
+	}
+}
+
 // public func String replace( byte replace, byte with )
 dsClassString::nfReplace::nfReplace( const sInitData &init ) : dsFunction( init.clsStr,
 "replace", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
@@ -1150,7 +1284,7 @@ void dsClassString::nfReplace::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte replace = rt->GetValue( 0 )->GetByte();
 	const byte with = rt->GetValue( 1 )->GetByte();
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	
 	char * const newstr = new char[ len + 1 ];
 	if( ! newstr ){
@@ -1189,8 +1323,8 @@ void dsClassString::nfReplace2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const replace = rt->GetValue( 0 )->GetString();
 	const byte with = rt->GetValue( 1 )->GetByte();
-	const int rlen = strlen( replace );
-	const int len = strlen( str );
+	const int rlen = ( int )strlen( replace );
+	const int len = ( int )strlen( str );
 	
 	char * const newstr = new char[ len + 1 ];
 	if( ! newstr ){
@@ -1235,8 +1369,8 @@ void dsClassString::nfReplaceString::RunFunction( dsRunTime *rt, dsValue *myself
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const char * const replace = rt->GetValue( 0 )->GetString();
 	const char * const with = rt->GetValue( 1 )->GetString();
-	const int reallen = strlen( str );
-	const int rlen = strlen( replace );
+	const int reallen = ( int )strlen( str );
+	const int rlen = ( int )strlen( replace );
 	const int len = reallen - rlen + 1;
 	
 	if( rlen == 0 || len <= 0 ){
@@ -1244,7 +1378,7 @@ void dsClassString::nfReplaceString::RunFunction( dsRunTime *rt, dsValue *myself
 		return;
 	}
 	
-	const int wlen = strlen( with );
+	const int wlen = ( int )strlen( with );
 	const int difflen = wlen - rlen;
 	int newlen = reallen;
 	int i, npos;
@@ -1300,7 +1434,7 @@ dsClassString::nfTrimLeft::nfTrimLeft( const sInitData &init ) : dsFunction( ini
 }
 void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	for( i=0; i<len; i++ ){
@@ -1312,7 +1446,11 @@ void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	if( i < len ){
 		char * const newstr = new char[ len - i + 1 ];
-		strncpy( newstr, str + i, len - i );
+		#ifdef OS_W32_VS
+			strncpy_s( newstr, len - i + 1, str + i, len - i );
+		#else
+			strncpy( newstr, str + i, len - i + 1 );
+		#endif
 		newstr[ len - i ] = '\0';
 		
 		try{
@@ -1335,7 +1473,7 @@ dsClassString::nfTrimRight::nfTrimRight( const sInitData &init ) : dsFunction( i
 }
 void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	for( i=len-1; i>=0; i-- ){
@@ -1347,7 +1485,11 @@ void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	if( i >= 0 ){
 		char * const newstr = new char[ i + 2 ];
-		strncpy( newstr, str, i + 1 );
+		#ifdef OS_W32_VS
+			strncpy_s( newstr, i + 2, str, i + 1 );
+		#else
+			strncpy( newstr, str, i + 1 + 1 );
+		#endif
 		newstr[ i + 1 ] = '\0';
 		
 		try{
@@ -1370,7 +1512,7 @@ dsClassString::nfTrimBoth::nfTrimBoth( const sInitData &init ) : dsFunction( ini
 }
 void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i, j;
 	
 	for( i=0; i<len; i++ ){
@@ -1388,7 +1530,11 @@ void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	if( j >= i ){
 		char * const newstr = new char[ j - i + 2 ];
-		strncpy( newstr, str + i, j - i + 1 );
+		#ifdef OS_W32_VS
+			strncpy_s( newstr, j - i + 2, str + i, j - i + 1 );
+		#else
+			strncpy( newstr, str + i, j - i + 2 );
+		#endif
 		newstr[ j - i + 1 ] = '\0';
 		
 		try{
@@ -1411,7 +1557,7 @@ dsClassString::nfToLower::nfToLower( const sInitData &init ) : dsFunction( init.
 }
 void dsClassString::nfToLower::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen(str);
 	int i;
 	
 	char * const newstr = new char[ len + 1 ];
@@ -1439,7 +1585,7 @@ dsClassString::nfToUpper::nfToUpper( const sInitData &init ) : dsFunction( init.
 }
 void dsClassString::nfToUpper::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	char * const newstr = new char[ len + 1 ];
@@ -1518,7 +1664,7 @@ void dsClassString::nfCompareNoCase::RunFunction( dsRunTime *rt, dsValue *myself
 	}
 	
 	char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	int i;
 	
 	for( i=0; i<=len; i++ ){
@@ -1700,14 +1846,21 @@ void dsClassString::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 		otherStr = ( ( sStrNatData* )p_GetNativeData( obj ) )->str;
 	}
 	
-	newStr = new char[ strlen( str )+strlen( otherStr ) + 1 ];
+	const int size1 = ( int )strlen( str );
+	const int size2 = ( int )strlen( otherStr );
+	newStr = new char[ size1 + size2 + 1 ];
 	if( ! newStr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	
-	strcpy( newStr, str );
-	strcat( newStr, otherStr );
-	
+	#ifdef OS_W32_VS
+		strncpy_s( newStr, size1 + 1, str, size1 );
+		strncpy_s( newStr + size1, size2 + 1, otherStr, size2 );
+	#else
+		strncpy( newStr, str, size1 + 1 );
+		strncpy( newStr + size1, otherStr, size2 + 1 );
+	#endif
+	newStr[ size1 + size2 ] = 0;
+
 	try{
 		rt->PushString( newStr );
 		
@@ -1726,7 +1879,7 @@ dsClassString::nfOpAddByte::nfOpAddByte( const sInitData &init ) : dsFunction( i
 void dsClassString::nfOpAddByte::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const byte character = rt->GetValue( 0 )->GetByte();
-	const int len = strlen( str );
+	const int len = ( int )strlen( str );
 	
 	char * const newstr = new char[ len + 2 ];
 	if( ! newstr ){
@@ -1757,13 +1910,20 @@ void dsClassString::nfOpAddBool::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const bool value = rt->GetValue( 0 )->GetBool();
 	
-	char * const newstr = new char[ strlen( str ) + 6 ];
+	const int size1 = ( int )strlen( str );
+	char * const newstr = new char[ size1 + 6 ];
 	if( ! newstr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	strcpy( newstr, str );
-	strcat( newstr, value ? "true" : "false" );
-	
+	#ifdef OS_W32_VS
+		strncpy_s( newstr, size1 + 1, str, size1 );
+		strncpy_s( newstr + size1, 6, value ? "true\0" : "false", 5 );
+	#else
+		strncpy( newstr, str, size1 + 1 );
+		strncpy( newstr + size1, value ? "true\0" : "false", 6 );
+	#endif
+	newstr[ size1 + 5 ] = 0;
+
 	try{
 		rt->PushString( newstr );
 		
@@ -1783,11 +1943,12 @@ void dsClassString::nfOpAddInt::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const int value = rt->GetValue( 0 )->GetInt();
 	
-	char * const newstr = new char[ strlen( str ) + 12 ];
+	const int size = ( int )strlen( str ) + 12;
+	char * const newstr = new char[ size ];
 	if( ! newstr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	sprintf( newstr, "%s%i", str, value );
+	snprintf( newstr, size, "%s%i", str, value );
 	
 	try{
 		rt->PushString( newstr );
@@ -1808,11 +1969,12 @@ void dsClassString::nfOpAddFloat::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
 	const float value = rt->GetValue( 0 )->GetFloat();
 	
-	char * const newstr = new char[ strlen( str ) + 20 ];
+	const int size = ( int )strlen( str ) + 20;
+	char * const newstr = new char[ size ];
 	if( ! newstr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	sprintf( newstr, "%s%g", str, value );
+	snprintf( newstr, size, "%s%g", str, value );
 	
 	try{
 		rt->PushString( newstr );
@@ -1842,13 +2004,21 @@ void dsClassString::nfOpAddObject::RunFunction( dsRunTime *rt, dsValue *myself )
 	}
 	
 	// create new string adding both
-	char * const newstr = new char[ strlen( str ) + strlen( otherstr ) + 1 ];
+	const int size1 = ( int )strlen( str );
+	const int size2 = ( int )strlen( otherstr );
+	char * const newstr = new char[ size1 + size2 + 1 ];
 	if( ! newstr ){
 		DSTHROW( dueOutOfMemory );
 	}
-	strcpy( newstr, str );
-	strcat( newstr, otherstr );
-	
+	#ifdef OS_W32_VS
+		strncpy_s( newstr, size1 + 1, str, size1 );
+		strncpy_s( newstr + size1, size2 + 1, otherstr, size2 );
+	#else
+		strncpy( newstr, str, size1 + 1 );
+		strncpy( newstr + size1, otherstr, size2 + 1 );
+	#endif
+	newstr[ size1 + size2 ] = 0;
+
 	try{
 		rt->PushString( newstr );
 		
@@ -1928,6 +2098,8 @@ void dsClassString::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfReverse( init ) );
 	AddFunction( new nfSplit( init ) );
 	AddFunction( new nfSplit2( init ) );
+	AddFunction( new nfSplitExact( init ) );
+	AddFunction( new nfSplitExact2( init ) );
 	AddFunction( new nfReplace( init ) );
 	AddFunction( new nfReplace2( init ) );
 	AddFunction( new nfReplaceString( init ) );
@@ -1980,9 +2152,15 @@ void dsClassString::SetRealObjectString( dsRealObject* object, const char* strin
 	
 	sStrNatData &nd = *( ( sStrNatData* )p_GetNativeData( object->GetBuffer() ) );
 	
-	nd.str = new char[ strlen( string ) + 1 ];
+	const int size = ( int )strlen( string );
+	nd.str = new char[ size + 1 ];
 	if( ! nd.str ){
 		DSTHROW( dueOutOfMemory );
 	}
-	strcpy( nd.str, string );
+	#ifdef OS_W32_VS
+		strncpy_s( nd.str, size + 1, string, size );
+	#else
+		strncpy( nd.str, string, size + 1 );
+	#endif
+	nd.str[ size ] = 0;
 }

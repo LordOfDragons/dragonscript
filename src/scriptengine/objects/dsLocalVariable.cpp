@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsLocalVariable.h"
 #include "../exceptions.h"
 
@@ -34,8 +34,14 @@
 // constructor, destructor
 dsLocalVariable::dsLocalVariable(dsClass *OwnerClass, const char *Name, dsClass *Type){
 	if(/*!OwnerClass || */!Name || !Type) DSTHROW(dueInvalidParam);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size + 1, Name, size );
+	#else
+		strncpy(p_Name, Name, size + 1);
+	#endif
+	p_Name[ size ] = 0;
 	p_Type = Type;
 }
 dsLocalVariable::~dsLocalVariable(){

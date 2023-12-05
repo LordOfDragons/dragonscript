@@ -32,7 +32,7 @@
 class dsEngine;
 
 // class dsEnginePackageSource
-class dsEnginePackageSource : public dsPackageSource{
+class DS_DLL_EXPORT dsEnginePackageSource : public dsPackageSource{
 private:
 	dsEngine *pEngine;
 public:

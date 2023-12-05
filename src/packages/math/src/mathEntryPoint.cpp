@@ -31,7 +31,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-bool CreatePackage(dsPackageWrapper *wrapper);
+PACKAGE_ENTRY_POINT_ATTR bool CreatePackage(dsPackageWrapper *wrapper);
 #ifdef  __cplusplus
 }
 #endif

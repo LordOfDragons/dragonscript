@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspParserCheckInterface.h"
 #include "dspParserCheckType.h"
 #include "dspNodes.h"

@@ -38,7 +38,7 @@ class dspParserCheck;
 class dspNodeClassFunction;
 
 // class dspParserCheckFunction
-class dspParserCheckFunction{
+class DS_DLL_EXPORT dspParserCheckFunction{
 private:
 	dspNodeScript *p_Script;
 	dspNodeClassFunction *p_FuncNode;

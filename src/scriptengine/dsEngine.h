@@ -41,7 +41,7 @@ class dsGarbageCollector;
 
 
 // class dsEngine
-class dsEngine{
+class DS_DLL_EXPORT dsEngine{
 friend class dspParserCheckClass;
 friend class dspParserCheck;
 friend class dsClass;

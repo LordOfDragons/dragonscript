@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassInt.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
@@ -40,7 +40,7 @@ dsClassInt::nfToString::nfToString( const sInitData &init ) : dsFunction( init.c
 }
 void dsClassInt::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	char buffer[ 20 ];
-	sprintf( buffer, "%i", myself->GetInt() );
+	snprintf( buffer, sizeof( buffer ), "%i", myself->GetInt() );
 	rt->PushString( buffer );
 }
 

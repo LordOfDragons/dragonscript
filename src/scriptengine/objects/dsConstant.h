@@ -34,7 +34,7 @@ class dsClass;
 class dsRealObject;
 
 // class dsConstant
-class dsConstant : public dsuArrayable {
+class DS_DLL_EXPORT dsConstant : public dsuArrayable {
 private:
 	char *p_Name;
 	dsClass *p_Type;

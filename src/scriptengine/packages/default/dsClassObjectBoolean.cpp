@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassObjectBoolean.h"
 
 #include "../../dsEngine.h"

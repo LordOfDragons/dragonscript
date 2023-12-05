@@ -40,7 +40,7 @@ class dsValue;
 class dsFunctionOptimized;
 
 // class dsFunction
-class dsFunction : public dsuArrayable {
+class DS_DLL_EXPORT dsFunction : public dsuArrayable {
 private:
 	dsClass *p_OwnerClass;
 	char *p_Name;

@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "dspParserCheckFunction.h"
@@ -39,8 +39,14 @@
 /////////////////
 dspNodeKeyword::dspNodeKeyword(dsScriptSource *source, int linenum, int charnum, const char *Keyword) : dspBaseNode(ntKeyword,source,linenum,charnum){
 	if(!Keyword) DSTHROW(dueInvalidParam);
-	if(!(p_Keyword = new char[strlen(Keyword)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Keyword, Keyword);
+	const int size = ( int )strlen( Keyword );
+	if(!(p_Keyword = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Keyword, size + 1, Keyword, size );
+	#else
+		strncpy(p_Keyword, Keyword, size + 1);
+	#endif
+	p_Keyword[ size ] = 0;
 }
 dspNodeKeyword::~dspNodeKeyword(){ delete [] p_Keyword; }
 const char *dspNodeKeyword::GetTerminalString(){ return (const char *)p_Keyword; }

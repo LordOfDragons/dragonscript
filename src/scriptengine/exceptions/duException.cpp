@@ -67,7 +67,7 @@ bool duException::IsNamed(const char *Name) const{
 	return strcmp(p_Name, Name) == 0;
 }
 
-dsuString ErrorBuildInfo( const char *format, ... ){
+DS_FUNC_EXPORT_IMPL dsuString ErrorBuildInfo( const char *format, ... ){
 	va_list args;
 	va_start( args, format );
 	
@@ -84,7 +84,7 @@ dsuString ErrorBuildInfo( const char *format, ... ){
 	return info;
 }
 
-dsuString ErrorObjectType( const dsValue *value ){
+DS_FUNC_EXPORT_IMPL dsuString ErrorObjectType( const dsValue *value ){
 	if( ! value ){
 		return dsuString( "null" );
 	}
@@ -99,7 +99,7 @@ dsuString ErrorObjectType( const dsValue *value ){
 	return name;
 }
 
-dsuString ErrorCastInfo( const dsValue *from, const dsClass *to ){
+DS_FUNC_EXPORT_IMPL dsuString ErrorCastInfo( const dsValue *from, const dsClass *to ){
 	if( ! from ){
 		return dsuString();
 	}
@@ -119,7 +119,7 @@ dsuString ErrorCastInfo( const dsValue *from, const dsClass *to ){
 	return ErrorBuildInfo( "%s to %s", nameFrom.Pointer(), nameTo.Pointer() );
 }
 
-dsuString ErrorCastInfo( const dsClass *from, const dsClass *to ){
+DS_FUNC_EXPORT_IMPL dsuString ErrorCastInfo( const dsClass *from, const dsClass *to ){
 	if( ! from || ! to ){
 		return dsuString();
 	}
@@ -130,7 +130,7 @@ dsuString ErrorCastInfo( const dsClass *from, const dsClass *to ){
 	return ErrorBuildInfo( "%s to %s", nameFrom.Pointer(), nameTo.Pointer() );
 }
 
-dsuString ErrorValueInfo( const dsRunTime &rt, const dsValue *value ){
+DS_FUNC_EXPORT_IMPL dsuString ErrorValueInfo( const dsRunTime &rt, const dsValue *value ){
 	dsuString info;
 	if( value ){
 		switch( value->GetType()->GetPrimitiveType() ){

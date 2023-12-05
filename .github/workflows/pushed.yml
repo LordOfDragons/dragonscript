@@ -1,0 +1,20 @@
+name: Pushed
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build_linux:
+    uses: ./.github/workflows/build_linux.yml
+    with:
+      releaseVersion: development
+      buildVersion: 9999
+      artifactArchive: archives-linux
+  
+  build_windows:
+    uses: ./.github/workflows/build_windows.yml
+    with:
+      releaseVersion: development
+      buildVersion: 9999
+      artifactArchive: archives-windows

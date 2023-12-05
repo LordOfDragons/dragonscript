@@ -38,7 +38,7 @@ class dsValue;
  * \version 1.0
  * \date 2015
  */
-class dsClassString : public dsClass {
+class DS_DLL_EXPORT dsClassString : public dsClass {
 friend class dsRunTime;
 public:
 	/** \name Constructors and Destructors */
@@ -104,6 +104,8 @@ private:
 	DEF_NATFUNC( nfReverse );
 	DEF_NATFUNC( nfSplit );
 	DEF_NATFUNC( nfSplit2 );
+	DEF_NATFUNC( nfSplitExact );
+	DEF_NATFUNC( nfSplitExact2 );
 	DEF_NATFUNC( nfReplace );
 	DEF_NATFUNC( nfReplace2 );
 	DEF_NATFUNC( nfReplaceString );

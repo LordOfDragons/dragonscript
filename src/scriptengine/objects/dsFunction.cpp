@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClass.h"
 #include "dsFunction.h"
 #include "dsSignature.h"
@@ -54,8 +54,14 @@ pOptimized( NULL )
 	}
 	
 	// init the rest
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size + 1, Name, size );
+	#else
+		strncpy(p_Name, Name, size + 1);
+	#endif
+	p_Name[ size ] = 0;
 	p_OwnerClass = OwnerClass;
 	p_FuncType = FuncType;
 	p_Type = Type;

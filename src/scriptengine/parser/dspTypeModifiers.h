@@ -25,7 +25,7 @@
 #ifndef _DSPTYPEMODIFIERS_H_
 #define _DSPTYPEMODIFIERS_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // definitions
 #define TM_COUNT	7
@@ -36,7 +36,7 @@ class dsEngine;
 class dspNodeKeyword;
 
 // class dspTypeModifiers
-class dspTypeModifiers{
+class DS_DLL_EXPORT dspTypeModifiers{
 private:
 	dspBaseNode *p_TypeNodes[TM_COUNT];
 	char *p_MsgBuf;

@@ -36,7 +36,7 @@ class dsValue;
  * \version 1.0
  * \date 2015
  */
-class dsClassInt : public dsClass {
+class DS_DLL_EXPORT dsClassInt : public dsClass {
 public:
 	/** \name Constructors and Destructors */
 	/*@{*/

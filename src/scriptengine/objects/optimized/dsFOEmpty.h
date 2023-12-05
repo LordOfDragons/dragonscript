@@ -30,7 +30,7 @@ class dsVariable;
 /**
  * \brief Function optimizing empty.
  */
-class dsFOEmpty : public dsFunctionOptimized{
+class DS_DLL_EXPORT dsFOEmpty : public dsFunctionOptimized{
 public:
 	/** \name Constructors and Destructors */
 	/*@{*/

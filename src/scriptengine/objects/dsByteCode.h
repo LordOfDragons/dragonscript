@@ -195,7 +195,7 @@
 /**
  * Byte code.
  */
-class dsByteCode{
+class DS_DLL_EXPORT dsByteCode{
 public:
 	enum eByteCodes{
 		ebcNop, // 0, no operation
@@ -286,7 +286,7 @@ public:
 	 * \brief Base code structure all other structures have to fit.
 	 * \details Used by all code not using a separate struct below.
 	 */
-	struct sCode{
+	struct DS_DLL_EXPORT sCode{
 		byte code;
 	};
 	
@@ -294,7 +294,7 @@ public:
 	 * \brief Byte constant code struct.
 	 * \details Used by ebcCByte.
 	 */
-	struct sCodeCByte{
+	struct DS_DLL_EXPORT sCodeCByte{
 		byte code;
 		byte value;
 	};
@@ -303,7 +303,7 @@ public:
 	 * \brief Integer constant code struct.
 	 * \details Used by ebcCInt.
 	 */
-	struct sCodeCInt{
+	struct DS_DLL_EXPORT sCodeCInt{
 		byte code;
 		int value;
 	};
@@ -312,7 +312,7 @@ public:
 	 * \brief Floating point constant code struct.
 	 * \details Used by ebcCFlt.
 	 */
-	struct sCodeCFloat{
+	struct DS_DLL_EXPORT sCodeCFloat{
 		byte code;
 		float value;
 	};
@@ -321,7 +321,7 @@ public:
 	 * \brief String constant code struct.
 	 * \details Used by ebcCStr.
 	 */
-	struct sCodeCString{
+	struct DS_DLL_EXPORT sCodeCString{
 		byte code;
 		int index;
 	};
@@ -330,7 +330,7 @@ public:
 	 * \brief Null code struct.
 	 * \details Used by ebcNull.
 	 */
-	struct sCodeNull{
+	struct DS_DLL_EXPORT sCodeNull{
 		byte code;
 		dsClass *type;
 	};
@@ -339,7 +339,7 @@ public:
 	 * \brief Class variable code struct.
 	 * \details Used by ebcClsVar.
 	 */
-	struct sCodeClassVar{
+	struct DS_DLL_EXPORT sCodeClassVar{
 		byte code;
 		dsVariable *variable;
 	};
@@ -348,7 +348,7 @@ public:
 	 * \brief Function parameter code struct.
 	 * \details Used by ebcParam.
 	 */
-	struct sCodeParam{
+	struct DS_DLL_EXPORT sCodeParam{
 		byte code;
 		byte index;
 	};
@@ -357,7 +357,7 @@ public:
 	 * \brief Local variable code struct.
 	 * \details Used by ebcLocVar, ebcCVar.
 	 */
-	struct sCodeLocalVar{
+	struct DS_DLL_EXPORT sCodeLocalVar{
 		byte code;
 		short index;
 	};
@@ -366,7 +366,7 @@ public:
 	 * \brief Allocate local variable code struct.
 	 * \details Used by ebcALV.
 	 */
-	struct sCodeAllocLocalVar{
+	struct DS_DLL_EXPORT sCodeAllocLocalVar{
 		byte code;
 		dsClass *type;
 	};
@@ -375,7 +375,7 @@ public:
 	 * \brief Free local variables code struct.
 	 * \details Used by ebcFLV.
 	 */
-	struct sCodeFreeLocalVars{
+	struct DS_DLL_EXPORT sCodeFreeLocalVars{
 		byte code;
 		short count;
 	};
@@ -384,7 +384,7 @@ public:
 	 * \brief Jump short distance code struct.
 	 * \details Used by ebcJMPB, ebcJEQB, ebcJNEB.
 	 */
-	struct sCodeJumpByte{
+	struct DS_DLL_EXPORT sCodeJumpByte{
 		byte code;
 		signed char offset;
 	};
@@ -393,7 +393,7 @@ public:
 	 * \brief Jump middle distance code struct.
 	 * \details Used by ebcJMPS, ebcJEQS, ebcJNES.
 	 */
-	struct sCodeJumpShort{
+	struct DS_DLL_EXPORT sCodeJumpShort{
 		byte code;
 		short offset;
 	};
@@ -402,7 +402,7 @@ public:
 	 * \brief Jump long distance code struct.
 	 * \details Used by ebcJMPL, ebcJEQL, ebcJNEL.
 	 */
-	struct sCodeJumpLong{
+	struct DS_DLL_EXPORT sCodeJumpLong{
 		byte code;
 		int offset;
 	};
@@ -411,7 +411,7 @@ public:
 	 * \brief Jump case short distance code struct.
 	 * \details Used by ebcJCEB.
 	 */
-	struct sCodeJumpCaseByte{
+	struct DS_DLL_EXPORT sCodeJumpCaseByte{
 		byte code;
 		signed char offset;
 		int caseValue;
@@ -421,7 +421,7 @@ public:
 	 * \brief Jump case medium distance code struct.
 	 * \details Used by ebcJCES.
 	 */
-	struct sCodeJumpCaseShort{
+	struct DS_DLL_EXPORT sCodeJumpCaseShort{
 		byte code;
 		short offset;
 		int caseValue;
@@ -431,7 +431,7 @@ public:
 	 * \brief Jump case long distance code struct.
 	 * \details Used by ebcJCEL.
 	 */
-	struct sCodeJumpCaseLong{
+	struct DS_DLL_EXPORT sCodeJumpCaseLong{
 		byte code;
 		int offset;
 		int caseValue;
@@ -441,7 +441,7 @@ public:
 	 * \brief Jump case static short distance code struct.
 	 * \details Used by ebcJCESB.
 	 */
-	struct sCodeJumpCaseStaticByte{
+	struct DS_DLL_EXPORT sCodeJumpCaseStaticByte{
 		byte code;
 		signed char offset;
 		dsVariable *caseValue;
@@ -451,7 +451,7 @@ public:
 	 * \brief Jump case static medium distance code struct.
 	 * \details Used by ebcJCES.
 	 */
-	struct sCodeJumpCaseStaticShort{
+	struct DS_DLL_EXPORT sCodeJumpCaseStaticShort{
 		byte code;
 		short offset;
 		dsVariable *caseValue;
@@ -461,7 +461,7 @@ public:
 	 * \brief Jump case static long distance code struct.
 	 * \details Used by ebcJCEL.
 	 */
-	struct sCodeJumpCaseStaticLong{
+	struct DS_DLL_EXPORT sCodeJumpCaseStaticLong{
 		byte code;
 		int offset;
 		dsVariable *caseValue;
@@ -471,7 +471,7 @@ public:
 	 * \brief Jump exception short distance code struct.
 	 * \details Used by ebcJOEB.
 	 */
-	struct sCodeJumpExcepByte{
+	struct DS_DLL_EXPORT sCodeJumpExcepByte{
 		byte code;
 		byte offset;
 		dsClass *type;
@@ -481,7 +481,7 @@ public:
 	 * \brief Jump exception medium distance code struct.
 	 * \details Used by ebcJOES.
 	 */
-	struct sCodeJumpExcepShort{
+	struct DS_DLL_EXPORT sCodeJumpExcepShort{
 		byte code;
 		short offset;
 		dsClass *type;
@@ -491,7 +491,7 @@ public:
 	 * \brief Jump exception long distance code struct.
 	 * \details Used by ebcJOEL.
 	 */
-	struct sCodeJumpExcepLong{
+	struct DS_DLL_EXPORT sCodeJumpExcepLong{
 		byte code;
 		int offset;
 		dsClass *type;
@@ -501,7 +501,7 @@ public:
 	 * \brief Type casting code struct.
 	 * \details Used by ebcCast, ebcCaTo, ebcTypO.
 	 */
-	struct sCodeCast{
+	struct DS_DLL_EXPORT sCodeCast{
 		byte code;
 		dsClass *type;
 	};
@@ -510,7 +510,7 @@ public:
 	 * \brief Function call code struct.
 	 * \details Used by ebcCall.
 	 */
-	struct sCodeCall{
+	struct DS_DLL_EXPORT sCodeCall{
 		byte code;
 		int index;
 	};
@@ -519,7 +519,7 @@ public:
 	 * \brief Direct, constructor or block function call code struct.
 	 * \details Used by ebcDCall, ebcCCall, ebcBlock.
 	 */
-	struct sCodeDirectCall{
+	struct DS_DLL_EXPORT sCodeDirectCall{
 		byte code;
 		dsFunction *function;
 	};

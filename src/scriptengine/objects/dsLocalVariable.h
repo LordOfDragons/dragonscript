@@ -33,7 +33,7 @@ class dsClass;
 class dsFunction;
 
 // class dsLocalVariable
-class dsLocalVariable : public dsuArrayable {
+class DS_DLL_EXPORT dsLocalVariable : public dsuArrayable {
 private:
 	char *p_Name;
 	dsClass *p_Type;

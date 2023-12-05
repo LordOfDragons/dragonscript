@@ -25,7 +25,7 @@
 #ifndef _DSFUNCLIST_H_
 #define _DSFUNCLIST_H_
 
-// includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsClass;
@@ -33,7 +33,7 @@ class dsFunction;
 class dsSignature;
 
 // class dsFuncList
-class dsFuncList{
+class DS_DLL_EXPORT dsFuncList{
 private:
 	dsFunction **p_Funcs;
 	int p_FuncCount;

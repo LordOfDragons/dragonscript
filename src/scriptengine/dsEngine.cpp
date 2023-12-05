@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsEngine.h"
 #include "dsPackage.h"
 #include "dsRunTime.h"
@@ -48,6 +48,12 @@
 #include "packages/default/package_default.h"
 #include "paksources/dsEnginePackageSource.h"
 #include "exceptions.h"
+
+#ifdef OS_W32
+	#include <windows.h>
+	#undef GetObject
+#endif
+
 
 /* script corresponding to exception classes
 class Exception{
@@ -178,7 +184,7 @@ dsEngine::dsEngine(){
 		if(!(pMemMgr = new dsMemoryManager(this))) DSTHROW(dueOutOfMemory);
 		if(!(pGC = new dsGarbageCollector(pMemMgr))) DSTHROW(dueOutOfMemory);
 		if(!(p_MainRT = new dsRunTime(this))) DSTHROW(dueOutOfMemory);
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		
 	}catch( ... ){
 		if(p_MainRT) delete p_MainRT;
@@ -290,7 +296,7 @@ dsClass *dsEngine::GetClass(const char *Name) const{
 	dsClass *vClass;
 	// determine class parts
 	const char *nextClass = (const char *)strchr(Name, '.');
-	int nameLen = nextClass ? (int)(nextClass - Name) : strlen(Name);
+	int nameLen = nextClass ? (int)(nextClass - Name) : ( int )strlen(Name);
 	// find class
 	for(int i=0; i<p_Classes->Length(); i++){
 		vClass = (dsClass*)p_Classes->GetObject(i);
@@ -764,8 +770,22 @@ void dsEngine::p_BuildSharePath(){
 	const int separator = ':';
 	#endif
 	
-	char *envPath = ( char* )getenv( "DS_PAKAGE_PATH" );
-	
+	char *envPath = nullptr;
+
+	#ifdef OS_W32
+		envPath = nullptr;
+		TCHAR bufEnvPath[ 256 ];
+		char bufEnvPathChar[ 256 ];
+		if( GetEnvironmentVariable( L"DS_PAKAGE_PATH", &bufEnvPath[ 0 ], sizeof( bufEnvPath ) ) ){
+			size_t size = 0;
+			if( ! wcstombs_s( &size, bufEnvPathChar, 256, bufEnvPath, wcslen( bufEnvPath ) + 1 ) ){
+				envPath = bufEnvPathChar;
+			}
+		}
+	#else
+		envPath = ( char* )getenv( "DS_PAKAGE_PATH" );
+	#endif
+
 	if( envPath ){
 		char *buffer = NULL;
 		
@@ -779,7 +799,11 @@ void dsEngine::p_BuildSharePath(){
 				const int len = ( int )( findSep - envPath );
 				if( len > 0 ){
 					buffer = new char[ len + 1 ];
-					strncpy( buffer, envPath, len );
+					#ifdef OS_W32_VS
+						strncpy_s( buffer, len + 1, envPath, len );
+					#else
+						strncpy( buffer, envPath, len + 1 );
+					#endif
 					buffer[ len ] = '\0';
 					p_AddSharePath( buffer );
 					delete [] buffer;
@@ -820,10 +844,15 @@ void dsEngine::p_AddSharePath(const char *path){
 	char *newPath = NULL;
 	int len;
 	try{
-		len = strlen(path);
+		len = ( int )strlen(path);
 		newPath = new char[len+2];
 		if(!newPath) DSTHROW(dueOutOfMemory);
-		strcpy(newPath, path);
+		#ifdef OS_W32_VS
+			strncpy_s( newPath, len + 1, path, len );
+		#else
+			strncpy(newPath, path, len + 1);
+		#endif
+		newPath[ len ] = 0;
 		if(newPath[len-1] != PATH_SEPARATOR){
 			newPath[len] = PATH_SEPARATOR;
 			newPath[len+1] = '\0';

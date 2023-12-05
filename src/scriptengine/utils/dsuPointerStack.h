@@ -25,8 +25,10 @@
 #ifndef _CPOINTERSTACK_H_
 #define _CPOINTERSTACK_H_
 
+#include "../dragonscript_export.h"
+
 // class dsuPointerStack
-class dsuPointerStack{
+class DS_DLL_EXPORT dsuPointerStack{
 private:
 	void **p_Objects;
 	int p_StackSize;

@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "dspParserCompileCode.h"
@@ -40,8 +40,14 @@
 //////////////////
 dspNodeOperator::dspNodeOperator(dsScriptSource *Source, int LineNum, int CharNum, const char *Operator) : dspBaseNode(ntOperator,Source,LineNum,CharNum){
 	if(!Operator) DSTHROW(dueInvalidParam);
-	if(!(p_Op = new char[strlen(Operator)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Op, Operator);
+	const int size = ( int )strlen( Operator );
+	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Op, size + 1, Operator, size );
+	#else
+		strncpy(p_Op, Operator, size + 1);
+	#endif
+	p_Op[ size ] = 0;
 }
 dspNodeOperator::~dspNodeOperator(){
 	delete [] p_Op;
@@ -59,16 +65,28 @@ void dspNodeOperator::DebugPrint(int Level, const char *Prefix){
 /////////////////////////
 dspNodeUnaryOperation::dspNodeUnaryOperation(dspNodeOperator *OpNode, dspBaseNode *Obj) : dspBaseNode(ntUnaryOp,OpNode){
 	if(!Obj) DSTHROW(dueInvalidParam);
-	if(!(p_Op = new char[strlen(OpNode->GetOperator())+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Op, OpNode->GetOperator());
+	const int size = ( int )strlen( OpNode->GetOperator() );
+	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
+	#else
+		strncpy(p_Op, OpNode->GetOperator(), size + 1);
+	#endif
+	p_Op[ size ] = 0;
 	p_Obj = Obj;
 	p_ObjClass = NULL;
 	p_FuncID = -11;
 }
 dspNodeUnaryOperation::dspNodeUnaryOperation(dspBaseNode *RefNode, const char *Op, dspBaseNode *Obj) : dspBaseNode(ntUnaryOp,RefNode){
 	if(!Obj || !Op) DSTHROW(dueInvalidParam);
-	if(!(p_Op = new char[strlen(Op)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Op, Op);
+	const int size = ( int )strlen( Op );
+	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Op, size + 1, Op, size );
+	#else
+		strncpy(p_Op, Op, size + 1);
+	#endif
+	p_Op[ size ] = 0;
 	p_Obj = Obj;
 	p_ObjClass = NULL;
 	p_FuncID = -1;
@@ -304,16 +322,28 @@ void dspNodePostDecrement::DebugPrint(int Level, const char *Prefix){
 //////////////////////////
 dspNodeBinaryOperation::dspNodeBinaryOperation(dspNodeOperator *OpNode, dspBaseNode *Obj, dspBaseNode *Arg) : dspBaseNode(ntBinaryOp,OpNode){
 	if(!Obj || !Arg) DSTHROW(dueInvalidParam);
-	if(!(p_Op = new char[strlen(OpNode->GetOperator())+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Op, OpNode->GetOperator());
+	const int size = ( int )strlen( OpNode->GetOperator() );
+	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Op, size + 1, OpNode->GetOperator(), size );
+	#else
+		strncpy(p_Op, OpNode->GetOperator(), size + 1);
+	#endif
+	p_Op[ size ] = 0;
 	p_Obj = Obj; p_Arg = Arg;
 	p_ObjClass = p_ArgClass = NULL;
 	p_FuncID = -1;
 }
 dspNodeBinaryOperation::dspNodeBinaryOperation(dspBaseNode *RefNode, const char *Op, dspBaseNode *Obj, dspBaseNode *Arg) : dspBaseNode(ntBinaryOp,RefNode){
 	if(!Op || !Obj || !Arg) DSTHROW(dueInvalidParam);
-	if(!(p_Op = new char[strlen(Op)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Op, Op);
+	const int size = ( int )strlen( Op );
+	if(!(p_Op = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Op, size + 1, Op, size );
+	#else
+		strncpy(p_Op, Op, size + 1);
+	#endif
+	p_Op[ size ] = 0;
 	p_Obj = Obj; p_Arg = Arg;
 	p_ObjClass = p_ArgClass = NULL;
 	p_FuncID = -1;

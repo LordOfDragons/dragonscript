@@ -36,7 +36,7 @@ class dsExceptionTrace;
 
 
 // class dsClassException
-class dsClassException : public dsClass {
+class DS_DLL_EXPORT dsClassException : public dsClass {
 public:
 	// constructor, destructor
 	dsClassException();

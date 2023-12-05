@@ -26,7 +26,7 @@
 #define _DSPNODESSPECIAL_H_
 
 // auto cast node
-class dspNodeAutoCast : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeAutoCast : public dspBaseNode{
 private:
 	dspBaseNode *p_Obj;
 	dsClass *p_Type;
@@ -41,7 +41,7 @@ public:
 };
 
 // assign init value to static variable
-class dspNodeSetStaVar : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeSetStaVar : public dspBaseNode{
 private:
 	dsVariable *p_Var;
 	dspBaseNode *p_Init;
@@ -57,7 +57,7 @@ public:
 };
 
 // enumeration value
-class dspNodeEnumValue : public dspBaseNode{
+class DS_DLL_EXPORT dspNodeEnumValue : public dspBaseNode{
 private:
 	char *pName;
 	int pOrder;

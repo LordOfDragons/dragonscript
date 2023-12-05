@@ -22,6 +22,8 @@
 #ifndef _LIBDSCRIPT_H_
 #define _LIBDSCRIPT_H_
 
+#include "dragonscript_config.h"
+
 #include "exceptions.h"
 #include "dsEngine.h"
 #include "dsScriptSource.h"

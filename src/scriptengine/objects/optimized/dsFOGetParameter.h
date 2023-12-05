@@ -28,7 +28,7 @@
 /**
  * \brief Function optimizing getter returning parameter.
  */
-class dsFOGetParameter : public dsFunctionOptimized{
+class DS_DLL_EXPORT dsFOGetParameter : public dsFunctionOptimized{
 private:
 	int pParameter;
 	

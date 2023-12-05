@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <stdlib.h>
-#include "../config.h"
+#include "dragonscript_config.h"
 #include "dsEngine.h"
 #include "dsGarbageCollector.h"
 #include "dsMemoryManager.h"

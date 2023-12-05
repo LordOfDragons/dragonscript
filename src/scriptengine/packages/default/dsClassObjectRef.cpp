@@ -25,7 +25,7 @@
 #include <stdint.h>
 
 #include "dsClassObjectRef.h"
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
 #include "../../exceptions.h"

@@ -33,7 +33,7 @@
 // Manages a list of arrayable objects.
 // Objects added to the list are managed by the array afterwards
 // so don't delete them after you added/inserted them.
-class dsuArray : dsuArrayable{
+class DS_DLL_EXPORT dsuArray : dsuArrayable{
 private:
 	dsuArrayable **p_Objects;
 	int p_EffObjCount;

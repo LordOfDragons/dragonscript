@@ -25,8 +25,10 @@
 #ifndef _CINDEXSTACK_H_
 #define _CINDEXSTACK_H_
 
+#include "../dragonscript_export.h"
+
 // class dsuIndexStack
-class dsuIndexStack{
+class DS_DLL_EXPORT dsuIndexStack{
 private:
 	int *p_Indices;
 	int p_StackSize;

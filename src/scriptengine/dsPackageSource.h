@@ -32,7 +32,7 @@
 class dsPackage;
 
 // class dsPackageSource
-class dsPackageSource : public dsuArrayable{
+class DS_DLL_EXPORT dsPackageSource : public dsuArrayable{
 public:
 	// determine if the given package name can be handled
 	// by this package source. if you return true then

@@ -26,12 +26,13 @@
 #define _DSBASEENGINEPACKAGE_H_
 
 // includes
+#include "../dragonscript_export.h"
 
 // predefinitions
 class dsPackage;
 
 // base engine package interface
-class dsBaseEnginePackage{
+class DS_DLL_EXPORT dsBaseEnginePackage{
 public:
 	// destructor
 	virtual ~dsBaseEnginePackage();

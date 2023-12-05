@@ -28,12 +28,10 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <errno.h>
-#include "../config.h"
 #include "../scriptengine/libdscript.h"
 #include "dsiEngineManager.h"
 

@@ -31,7 +31,7 @@
 #include "dsuArrayable.h"
 
 // class dsuString
-class dsuString : public dsuArrayable{
+class DS_DLL_EXPORT dsuString : public dsuArrayable{
 protected:
 	char *p_String;
 public:
@@ -41,7 +41,7 @@ public:
 	dsuString(const dsuString &String);
 	~dsuString();
 	// management
-	inline int Length() const{ return strlen(p_String); }
+	inline int Length() const{ return ( int )strlen(p_String); }
 	inline char *Pointer() const{ return p_String; }
 	void Empty();
 	inline bool IsEmpty() const{ return p_String[0] == 0; }

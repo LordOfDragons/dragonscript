@@ -25,13 +25,14 @@
 #ifndef _DSPACKAGEWRAPPER_H_
 #define _DSPACKAGEWRAPPER_H_
 
+#include "dragonscript_export.h"
 
 // predefinitions
 class dsClass;
 
 // package wrapper class
 // used by native-packages during creation time
-class dsPackageWrapper{
+class DS_DLL_EXPORT dsPackageWrapper{
 public:
 
 	// virtual destructor

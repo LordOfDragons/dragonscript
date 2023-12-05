@@ -31,7 +31,7 @@
 class dsClass;
 
 // class dsSignature
-class dsSignature{
+class DS_DLL_EXPORT dsSignature{
 private:
 	dsClass **p_Parameters;
 	int p_ParamCount;

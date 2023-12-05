@@ -24,7 +24,7 @@
 // includes
 #include <stdio.h>
 #include <string.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dspNodes.h"
 #include "dspParserCheckCode.h"
 #include "../exceptions.h"
@@ -155,8 +155,14 @@ void dspNodeNatClassErr::DebugPrint(int Level, const char *Prefix){
 ///////////////
 dspNodeIdent::dspNodeIdent(dsScriptSource *Source, int LineNum, int CharNum, const char *Name) : dspBaseNode(ntIdent,Source,LineNum,CharNum) {
 	if(!Name || Name[0]=='\0') DSTHROW(dueInvalidParam);
-	if(!(p_Name = new char[strlen(Name)+1])) DSTHROW(dueOutOfMemory);
-	strcpy(p_Name, Name);
+	const int size = ( int )strlen( Name );
+	if(!(p_Name = new char[size+1])) DSTHROW(dueOutOfMemory);
+	#ifdef OS_W32_VS
+		strncpy_s( p_Name, size + 1, Name, size );
+	#else
+		strncpy(p_Name, Name, size + 1);
+	#endif
+	p_Name[ size ] = 0;
 }
 dspNodeIdent::~dspNodeIdent(){ delete [] p_Name; }
 const char *dspNodeIdent::GetTerminalString(){ return p_Name; }

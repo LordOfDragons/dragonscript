@@ -35,7 +35,7 @@ class dsValue;
 class dsRealObject;
 
 // class dsClassBlock
-class dsClassBlock : public dsClass {
+class DS_DLL_EXPORT dsClassBlock : public dsClass {
 private:
 public:
 	// constructor, destructor

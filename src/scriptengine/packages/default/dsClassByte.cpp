@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassByte.h"
 #include "../../dsEngine.h"
 #include "../../dsRunTime.h"
@@ -40,7 +40,7 @@ dsClassByte::nfToString::nfToString( const sInitData &init ) : dsFunction( init.
 }
 void dsClassByte::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 	char buffer[ 2 ];
-	sprintf( buffer, "%c", myself->GetByte() );
+	snprintf( buffer, sizeof( buffer ), "%c", myself->GetByte() );
 	rt->PushString( buffer );
 }
 

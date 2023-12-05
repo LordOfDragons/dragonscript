@@ -30,7 +30,7 @@
 #include "dsScriptSource.h"
 
 // class dsFile
-class dsFile : public dsScriptSource{
+class DS_DLL_EXPORT dsFile : public dsScriptSource{
 private:
 	char *p_Filename;
 	char *p_Filetitle;

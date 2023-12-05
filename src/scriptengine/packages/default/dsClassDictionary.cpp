@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassArray.h"
 #include "dsClassBlock.h"
 #include "dsClassDictionary.h"
@@ -1619,7 +1619,7 @@ void dsClassDictionary::nfToString::RunFunction( dsRunTime *rt, dsValue *myself 
 				// key
 				rt->RunFunctionFast( iterEntry->key, funcIndexToString ); // String toString()
 				const char * const keystr = rt->GetReturnValue()->GetString();
-				const int kslen = strlen( keystr );
+				const int kslen = ( int )strlen( keystr );
 				
 				if( first ){
 					first = false;
@@ -1630,17 +1630,29 @@ void dsClassDictionary::nfToString::RunFunction( dsRunTime *rt, dsValue *myself 
 				}
 				
 				if( curLen + kslen > maxLen ){
-					strcat( buffer, "..." );
+					#ifdef OS_W32_VS
+						strcat_s( buffer, maxLen + 7, "..." );
+					#else
+						strcat( buffer, "..." );
+					#endif
 					curLen += 3;
 					break;
 					
 				}else{
-					strcat( buffer, keystr );
+					#ifdef OS_W32_VS
+						strcat_s( buffer, maxLen + 7, keystr );
+					#else
+						strcat( buffer, keystr );
+					#endif
 					curLen += kslen;
 				}
 				
 				// ->
-				strcat( buffer, "->" );
+				#ifdef OS_W32_VS
+					strcat_s( buffer, maxLen + 7, "->" );
+				#else
+					strcat( buffer, "->" );
+				#endif
 				curLen += 2;
 				
 				// value
@@ -1655,15 +1667,23 @@ void dsClassDictionary::nfToString::RunFunction( dsRunTime *rt, dsValue *myself 
 					valuestr = "null";
 				}
 				
-				const int vslen = strlen( valuestr );
+				const int vslen = ( int )strlen( valuestr );
 				
 				if( curLen + vslen > maxLen ){
-					strcat( buffer, "..." );
+					#ifdef OS_W32_VS
+						strcat_s( buffer, maxLen + 7, "..." );
+					#else
+						strcat( buffer, "..." );
+					#endif
 					curLen += 3;
 					break;
 					
 				}else{
-					strcat( buffer, valuestr );
+					#ifdef OS_W32_VS
+						strcat_s( buffer, maxLen + 7, valuestr );
+					#else
+						strcat( buffer, valuestr );
+					#endif
 					curLen += vslen;
 				}
 				

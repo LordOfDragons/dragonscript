@@ -23,7 +23,7 @@
 
 // includes
 #include <stdio.h>
-#include "../../config.h"
+#include "../dragonscript_config.h"
 #include "dsClass.h"
 #include "dsValue.h"
 #include "dsRealObject.h"

@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <ctype.h>
-#include "../../../config.h"
+#include "../../dragonscript_config.h"
 #include "dsClassException.h"
 #include "../../dsEngine.h"
 #include "../../dsBaseEngineManager.h"
@@ -179,7 +179,7 @@ dsClassException::nfHashCode::nfHashCode(const sInitData &init) : dsFunction(ini
 "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt){
 }
 void dsClassException::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	rt->PushInt( ( intptr_t )myself->GetRealType() );
+	rt->PushInt( ( int )( intptr_t )myself->GetRealType() );
 }
 
 // public func bool equals(Object obj)
@@ -300,10 +300,10 @@ void dsClassException::PrintTrace(dsRunTime *rt, dsValue *obj){
 		// print out the reason for the exception
 		fullName = BuildFullName( realObj->GetType() );
 		reason = nd->trace->GetReason();
-		strLen = 30 + strlen(fullName) + strlen(reason);
+		strLen = 30 + ( int )strlen(fullName) + ( int )strlen(reason);
 		buffer = new char[strLen+1];
 		if(!buffer) DSTHROW(dueOutOfMemory);
-		sprintf(buffer, "%s: %s", fullName, reason);
+		snprintf(buffer, strLen+1, "%s: %s", fullName, reason);
 		engMgr->OutputMessage(buffer);
 		delete [] buffer; buffer = NULL;
 		delete [] fullName; fullName = NULL;
@@ -313,13 +313,13 @@ void dsClassException::PrintTrace(dsRunTime *rt, dsValue *obj){
 			fullName = BuildFullName( point->GetClass() );
 			funcName = point->GetFunction()->GetName();
 			line = point->GetLine();
-			strLen = 40 + strlen(fullName) + strlen(funcName);
+			strLen = 40 + ( int )strlen(fullName) + ( int )strlen(funcName);
 			buffer = new char[strLen+1];
 			if(!buffer) DSTHROW(dueOutOfMemory);
 			if( point->GetFunction()->GetTypeModifiers() & DSTM_NATIVE ){
-				sprintf(buffer, "%i) Native %s.%s: line %i", i+1, fullName, funcName, line);
+				snprintf(buffer, strLen+1, "%i) Native %s.%s: line %i", i+1, fullName, funcName, line);
 			}else{
-				sprintf(buffer, "%i) Script %s.%s: line %i", i+1, fullName, funcName, line);
+				snprintf(buffer, strLen+1, "%i) Script %s.%s: line %i", i+1, fullName, funcName, line);
 			}
 			engMgr->OutputMessage(buffer);
 			delete [] buffer; buffer = NULL;
@@ -345,7 +345,7 @@ char *dsClassException::BuildFullName(dsClass *theClass){
 	int fullNameLen=0, nameLen;
 	dsClass *curClass = theClass;
 	while(curClass){
-		fullNameLen += strlen(curClass->GetName()) + 1;
+		fullNameLen += ( int )strlen(curClass->GetName()) + 1;
 		curClass = curClass->GetParent();
 	}
 	fullNameLen--;
@@ -355,7 +355,7 @@ char *dsClassException::BuildFullName(dsClass *theClass){
 	fullName[fullNameLen] = '\0';
 	curClass = theClass;
 	while(curClass){
-		nameLen = strlen(curClass->GetName());
+		nameLen = ( int )strlen(curClass->GetName());
 		fullNameLen -= nameLen;
 		// new -Wstringop-truncation check is fail. fix is to use memcpy instead of
 		// strncpy. seriously... how brain dead is this?!
