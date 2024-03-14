@@ -39,7 +39,7 @@ jobs:
 
       - name: Build API Docs
         working-directory: ./ghdocs
-        run: python3 build.py
+        run: python3 _build.py
 
       - name: Build Pages
         uses: actions/jekyll-build-pages@v1
