@@ -6,7 +6,8 @@ on:
       - master
     paths:
       - ghdocs/**
-  workflow_call:
+      - .github/workflows/build_ghpages.yml
+  workflow_dispatch:
 
 # set permissions of GITHUB_TOKEN to allow deployment to github pages
 permissions:
