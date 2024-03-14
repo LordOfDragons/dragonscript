@@ -10,9 +10,3 @@ nav_order: 1
 [Home Page](https://dragondreams.ch/index.php/dragengine){:target="_blank"}
 
 [Wiki](https://developer.dragondreams.ch/wiki/doku.php){:target="_blank"}
-
-## Building
-Build using
-  scons
-
-Configurate by copy custom.py.dist to custom.py
