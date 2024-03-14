@@ -2,9 +2,10 @@ name: Build GitHub Pages
 
 on:
   push:
-    branches: ['main']
+    branches:
+      - master
     paths:
-      - '/ghdocs/**'
+      - ghdocs/**
   workflow_call:
 
 # set permissions of GITHUB_TOKEN to allow deployment to github pages
