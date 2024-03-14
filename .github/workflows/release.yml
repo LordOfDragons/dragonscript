@@ -68,3 +68,7 @@ jobs:
           artifacts: >
             libdscript-${{ github.event.inputs.version }}-linux64.tar.bz2,
             libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip
+
+  build_doc:
+    needs: [upload]
+    uses: ./.github/workflows/build_ghpages.yml
