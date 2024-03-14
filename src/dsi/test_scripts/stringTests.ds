@@ -61,6 +61,8 @@ class StringTests extends Application
 		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1) + "\n" )
 		System.print( "startsWithNoCase: should true is " + str1.startsWithNoCase(str1.toUpper()) + "\n" )
 		System.print( "startsWithNoCase: should false is " + str1.startsWithNoCase(str1 + "x") + "\n" )
+		
+		System.print( "startsWith: should true is " + str1.startsWith("") + "\n" )
 	end
 	
 	protected func void testEndsWith()
