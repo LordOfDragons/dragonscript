@@ -11,11 +11,11 @@ nav_order: 2
 
 API documentation of the DragonScript Language (*.ds).
 
-## Latest:
+## Latest
 {% assign version = versions.first.version %}
 [DragonScript Language: {{ version }}]({{ urlapidoc }}{{ version }}/index.html){:target="_blank"}
 
-## Previous Versions:
+## Previous Versions
 {% assign count = versions.size | minus: 1 %}
 {% assign versions2 = versions | slice: 1, count %}
 {% for each in versions2 %}
