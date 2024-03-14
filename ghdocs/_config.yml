@@ -1,0 +1,23 @@
+title: DragonScript
+email: info@dragondreams.ch
+description: >-
+  Documentation for the DragonScript language.
+domain: "lordofdragons.github.io"
+url: "https://lordofdragons.github.io"
+baseurl: "/dragonscript"
+twitter_username: DragonDreamsGD
+github_username: LordOfDragons
+repository: LordOfDragons/dragonscript
+
+remote_theme: just-the-docs/just-the-docs@v0.5.2
+plugins:
+  - jekyll-remote-theme
+
+nav_external_links:
+  - title: Repository
+    url: https://github.com/LordOfDragons/dragonscript.git
+    hide_icon: false
+    opens_in_new_tab: true
+
+keep_files:
+  - artifacts
