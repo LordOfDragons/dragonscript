@@ -65,10 +65,10 @@ private: // for dsRunTime
 	dsValue(dsValue *value);
 	inline void SetValue(dsValue *Value){ p_Type=Value->p_Type; p_Data=Value->p_Data; }
 	inline void SetValue(dsClass *Type, dsValueData *Data){ p_Type=Type; p_Data=*Data; }
-	inline void SetByte(dsClass *Type, byte Value){ p_Type=Type; p_Data.SetByte(Value); }
-	inline void SetBool(dsClass *Type, bool Value){ p_Type=Type; p_Data.SetBool(Value); }
-	inline void SetInt(dsClass *Type, int Value){ p_Type=Type; p_Data.SetInt(Value); }
-	inline void SetFloat(dsClass *Type, float Value){ p_Type=Type; p_Data.SetFloat(Value); }
+	inline void SetByte(dsClass *Type, byte Value){ p_Type=Type; p_Data.SetByte(Value); p_Data.SetFuncBase(0); }
+	inline void SetBool(dsClass *Type, bool Value){ p_Type=Type; p_Data.SetBool(Value); p_Data.SetFuncBase(0); }
+	inline void SetInt(dsClass *Type, int Value){ p_Type=Type; p_Data.SetInt(Value); p_Data.SetFuncBase(0); }
+	inline void SetFloat(dsClass *Type, float Value){ p_Type=Type; p_Data.SetFloat(Value); p_Data.SetFuncBase(0); }
 	inline void SetRealObject(dsClass *Type, dsRealObject *Object){ p_Type=Type; p_Data.SetRealObject(Object); p_Data.SetFuncBase(0); }
 	inline void SetNull(dsClass *Type){ p_Type=Type; p_Data.SetRealObject(NULL); p_Data.SetFuncBase(0); }
 	inline void SetEmpty(dsClass *Type){ p_Type=Type; p_Data.SetRealObject(NULL); p_Data.SetFuncBase(0); }
