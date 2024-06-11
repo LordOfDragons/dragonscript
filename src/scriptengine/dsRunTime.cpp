@@ -1631,7 +1631,7 @@ void dsRunTime::p_ExecFunc(dsRealObject *myself, dsClass *Class, dsFunction *Fun
 				if( primType == DSPT_BYTE ){
 					SetByte( &tmpVal, execObj->GetByte() & vTmpValPtr->GetByte() );
 				}else if( primType == DSPT_BOOL ){
-					SetBool( &tmpVal, execObj->GetBool() & vTmpValPtr->GetBool() );
+					SetBool( &tmpVal, execObj->GetBool() && vTmpValPtr->GetBool() );
 				}else if( primType == DSPT_INT ){
 					SetInt( &tmpVal, execObj->GetInt() & vTmpValPtr->GetInt() );
 				}
@@ -1646,7 +1646,7 @@ void dsRunTime::p_ExecFunc(dsRealObject *myself, dsClass *Class, dsFunction *Fun
 				if( primType == DSPT_BYTE ){
 					SetByte( &tmpVal, execObj->GetByte() | vTmpValPtr->GetByte() );
 				}else if( primType == DSPT_BOOL ){
-					SetBool( &tmpVal, execObj->GetBool() | vTmpValPtr->GetBool() );
+					SetBool( &tmpVal, execObj->GetBool() || vTmpValPtr->GetBool() );
 				}else if( primType == DSPT_INT ){
 					SetInt( &tmpVal, execObj->GetInt() | vTmpValPtr->GetInt() );
 				}
