@@ -27,13 +27,17 @@ from SCons.Variables import Variables, PathVariable, EnumVariable
 from SCons.Script import ARGUMENTS
 
 def generate(env, configGroup):
+	ndkroot = ''
+	if 'NDK_ROOT' in os.environ:
+		ndkroot = os.path.expanduser(os.environ['NDK_ROOT'])
+	
 	# add parameters to configurate toolchain
 	params = Variables(env['PARAMETER_SOURCE'], ARGUMENTS)
 	params.Add(PathVariable('android_ndkroot',
 		'Path to Android NDK toolchain (NDK_ROOT env-param by default)',
-		os.path.expanduser(os.environ['NDK_ROOT']), PathVariable.PathAccept ) )
+		ndkroot, PathVariable.PathAccept ) )
 	params.Add(EnumVariable('android_arch', 'Android architecture to build for',
-		'armv7a', ['armv7','armv7a','armv8','x86','x86_64'] ) )
+		'armv7a', ['armv7','armv7a','aarch64','x86','x86_64'] ) )
 	params.Add(('android_apilevel', 'Android API level', '18'))
 	params.Add(('android_gccversion', 'Android NDK GCC version', '4.9'))
 	params.Update(env)
@@ -66,9 +70,9 @@ def generate(env, configGroup):
 		fullarch = 'armeabi-v7a'
 		hardfp = True
 		
-	elif env['android_arch'] == 'armv8':
-		abi = 'androideabi'
-		fullarch = 'armeabi-v8'
+	elif env['android_arch'] == 'aarch64':
+		abi = 'android'
+		fullarch = 'arm64-v8a'
 		hardfp = True
 		
 	elif env['android_arch'] == 'x86':
