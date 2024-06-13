@@ -2731,7 +2731,7 @@ void dsClassArray::nfInject3::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
 	}
 	if( toIndex < 0 ){
-		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < %d", 0 );
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
 	}
 	if( toIndex > nd.count ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
