@@ -83,7 +83,7 @@ void dsExceptionTrace::AddPoint( dsExceptionTracePoint *point ){
 		DSTHROW( dueInvalidParam );
 	}
 	
-	if( pPointCount == 50 ){ // emergency break
+	if( pPointCount == 100 ){ // overflow protection
 		delete point;
 		return;
 	}
