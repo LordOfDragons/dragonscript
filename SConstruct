@@ -161,6 +161,9 @@ if globalEnv['with_debug'] and globalEnv['with_sanitize']:
 		'-fsanitize=vptr',
 		'-fsanitize=pointer-overflow',
 		'-fsanitize=builtin'])
+	
+	if globalEnv['TARGET_PLATFORM'] in ['android']:
+		globalEnv.Replace(SANITIZE_FLAGS = ['-fsanitize=address'])
 
 # define the targets array and reports dictionary to be filled
 parent_targets = {}
