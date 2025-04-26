@@ -33,7 +33,7 @@ jobs:
 
   upload:
     needs: [build_linux, build_windows]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Get Linux Archives
