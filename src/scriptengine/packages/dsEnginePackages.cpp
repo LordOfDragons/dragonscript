@@ -19,107 +19,160 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// includes
 #include <stdio.h>
 #include <string.h>
+
 #include "../dragonscript_config.h"
+
 #include "dsEnginePackages.h"
 #include "dsBaseEnginePackage.h"
 #include "dsNativePackage.h"
-//#include "math/dsEnginePackageMath.h"
 #include "../dsEngine.h"
 #include "../exceptions.h"
 
-// class dsEnginePackage
+
+#ifdef WITH_INTERNAL_PACKAGES
+extern dsBaseEnginePackage *dsMathRegisterInternalModule();
+extern dsBaseEnginePackage *dsIntrospectionRegisterInternalModule();
+#endif
+
+
+// Class dsEnginePackage
 //////////////////////////
-// constructor, destructor
-dsEnginePackages::dsEnginePackages(dsEngine *Engine){
-	if(!Engine) DSTHROW(dueInvalidParam);
-	p_Engine = Engine;
-	p_Packages = NULL;
-	p_PkgCount = 0;
-	p_PkgSize = 0;
-	p_NatPaks = NULL;
-	p_NatPakCount = 0;
-	p_NatPakSize = 0;
-//	try{
-//		p_AddPackage(new dsEnginePackageMath(p_Engine));
-//	}catch( ... ){
-//		p_Clear(); throw;
-//	}
+
+// Constructor, destructor
+////////////////////////////
+
+dsEnginePackages::dsEnginePackages(dsEngine *engine) :
+pEngine(engine),
+pPackages(nullptr),
+pPkgCount(0),
+pPkgSize(0),
+pNatPaks(nullptr),
+pNatPakCount(0),
+pNatPakSize(0)
+{
+	if(!engine){
+		DSTHROW(dueInvalidParam);
+	}
+	
+#ifdef WITH_INTERNAL_PACKAGES
+	try{
+		pAddPackage(dsMathRegisterInternalModule());
+		pAddPackage(dsIntrospectionRegisterInternalModule());
+		
+	}catch( ... ){
+		pClear();
+		throw;
+	}
+#endif
 }
+
 dsEnginePackages::~dsEnginePackages(){
-	p_Clear();
+	pClear();
 }
 
-// package management
-dsBaseEnginePackage *dsEnginePackages::GetPackage(int Index) const{
-	if(Index<0 || Index>=p_PkgCount) DSTHROW(dueOutOfBoundary);
-	return p_Packages[Index];
+
+// Package management
+///////////////////////
+
+dsBaseEnginePackage *dsEnginePackages::GetPackage(int index) const{
+	if(index<0 || index>=pPkgCount){
+		DSTHROW(dueOutOfBoundary);
+	}
+	return pPackages[index];
 }
+
 dsBaseEnginePackage *dsEnginePackages::GetPackage(const char *Name) const{
-	for(int i=0; i<p_PkgCount; i++){
-		if(strcmp(p_Packages[i]->GetName(), Name) == 0) return p_Packages[i];
+	int i;
+	for(i=0; i<pPkgCount; i++){
+		if(strcmp(pPackages[i]->GetName(), Name) == 0){
+			return pPackages[i];
+		}
 	}
-	return NULL;
+	return nullptr;
 }
 
-// native package management
-dsNativePackage *dsEnginePackages::GetNativePackage(int Index) const{
-	if(Index<0 || Index>=p_NatPakCount) DSTHROW(dueOutOfBoundary);
-	return p_NatPaks[Index];
+
+// Native package management
+//////////////////////////////
+
+dsNativePackage *dsEnginePackages::GetNativePackage(int index) const{
+	if(index<0 || index>=pNatPakCount){
+		DSTHROW(dueOutOfBoundary);
+	}
+	return pNatPaks[index];
 }
+
 dsNativePackage *dsEnginePackages::GetNativePackage(const char *filename) const{
-	for(int i=0; i<p_NatPakCount; i++){
-		if(strcmp(filename, p_NatPaks[i]->GetFilename()) == 0) return p_NatPaks[i];
-	}
-	return NULL;
-}
-void dsEnginePackages::AddNatPackage(dsNativePackage *Package){
-	if(!Package) DSTHROW(dueInvalidParam);
-	if(GetNativePackage(Package->GetFilename())) DSTHROW(dueInvalidParam);
-	// enlarge array if needed
-	if(p_NatPakCount == p_NatPakSize){
-		dsNativePackage **vNewArray = new dsNativePackage*[p_NatPakSize+1];
-		if(!vNewArray) DSTHROW(dueOutOfMemory);
-		if(p_NatPaks){
-			for(int i=0; i<p_NatPakCount; i++) vNewArray[i] = p_NatPaks[i];
-			delete [] p_NatPaks;
+	int i;
+	for(i=0; i<pNatPakCount; i++){
+		if(strcmp(filename, pNatPaks[i]->GetFilename()) == 0){
+			return pNatPaks[i];
 		}
-		p_NatPaks = vNewArray;
-		p_NatPakSize++;
 	}
-	// add Scene
-	p_NatPaks[p_NatPakCount] = Package;
-	p_NatPakCount++;
+	return nullptr;
 }
 
-// private functions
-void dsEnginePackages::p_Clear(){
-	if(p_NatPaks){
-		for(int i=0; i<p_NatPakCount; i++) delete p_NatPaks[i];
-		delete [] p_NatPaks;
+void dsEnginePackages::AddNatPackage(dsNativePackage *package){
+	if(!package){
+		DSTHROW(dueInvalidParam);
 	}
-	if(p_Packages){
-		for(int i=0; i<p_PkgCount; i++) delete p_Packages[i];
-		delete [] p_Packages;
+	if(GetNativePackage(package->GetFilename())){
+		DSTHROW(dueInvalidParam);
+	}
+	
+	if(pNatPakCount == pNatPakSize){
+		dsNativePackage **newArray = new dsNativePackage*[pNatPakSize+1];
+		if(pNatPaks){
+			int i;
+			for(i=0; i<pNatPakCount; i++){
+				newArray[i] = pNatPaks[i];
+			}
+			delete [] pNatPaks;
+		}
+		pNatPaks = newArray;
+		pNatPakSize++;
+	}
+	
+	pNatPaks[pNatPakCount] = package;
+	pNatPakCount++;
+}
+
+
+// Private functions
+//////////////////////
+
+void dsEnginePackages::pClear(){
+	int i;
+	if(pNatPaks){
+		for(i=0; i<pNatPakCount; i++){
+			delete pNatPaks[i];
+		}
+		delete [] pNatPaks;
+	}
+	if(pPackages){
+		for(i=0; i<pPkgCount; i++){
+			delete pPackages[i];
+		}
+		delete [] pPackages;
 	}
 }
-void dsEnginePackages::p_AddPackage(dsBaseEnginePackage *Package){
-	// enlarge array if needed
-	if(p_PkgCount == p_PkgSize){
-		dsBaseEnginePackage **vNewArray = new dsBaseEnginePackage*[p_PkgSize+1];
-		if(!vNewArray) DSTHROW(dueOutOfMemory);
-		if(p_Packages){
-			for(int i=0; i<p_PkgCount; i++) vNewArray[i] = p_Packages[i];
-			delete [] p_Packages;
+
+void dsEnginePackages::pAddPackage(dsBaseEnginePackage *package){
+	if(pPkgCount == pPkgSize){
+		dsBaseEnginePackage **newArray = new dsBaseEnginePackage*[pPkgSize+1];
+		if(pPackages){
+			int i;
+			for(i=0; i<pPkgCount; i++){
+				newArray[i] = pPackages[i];
+			}
+			delete [] pPackages;
 		}
-		p_Packages = vNewArray;
-		p_PkgSize++;
+		pPackages = newArray;
+		pPkgSize++;
 	}
-	// add Scene
-	p_Packages[p_PkgCount] = Package;
-	p_PkgCount++;
+	
+	pPackages[pPkgCount] = package;
+	pPkgCount++;
 }

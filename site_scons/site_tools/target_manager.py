@@ -61,6 +61,7 @@ def generate(env):
 			self.install = []
 			self.archive = {}
 			self.params = {}
+			self.specials = {}
 			self.addParameters(**args)
 		
 		## Install files with first n destination directories cut.
@@ -87,11 +88,11 @@ def generate(env):
 		#
 		#  \param path Path to archive library in
 		#  \param library Library to archive
-		def archiveLibrary(self, env, path, library):
+		def archiveLibrary(self, env, path, library, static=False):
 			for l in library:
 				self.archive[os.path.normpath(os.path.join(path, l.name))] = l
 				
-				if 'SHLIBVERSION' not in env:
+				if static or 'SHLIBVERSION' not in env:
 					continue
 				
 				version = env['SHLIBVERSION'].split('.')

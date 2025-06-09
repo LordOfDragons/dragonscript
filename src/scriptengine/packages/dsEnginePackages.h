@@ -19,45 +19,45 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// include only once
 #ifndef _DSENGINEPACKAGES_H_
 #define _DSENGINEPACKAGES_H_
 
 #include "../dragonscript_export.h"
 
-// predefinitions
 class dsEngine;
 class dsBaseEnginePackage;
 class dsNativePackage;
 
-// class dsEnginePackages
+/**
+ * Class dsEnginePackages.
+ */
 class DS_DLL_EXPORT dsEnginePackages{
 private:
-	dsEngine *p_Engine;
-	dsBaseEnginePackage **p_Packages;
-	int p_PkgCount, p_PkgSize;
-	dsNativePackage **p_NatPaks;
-	short p_NatPakCount, p_NatPakSize;
+	dsEngine *pEngine;
+	dsBaseEnginePackage **pPackages;
+	int pPkgCount, pPkgSize;
+	dsNativePackage **pNatPaks;
+	int pNatPakCount, pNatPakSize;
+	
 public:
 	// constructor, destructor
 	dsEnginePackages(dsEngine *Engine);
 	~dsEnginePackages();
+	
 	// package management
-	inline int GetPackageCount() const{ return p_PkgCount; }
-	dsBaseEnginePackage *GetPackage(int Index) const;
-	dsBaseEnginePackage *GetPackage(const char *Name) const;
+	inline int GetPackageCount() const{ return pPkgCount; }
+	dsBaseEnginePackage *GetPackage(int index) const;
+	dsBaseEnginePackage *GetPackage(const char *name) const;
+	
 	// native package management
-	inline int GetNativePackageCount() const{ return p_NatPakCount; }
-	dsNativePackage *GetNativePackage(int Index) const;
+	inline int GetNativePackageCount() const{ return pNatPakCount; }
+	dsNativePackage *GetNativePackage(int index) const;
 	dsNativePackage *GetNativePackage(const char *filename) const;
-	void AddNatPackage(dsNativePackage *Package);
+	void AddNatPackage(dsNativePackage *package);
+	
 private:
-	void p_Clear();
-	void p_AddPackage(dsBaseEnginePackage *Package);
+	void pClear();
+	void pAddPackage(dsBaseEnginePackage *package);
 };
 
-// end of include only once
 #endif
-

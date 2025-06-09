@@ -405,4 +405,3 @@ void dsClassMath::CreateClassMembers(dsEngine *engine){
 	AddFunction( new nfClampI( init ) );
 	AddFunction( new nfClampF( init ) );
 }
-

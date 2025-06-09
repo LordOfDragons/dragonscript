@@ -19,6 +19,9 @@
 			"ghdocs/_repository": true,
 			"ghdocs/_site": true,
 			"ghdocs/_venv": true
-		}
+		},
+		"C_Cpp.default.defines": [
+			//"WITH_INTERNAL_PACKAGES="
+		]
 	}
 }

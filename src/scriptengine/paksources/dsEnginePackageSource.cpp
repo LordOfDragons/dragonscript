@@ -84,14 +84,35 @@ bool dsEnginePackageSource::CanHandle(const char *name){
 dsPackage *dsEnginePackageSource::LoadPackage(const char *name){
 	dsEnginePackages *engPkgList = pEngine->GetEnginePackages();
 	dsBaseEnginePackage *engPkg;
-	dsPackage *pkg=NULL;
+	dsPackage *pkg = nullptr;
 	const char *sharedPath;
-	char *pakPath=NULL;
+	char *pakPath = nullptr;
+	
 	// try to load package from engine if existing
 	engPkg = engPkgList->GetPackage(name);
 	if(engPkg){
-		return engPkg->CreatePackage();
+		pkg = engPkg->CreatePackage();
+		sharedPath = p_FindPackage(name);
+		if(sharedPath){
+			try{
+				const int size = (int)strlen(sharedPath) + (int)strlen(name) + 2;
+				pakPath = new char[size];
+				snprintf(pakPath, size, "%s%s%c", sharedPath, name, PATH_SEPARATOR);
+				p_AddScripts(pkg, pakPath);
+				delete [] pakPath;
+				pakPath = nullptr;
+				
+			}catch( ... ){
+				if(pakPath){
+					delete [] pakPath;
+				}
+				delete pkg;
+				throw;
+			}
+		}
+		return pkg;
 	}
+	
 	// if this is not an internal package it has to be a
 	// script package. try to load it
 	sharedPath = p_FindPackage(name);
@@ -222,7 +243,10 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 	try{
 		// open directory
 		dir = opendir(path);
-		if(!dir) DSTHROW(dseDirectoryNotFound);
+		if(!dir){
+			return;
+		}
+		
 		// do the search
 		while(true){
 			// read next entry
@@ -307,7 +331,7 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 		
 		delete [] newPath; newPath = NULL;
 		if(searchHandle == INVALID_HANDLE_VALUE){
-		    if(GetLastError() != ERROR_NO_MORE_FILES) DSTHROW(dseDirectoryRead);
+			return;
 		}
 		// do the search
 		while(true){
