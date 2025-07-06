@@ -60,7 +60,9 @@ void dsClassObject::nfClassName::RunFunction( dsRunTime *rt, dsValue *myself ){
 		fullNameLen += ( int )strlen( curClass->GetName() ) + 1;
 		curClass = curClass->GetParent();
 	}
-	fullNameLen--;
+	if(fullNameLen > 0){
+		fullNameLen--;
+	}
 	
 	// create and push string containing full name
 	char * const fullName = new char[ fullNameLen + 1 ];
