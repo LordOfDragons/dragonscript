@@ -46,7 +46,7 @@ public:
 	// parser management
 	virtual bool ContinueParsing() = 0;
 	// source management for engine packages
-	virtual dsScriptSource *CreateScriptSource(const char *path) = 0;
+	virtual void AddPackageScriptFiles(dsPackage &package, const char *baseDirectory) = 0;
 };
 
 // end of include only once
