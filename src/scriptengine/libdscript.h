@@ -32,6 +32,7 @@
 #include "dsPackageWrapper.h"
 #include "dsRunTime.h"
 #include "dsBaseEngineManager.h"
+#include "dsDefaultEngineManager.h"
 #include "dsExceptionTrace.h"
 #include "dsExceptionTracePoint.h"
 #include "objects/dsClass.h"
