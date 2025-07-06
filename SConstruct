@@ -60,6 +60,8 @@ params.Add(BoolVariable('with_debug', 'Build with debug symbols for GDB usage', 
 params.Add(BoolVariable('with_warnerrors', 'Treat warnings as errors (dev-builds)', False))
 params.Add(BoolVariable('with_sanitize', 'Enable sanitizing (dev-builds)', False))
 params.Add(BoolVariable('with_optimizations', 'Enable run-time optimizations', True))
+params.Add(BoolVariable('with_internal_packages', 'Compile packages as internal packages', False))
+params.Add(BoolVariable('with_static', 'Build static library', False))
 params.Add(TernaryVariable('build_dsi', 'Build DragonScript Interpreter'))
 params.Add(BoolVariable('dsi_measure_runtime', 'Enable DSI run-time measuring (dev-builds)', False))
 
@@ -126,6 +128,9 @@ globalEnv.Append(CPPFLAGS = ['-Wall'])
 if globalEnv['with_warnerrors']:
 	globalEnv.Append(CPPFLAGS = ['-Werror'])
 
+if globalEnv['with_internal_packages']:
+	globalEnv.Append(CPPFLAGS = ['-DWITH_INTERNAL_PACKAGES'])
+
 # determine sanitize flags to use
 globalEnv.Replace(SANITIZE_FLAGS = [])
 
@@ -161,14 +166,16 @@ if globalEnv['with_debug'] and globalEnv['with_sanitize']:
 		'-fsanitize=vptr',
 		'-fsanitize=pointer-overflow',
 		'-fsanitize=builtin'])
+	
+	if globalEnv['TARGET_PLATFORM'] in ['android']:
+		globalEnv.Replace(SANITIZE_FLAGS = ['-fsanitize=address'])
 
 # define the targets array and reports dictionary to be filled
-parent_targets = {}
-
 configGroup = 'DragonScript'
 globalEnv.configReport.add('Treat warnings as errors (dev-builds)', 'with_warnerrors', configGroup)
 globalEnv.configReport.add('Build with debug symbols for GDB usage', 'with_debug', configGroup)
 globalEnv.configReport.add('Enable run-time optimizations', 'with_optimizations', configGroup)
+globalEnv.configReport.add('Compile packages as internal packages', 'with_internal_packages', configGroup)
 globalEnv.configReport.add('Build DragonScript Interpreter', 'build_dsi', configGroup)
 
 # collector targets
@@ -176,8 +183,6 @@ targetInstallRuntime = globalEnv.targetManager.Target('Install Runtime')
 globalEnv.targetManager.add('install_runtime', targetInstallRuntime)
 
 # build scripts
-SConscript(dirs='src/scriptengine', variant_dir='src/scriptengine/build', duplicate=0, exports='globalEnv' )
-
 packages = []
 #packages.append('src/packages/collections')
 #packages.append('src/packages/dsbench')
@@ -187,8 +192,16 @@ packages.append('src/packages/introspection')
 packages.append('src/packages/math')
 packages.append('src/packages/utils')
 
-for p in packages:
-	SConscript(dirs=p, variant_dir='{}/build'.format(p), duplicate=0, exports='globalEnv' )
+if globalEnv['with_static']:
+	globalEnv.targetManager.add('internalPackages', globalEnv.targetManager.Target('Internal Packages'))
+	for p in packages:
+		SConscript(dirs=p, variant_dir='{}/build'.format(p), duplicate=0, exports='globalEnv')
+
+SConscript(dirs='src/scriptengine', variant_dir='src/scriptengine/build', duplicate=0, exports='globalEnv' )
+
+if not globalEnv['with_static']:
+	for p in packages:
+		SConscript(dirs=p, variant_dir='{}/build'.format(p), duplicate=0, exports='globalEnv' )
 
 SConscript(dirs='src/dsi', variant_dir='src/dsi/build', duplicate=0, exports='globalEnv' )
 

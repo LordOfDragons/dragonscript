@@ -6,7 +6,7 @@
 Import-Module "$PSScriptRoot\..\..\shared.psm1"
 
 # application
-$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistDataPackages\Utils"
+$TargetDir = Join-Path -Path $OutputDir -ChildPath "$PathDistRuntimePackages\Utils"
 
 #Write-Host "Package Utils: Copy Library to '$TargetDir'"
 #Install-Files -Path (Join-Path -Path $OutputDir -ChildPath "Utils.dll") -Destination $TargetDir

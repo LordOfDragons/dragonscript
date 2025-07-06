@@ -104,6 +104,8 @@ private:
 	DEF_NATFUNC( nfReverse );
 	DEF_NATFUNC( nfSplit );
 	DEF_NATFUNC( nfSplit2 );
+	DEF_NATFUNC( nfSplitExact );
+	DEF_NATFUNC( nfSplitExact2 );
 	DEF_NATFUNC( nfReplace );
 	DEF_NATFUNC( nfReplace2 );
 	DEF_NATFUNC( nfReplaceString );

@@ -6,3 +6,4 @@ custom.py
 config.log
 lastConfig.py
 src/scriptengine/dragonscript_config.h
+src/config.h

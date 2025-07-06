@@ -58,16 +58,11 @@ function Copy-Files {
 # Various path constants
 ##########################
 
-New-Variable -Name PathDist -Value "Distribute\Application" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistData -Value "$PathDist\@ProgramFiles\DragonScript" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistDataPackages -Value "$PathDistData" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistBin -Value "$PathDistData" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistSystem -Value "$PathDist\@System" -Scope Global -Option ReadOnly -Force
-
-New-Variable -Name PathDistSdk -Value "Distribute\SDK" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistSdkInc -Value "$PathDistSdk\@ProgramFiles\DragonScript\SDK\include" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistSdkLib -Value "$PathDistSdk\@ProgramFiles\DragonScript\SDK\lib" -Scope Global -Option ReadOnly -Force
-
-New-Variable -Name PathDistDebug -Value "Distribute\Debug" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistPdb -Value "$PathDistDebug\@ProgramFiles\DragonScript\PDB" -Scope Global -Option ReadOnly -Force
-New-Variable -Name PathDistPdbPackages -Value "$PathDistPdb\Packages" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDist -Value "Distribute\SDK" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistRuntime -Value "$PathDist\dsinstall" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistRuntimePackages -Value "$PathDistRuntime" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistBin -Value "$PathDist\bin" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistInc -Value "$PathDist\include" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistLib -Value "$PathDist\lib" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistPdb -Value "$PathDist\pdb" -Scope Global -Option ReadOnly -Force
+New-Variable -Name PathDistPdbPackages -Value "$PathDistPdb\packages" -Scope Global -Option ReadOnly -Force

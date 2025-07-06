@@ -19,34 +19,43 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// includes
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "dragonscript_config.h"
 #include "dsScriptSource.h"
 #include "dsDefaultEngineManager.h"
+#include "dsFile.h"
 
 // class dsDefaultEngineManager
 /////////////////////////////////
-// message output
+
 void dsDefaultEngineManager::OutputMessage(const char *Message){
 	printf("%s\n", Message);
 }
-void dsDefaultEngineManager::OutputWarning(const char *Message, int WarnID, dsScriptSource *Script, int Line, int Position){
+
+void dsDefaultEngineManager::OutputWarning(const char *Message, int WarnID,
+dsScriptSource *Script, int Line, int Position){
 	printf("[WARN#%i] %s(%i/%i): %s\n", WarnID, Script->GetName(), Line, Position, Message);
 }
+
 void dsDefaultEngineManager::OutputWarningMore(const char *Message){
 	printf("   %s\n", Message);
 }
-void dsDefaultEngineManager::OutputError(const char *Message, int ErrorID, dsScriptSource *Script, int Line, int Position){
+
+void dsDefaultEngineManager::OutputError(const char *Message, int ErrorID,
+dsScriptSource *Script, int Line, int Position){
 	printf("[ERR#%i] %s(%i/%i): %s\n", ErrorID, Script->GetName(), Line, Position, Message);
 }
+
 void dsDefaultEngineManager::OutputErrorMore(const char *Message){
 	printf("   %s\n", Message);
 }
-// parser management
+
 bool dsDefaultEngineManager::ContinueParsing(){
 	return true;
+}
+
+dsScriptSource *dsDefaultEngineManager::CreateScriptSource(const char *path){
+	return new dsFile(path);
 }

@@ -834,37 +834,12 @@ void dsClassArray::nfHas::RunFunction( dsRunTime *rt, dsValue *myself ){
 	rt->PushBool( false );
 }
 
-// function void Remove(int Position)
-dsClassArray::nfRemove::nfRemove(const sInitData &init) : dsFunction(init.clsArr, "remove",
-DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
-	p_AddParameter(init.clsInt); // Position
-}
-void dsClassArray::nfRemove::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sArrNatData *nd = (sArrNatData*)p_GetNativeData(myself);
-	if( nd->lockModify != 0 ){
-		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
-	}
-	int i, vPos = rt->GetValue(0)->GetInt();
-	if( vPos < 0 ){
-		DSTHROW_INFO_FMT(dueInvalidParam, "position(%d) < 0", vPos);
-	}
-	if(vPos >= nd->count){
-		DSTHROW_INFO_FMT(dueInvalidParam, "position(%d) >= count(%d)", vPos, nd->count);
-	}
-	const dsClassArray_LockModifyGuard lock( nd->lockModify );
-	for(i=vPos; i<nd->count-1; i++){
-		rt->MoveValue( nd->values[i+1], nd->values[i] );
-	}
-	rt->ClearValue( nd->values[ nd->count - 1 ] );
-	nd->count--;
-}
-
 // function void Remove(Object obj)
-dsClassArray::nfRemove2::nfRemove2(const sInitData &init) : dsFunction(init.clsArr, "remove",
+dsClassArray::nfRemove::nfRemove(const sInitData &init) : dsFunction(init.clsArr, "remove",
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 	p_AddParameter(init.clsObj); // obj
 }
-void dsClassArray::nfRemove2::RunFunction( dsRunTime *rt, dsValue *myself ){
+void dsClassArray::nfRemove::RunFunction( dsRunTime *rt, dsValue *myself ){
 	sArrNatData &nd = *( ( sArrNatData* )p_GetNativeData( myself ) );
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
@@ -2756,7 +2731,7 @@ void dsClassArray::nfInject3::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "fromIndex(%d) >= count(%d)", fromIndex, nd.count );
 	}
 	if( toIndex < 0 ){
-		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < %d", 0 );
+		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) < 0", toIndex );
 	}
 	if( toIndex > nd.count ){
 		DSTHROW_INFO_FMT( dueInvalidParam, "toIndex(%d) > count(%d)", toIndex, nd.count );
@@ -4389,7 +4364,6 @@ void dsClassArray::CreateClassMembers( dsEngine *engine ){
 	AddFunction( new nfIndexOf( init ) );
 	AddFunction( new nfHas( init ) );
 	AddFunction( new nfRemove( init ) );
-	AddFunction( new nfRemove2( init ) );
 	AddFunction( new nfRemoveFrom( init ) );
 	AddFunction( new nfRemoveAll( init ) );
 	AddFunction( new nfGetObject( init ) );

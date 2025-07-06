@@ -28,6 +28,7 @@
 #include "../dragonscript_config.h"
 #include "dsEnginePackageSource.h"
 #include "../dsEngine.h"
+#include "../dsBaseEngineManager.h"
 #include "../dsFile.h"
 #include "../dsPackage.h"
 #include "../packages/dsEnginePackages.h"
@@ -84,14 +85,35 @@ bool dsEnginePackageSource::CanHandle(const char *name){
 dsPackage *dsEnginePackageSource::LoadPackage(const char *name){
 	dsEnginePackages *engPkgList = pEngine->GetEnginePackages();
 	dsBaseEnginePackage *engPkg;
-	dsPackage *pkg=NULL;
+	dsPackage *pkg = nullptr;
 	const char *sharedPath;
-	char *pakPath=NULL;
+	char *pakPath = nullptr;
+	
 	// try to load package from engine if existing
 	engPkg = engPkgList->GetPackage(name);
 	if(engPkg){
-		return engPkg->CreatePackage();
+		pkg = engPkg->CreatePackage();
+		sharedPath = p_FindPackage(name);
+		if(sharedPath){
+			try{
+				const int size = (int)strlen(sharedPath) + (int)strlen(name) + 2;
+				pakPath = new char[size];
+				snprintf(pakPath, size, "%s%s%c", sharedPath, name, PATH_SEPARATOR);
+				p_AddScripts(pkg, pakPath);
+				delete [] pakPath;
+				pakPath = nullptr;
+				
+			}catch( ... ){
+				if(pakPath){
+					delete [] pakPath;
+				}
+				delete pkg;
+				throw;
+			}
+		}
+		return pkg;
 	}
+	
 	// if this is not an internal package it has to be a
 	// script package. try to load it
 	sharedPath = p_FindPackage(name);
@@ -212,6 +234,7 @@ const char *dsEnginePackageSource::p_FindPackage(const char *name){
 
 #if defined OS_UNIX || defined OS_BEOS || defined OS_MACOS
 void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
+	dsBaseEngineManager &engineManager = *pEngine->GetEngineManager();
 	dsScriptSource *scriptSource=NULL;
 	const char *pattern="ds";
 	char *newPath=NULL;
@@ -222,7 +245,10 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 	try{
 		// open directory
 		dir = opendir(path);
-		if(!dir) DSTHROW(dseDirectoryNotFound);
+		if(!dir){
+			return;
+		}
+		
 		// do the search
 		while(true){
 			// read next entry
@@ -253,7 +279,7 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 					// check if this a valid script file '*.ds'
 					if(p_MatchesExt(dirEntry->d_name, pattern)){
 						// add script to package
-						scriptSource = new dsFile(newPath);
+						scriptSource = engineManager.CreateScriptSource(newPath);
 						if(!scriptSource) DSTHROW(dueOutOfMemory);
 						pak->AddScript(scriptSource); scriptSource = NULL;
 					}
@@ -273,6 +299,7 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 }
 #elif defined OS_W32
 void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
+	dsBaseEngineManager &engineManager = *pEngine->GetEngineManager();
 	dsScriptSource *scriptSource=NULL;
 	const char *searchPattern="*.*";
 	const char *matchPattern="ds";
@@ -307,7 +334,7 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 		
 		delete [] newPath; newPath = NULL;
 		if(searchHandle == INVALID_HANDLE_VALUE){
-		    if(GetLastError() != ERROR_NO_MORE_FILES) DSTHROW(dseDirectoryRead);
+			return;
 		}
 		// do the search
 		while(true){
@@ -346,7 +373,7 @@ void dsEnginePackageSource::p_AddScripts(dsPackage *pak, const char *path){
 					// check if this a valid script file '*.ds'
 					if(p_MatchesExt(utf8, matchPattern)){
 						// add script to package
-						scriptSource = new dsFile(newPath);
+						scriptSource = engineManager.CreateScriptSource(newPath);
 						if(!scriptSource) DSTHROW(dueOutOfMemory);
 						pak->AddScript(scriptSource); scriptSource = NULL;
 					}

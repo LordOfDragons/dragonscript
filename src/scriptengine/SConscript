@@ -12,6 +12,7 @@ elif envLibrary['TARGET_PLATFORM'] == 'windows':
 	envLibrary.Append(LIBS = ['kernel32'])
 
 versionString = envLibrary['version']
+staticBuild = envLibrary['with_static']
 
 libVersionString = versionString
 while len(libVersionString.split('.')) < 3:
@@ -78,19 +79,26 @@ globFiles(envLibrary, '.', '*.h', headers)
 
 objects = [envLibrary.SharedObject(s) for s in sources]
 
+if staticBuild:
+	objects.extend(globalEnv.targetManager.targets['internalPackages'].target)
+
 for h in headers:
 	envLibrary.Command('include/libdscript/{}'.format(h), h, Copy('$TARGET', '$SOURCE'))
 
 if envLibrary['TARGET_PLATFORM'] != 'windows':
 	envLibrary['SHLIBVERSION'] = libVersionString
 
-library = envLibrary.SharedLibrary(target='dscript', source=objects)
+if staticBuild:
+	library = envLibrary.StaticLibrary(target='dscript', source=objects)
+else:
+	library = envLibrary.SharedLibrary(target='dscript', source=objects)
 targetLibrary.build.extend(library)
 targetLibrary.aliasBuild(envLibrary, 'dscript_build')
 
 envLibrary.Clean(library, fileConfig)
 
-if 'SHLIBVERSION' in envLibrary:
+targetLibrary.installCutDirs(envLibrary, pathInclude, headers, 0)
+if not staticBuild and 'SHLIBVERSION' in envLibrary:
 	targetLibrary.install.extend(envLibrary.InstallVersionedLib(pathLib, library))
 else:
 	targetLibrary.install.extend(envLibrary.Install(pathLib, library))
@@ -102,6 +110,17 @@ targetLibraryDev.aliasInstall(envLibrary, 'install_develop')
 envLibrary.Alias('dscript', [targetLibraryDev.install, targetLibrary.install])
 
 targetLibrary.archiveCutDirs(envLibrary, pathInclude, headers, 0)
-targetLibrary.archiveLibrary(envLibrary, pathLib, library)
+targetLibrary.archiveLibrary(envLibrary, pathLib, library, static=staticBuild)
 
 targetLibrary.addParametersBuildCPP(envLibrary, ['dscript'], 'include')
+
+if not staticBuild:
+	def addInternalPackage(env, nodes):
+		libenv = library[0].get_env()
+		for n in nodes:
+			libenv['LIBS'].insert(0, n)
+		env.Depends(library, nodes)
+		print('nodes: ', nodes)
+		print('LIBS: ', libenv['LIBS'])
+
+	targetLibrary.specials['addInternalPackage'] = addInternalPackage

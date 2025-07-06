@@ -33,16 +33,16 @@ jobs:
 
   upload:
     needs: [build_linux, build_windows]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Get Linux Archives
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: archives-linux
       
       - name: Get Windows Archives
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: archives-windows
       
@@ -67,6 +67,8 @@ jobs:
             See https://developer.dragondreams.ch/wiki/doku.php/dragengine:modules:dragonscript:api for documentation.
           artifacts: >
             libdscript-${{ github.event.inputs.version }}-linux64.tar.bz2,
-            libdscript-${{ github.event.inputs.version }}-windows64.zip,
-            libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip,
-            libdscript-dbg-${{ github.event.inputs.version }}-windows64.zip
+            libdscript-sdk-${{ github.event.inputs.version }}-windows64.zip
+
+  build_doc:
+    needs: [upload]
+    uses: ./.github/workflows/build_ghpages.yml

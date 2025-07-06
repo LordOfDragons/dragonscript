@@ -5,7 +5,7 @@ Import('globalEnv')
 
 envPackage = globalEnv.Clone()
 
-globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
+#globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
 
 pathPackage = envPackage.subst('${libdir}/dragonscript/Utils')
 

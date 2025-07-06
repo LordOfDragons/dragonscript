@@ -30,10 +30,10 @@
 #define _DSIENGINEMANAGER_H_
 
 // includes
-#include "../scriptengine/dsBaseEngineManager.h"
+#include "../scriptengine/dsDefaultEngineManager.h"
 
 // class engine manager
-class dsiEngineManager : public dsBaseEngineManager{
+class dsiEngineManager : public dsDefaultEngineManager{
 public:
 	// constructor
 	dsiEngineManager();

@@ -4,10 +4,13 @@ import os
 Import('globalEnv')
 
 envPackage = globalEnv.Clone()
+staticBuild = globalEnv['with_static']
 
-globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
+if not staticBuild:
+    globalEnv.targetManager.targets['dscript'].applyBuild(envPackage)
 
 pathPackage = envPackage.subst('${libdir}/dragonscript/Math')
+internalPackage = envPackage['with_internal_packages']
 
 # setup the builders
 targetPackage = globalEnv.targetManager.TargetLibrary('Package Math')
@@ -22,15 +25,25 @@ globFiles(envPackage, 'src', '*.ds', scripts)
 
 objects = [envPackage.SharedObject(s) for s in sources]
 
-library = envPackage.SharedLibrary(target='Math', source=objects, SHLIBPREFIX='')
-targetPackage.build.extend(library)
+if not staticBuild:
+    if internalPackage:
+        library = envPackage.StaticLibrary(target='pakmath', source=objects)
+    else:
+        library = envPackage.SharedLibrary(target='Math', source=objects, SHLIBPREFIX='')
+    targetPackage.build.extend(library)
 targetPackage.aliasBuild(envPackage, 'pak_math_build')
 
 targetPackage.installCutDirs(envPackage, pathPackage, scripts, 1)
-targetPackage.install.extend(envPackage.Install(pathPackage, library[0])) # only first target in case clutter exists
+if not internalPackage and not staticBuild:
+    targetPackage.install.extend(envPackage.Install(pathPackage, library[0])) # only first target in case clutter exists
 targetPackage.aliasInstall(envPackage, 'pak_math')
 
 targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)
-targetPackage.archiveLibrary(envPackage, pathPackage, library[0:1])
+if not internalPackage and not staticBuild:
+    targetPackage.archiveLibrary(envPackage, pathPackage, library[0:1])
 
-globalEnv.targetManager.targets['install_runtime'].target.extend(targetPackage.install)
+if internalPackage:
+    if staticBuild:
+        globalEnv.targetManager.targets['internalPackages'].target.extend(objects)
+    else:
+        globalEnv.targetManager.targets['dscript'].specials['addInternalPackage'](envPackage, library)

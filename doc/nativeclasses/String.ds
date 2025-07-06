@@ -304,6 +304,22 @@ fixed class String
 		return null
 	end
 	
+	/**
+	 * \brief String split by character.
+	 * \details Consecutive runs of \em character produce empty string entries.
+	 */
+	public func Array splitExact( byte character )
+		return null
+	end
+	
+	/**
+	 * \brief String split by any character from a list of characters.
+	 * \details Consecutive runs of any character from \em characters produce empty string entries.
+	 */
+	public func Array splitExact( String characters )
+		return null
+	end
+	
 	/** \brief String with replaced characters. */
 	public func String replace( byte replace, byte with )
 		return null

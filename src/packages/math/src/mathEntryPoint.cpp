@@ -19,13 +19,39 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// includes
 #include "../../../scriptengine/libdscript.h"
 #include "dsClassMath.h"
 
+#ifdef WITH_INTERNAL_PACKAGES
 
+#include "../../../scriptengine/packages/dsBaseEnginePackage.h"
+
+class dsMathInternalModule : public dsBaseEnginePackage{
+public:
+	dsMathInternalModule() = default;
+	~dsMathInternalModule() override = default;
+	
+	const char *GetName() const override{
+		return "Math";
+	}
+	
+	dsPackage *CreatePackage() override{
+		dsPackage * const package = new dsPackage(GetName());
+		try{
+			package->AddHostClass(new dsClassMath);
+		}catch(...){
+			delete package;
+			throw;
+		}
+		return package;
+	}
+};
+
+dsBaseEnginePackage *dsMathRegisterInternalModule(){
+	return new dsMathInternalModule;
+}
+
+#else
 
 // export definition
 #ifdef __cplusplus
@@ -35,7 +61,6 @@ PACKAGE_ENTRY_POINT_ATTR bool CreatePackage(dsPackageWrapper *wrapper);
 #ifdef  __cplusplus
 }
 #endif
-
 
 
 // entry function
@@ -57,3 +82,5 @@ bool CreatePackage(dsPackageWrapper *wrapper){
 	}
 	return true;
 }
+
+#endif

@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"dragonscriptLanguage.scriptDirectories": [
+			"src/testscripts",
+			"src/packages/introspection/tests",
+			"src/dsi/test_scripts"
+		],
+		"files.exclude": {
+			".sconsign.dblite": true,
+			"**/__pycache__": true,
+			"**/.sconf_temp": true,
+			"**/*.pyc": true,
+			"**/build": true,
+			"ghdocs/_repository": true,
+			"ghdocs/_site": true,
+			"ghdocs/_venv": true
+		},
+		"C_Cpp.default.defines": [
+			//"WITH_INTERNAL_PACKAGES="
+		]
+	}
+}

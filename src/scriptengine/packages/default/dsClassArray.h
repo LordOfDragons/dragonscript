@@ -134,7 +134,6 @@ private:
 	DEF_NATFUNC( nfIndexOf );
 	DEF_NATFUNC( nfHas );
 	DEF_NATFUNC(nfRemove);
-	DEF_NATFUNC(nfRemove2);
 	DEF_NATFUNC( nfRemoveFrom );
 	DEF_NATFUNC(nfRemoveAll);
 	DEF_NATFUNC(nfSetObject);
