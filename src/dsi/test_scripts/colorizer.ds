@@ -9,15 +9,15 @@ class MyApp extends Application
 	end
 		
 	public func int run()
-		System.print( TerminalColorizer.setColor( TerminalColorizer.RED ) \
+		System.print( TerminalColorizer.setColor( TerminalColorizer.Colors.red ) \
 			+ "red, default" + TerminalColorizer.reset() + "\n" )
-		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, true ) \
+		System.print( TerminalColorizer.setColor( TerminalColorizer.Colors.red, true ) \
 			+ "red bold, default" + TerminalColorizer.reset() + "\n" )
-		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, TerminalColorizer.BLUE, true ) \
+		System.print( TerminalColorizer.setColor( TerminalColorizer.Colors.red, TerminalColorizer.Colors.blue, true ) \
 			+ "red bold, blue" + TerminalColorizer.reset() + "\n" )
-		System.print( TerminalColorizer.setColor( TerminalColorizer.RED, TerminalColorizer.BLUE ) \
+		System.print( TerminalColorizer.setColor( TerminalColorizer.Colors.red, TerminalColorizer.Colors.blue ) \
 			+ "red, blue" + TerminalColorizer.reset() + "\n" )
-		System.print( TerminalColorizer.setColor( TerminalColorizer.BLUE ) \
+		System.print( TerminalColorizer.setColor( TerminalColorizer.Colors.blue ) \
 			+ "blue, default" + TerminalColorizer.reset() + "\n" )
 		return 0
 	end

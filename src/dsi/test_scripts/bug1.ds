@@ -38,6 +38,6 @@ class StaticStuff
 
    public static func void message1()
       System.print("StaticStuff.message1()\n")
-      System.print(this.s+"\n")
+      System.print(this.s+"\n")  // this should cause an exception
    end
 end

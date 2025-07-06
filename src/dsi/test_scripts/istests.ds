@@ -28,9 +28,9 @@ class TestScript extends Application
 	func int run()
 		var bool result
 		
-		result = String.new("8") == null
+		result = "8" == null
 		
-		result = null == String.new("8")
+		result = null == "8"
 		
 		result = (null cast String) == null
 		

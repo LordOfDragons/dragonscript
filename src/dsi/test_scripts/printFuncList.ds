@@ -20,7 +20,6 @@
  */
 
 requires "Introspection"
-requires "Collections"
 
 pin Introspection
 

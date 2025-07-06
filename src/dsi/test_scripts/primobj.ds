@@ -8,7 +8,7 @@ class TestApp extends Application
 		var Array numbers
 		var int i
 		// store string
-		testObj = String.new("hallo")
+		testObj = "hallo"
 		System.print("testObj='" + testObj + "'\n")
 		// store int
 		testObj = 8
