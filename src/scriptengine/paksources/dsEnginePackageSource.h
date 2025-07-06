@@ -48,7 +48,6 @@ private:
 	const char *p_FindPackage(const char *name);
 	void p_AddScripts(dsPackage *pak, const char *path);
 	void p_AddNativeLib(dsPackage *pak, const char *path);
-	bool p_MatchesExt(const char *path, const char *ext);
 };
 
 // end of include only once

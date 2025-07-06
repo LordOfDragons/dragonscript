@@ -40,7 +40,9 @@ public:
 	// parser management
 	bool ContinueParsing() override;
 	// file management
-	dsScriptSource *CreateScriptSource(const char *path) override;
+	void AddPackageScriptFiles(dsPackage &package, const char *baseDirectory) override;
+	
+	bool MatchesExtension(const char *path, const char *extension) const;
 };
 
 // end of include only once
