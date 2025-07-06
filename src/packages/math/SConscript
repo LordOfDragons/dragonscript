@@ -47,3 +47,5 @@ if internalPackage:
         globalEnv.targetManager.targets['internalPackages'].target.extend(objects)
     else:
         globalEnv.targetManager.targets['dscript'].specials['addInternalPackage'](envPackage, library)
+
+globalEnv.targetManager.targets['install_runtime'].target.extend(targetPackage.install)
