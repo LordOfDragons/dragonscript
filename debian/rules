@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+DEB_VERSION := $(shell dpkg-parsechangelog | egrep '^Version:' | cut -f 2 -d ' ' | cut -f 1 -d '-')
+
 DESTDIR_DS := $(shell realpath debian/libdscript1)
 DESTDIR_DS_DEV := $(shell realpath debian/libdscript-dev)
 DESTDIR_DS_DSI := $(shell realpath debian/dsi)
@@ -8,7 +10,7 @@ SANDBOX_DS := --install-sandbox="$(DESTDIR_DS)"
 SANDBOX_DS_DEV := --install-sandbox="$(DESTDIR_DS_DEV)"
 SANDBOX_DS_DSI := --install-sandbox="$(DESTDIR_DS_DSI)"
 
-SCONS_OPTIONS :=
+SCONS_OPTIONS := version="$(DEB_VERSION)"
 
 %:
 	dh $@
