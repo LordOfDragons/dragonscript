@@ -178,6 +178,10 @@ globalEnv.configReport.add('Enable run-time optimizations', 'with_optimizations'
 globalEnv.configReport.add('Compile packages as internal packages', 'with_internal_packages', configGroup)
 globalEnv.configReport.add('Build DragonScript Interpreter', 'build_dsi', configGroup)
 
+# collector targets
+targetInstallRuntime = globalEnv.targetManager.Target('Install Runtime')
+globalEnv.targetManager.add('install_runtime', targetInstallRuntime)
+
 # build scripts
 packages = []
 #packages.append('src/packages/collections')
@@ -203,6 +207,9 @@ SConscript(dirs='src/dsi', variant_dir='src/dsi/build', duplicate=0, exports='gl
 
 SConscript(dirs='archive', variant_dir='archive/build', duplicate=0, exports='globalEnv' )
 
+# finish alias
+targetInstallRuntime.alias(globalEnv, 'install_runtime')
+
 # build all target
 targets = []
 for t in globalEnv.targetManager.targets.values():
@@ -210,7 +217,8 @@ for t in globalEnv.targetManager.targets.values():
 		targets.extend(t.build)
 	except:
 		pass
-globalEnv.targetManager.add('build', globalEnv.targetManager.Target('Build All', globalEnv.Alias('build', targets)))
+globalEnv.targetManager.add('build', globalEnv.targetManager.Target(
+	'Build All', globalEnv.Alias('build', targets)))
 
 # install all target
 targets = []
@@ -219,7 +227,8 @@ for t in globalEnv.targetManager.targets.values():
 		targets.extend(t.install)
 	except:
 		pass
-globalEnv.targetManager.add('install', globalEnv.targetManager.Target('Install All', globalEnv.Alias('install', targets)))
+globalEnv.targetManager.add('install', globalEnv.targetManager.Target(
+	'Install All', globalEnv.Alias('install', targets)))
 
 # by default just build
 Default('build')

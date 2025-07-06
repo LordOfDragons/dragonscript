@@ -21,3 +21,5 @@ targetPackage.installCutDirs(envPackage, pathPackage, scripts, 1)
 targetPackage.aliasInstall(envPackage, 'pak_utils')
 
 targetPackage.archiveCutDirs(envPackage, pathPackage, scripts, 1)
+
+globalEnv.targetManager.targets['install_runtime'].target.extend(targetPackage.install)
