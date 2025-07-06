@@ -217,7 +217,7 @@ void dsDefaultEngineManager::AddPackageScriptFiles(dsPackage &package, const cha
 					if(!newPath) DSTHROW(dueOutOfMemory);
 					snprintf(newPath, size, "%s%s", baseDirectory, utf8);
 					// check if this a valid script file '*.ds'
-					if(p_MatchesExt(utf8, matchPattern)){
+					if(MatchesExtension(utf8, matchPattern)){
 						// add script to package
 						scriptSource = new dsFile(newPath);
 						if(!scriptSource) DSTHROW(dueOutOfMemory);
