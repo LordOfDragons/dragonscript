@@ -32,13 +32,15 @@
 class DS_DLL_EXPORT dsDefaultEngineManager : public dsBaseEngineManager{
 public:
 	// message output
-	void OutputMessage(const char *Message);
-	void OutputWarning(const char *Message, int WarnID, dsScriptSource *Script, int Line, int Position);
-	void OutputWarningMore(const char *Message);
-	void OutputError(const char *Message, int ErrorID, dsScriptSource *Script, int Line, int Position);
-	void OutputErrorMore(const char *Message);
+	void OutputMessage(const char *Message) override;
+	void OutputWarning(const char *Message, int WarnID, dsScriptSource *Script, int Line, int Position) override;
+	void OutputWarningMore(const char *Message) override;
+	void OutputError(const char *Message, int ErrorID, dsScriptSource *Script, int Line, int Position) override;
+	void OutputErrorMore(const char *Message) override;
 	// parser management
-	bool ContinueParsing();
+	bool ContinueParsing() override;
+	// file management
+	dsScriptSource *CreateScriptSource(const char *path) override;
 };
 
 // end of include only once
