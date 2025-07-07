@@ -173,7 +173,7 @@ dsNativePackage::~dsNativePackage(){
 // modules management
 void dsNativePackage::LoadIntoPackage(dsEngine *engine, dsPackage *package){
 	if(!engine || !package) DSTHROW(dueInvalidParam);
-	FUNC_CREATEPACKAGE pFuncCreatePackage;
+	FUNC_CREATEPACKAGE pFuncCreatePackage = nullptr;
 	cWrapper wrapper(package);
 	// look for the CreatePackage function
 #ifdef HAVE_DLFCN_H
