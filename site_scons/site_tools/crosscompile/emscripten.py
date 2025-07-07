@@ -35,7 +35,7 @@ def generate(env, configGroup):
 	# disable some nag warnings which are plain out stupid
 	#env.Append(CPPFLAGS = ['-Wno-nontrivial-memcall'])
 	
-	env.Append(LINKFLAGS = ['-s', 'SIDE_MODULE=1'])
+	# env.Append(LINKFLAGS = ['-s', 'SIDE_MODULE=1'])
 
 def exists(env):
 	return True
