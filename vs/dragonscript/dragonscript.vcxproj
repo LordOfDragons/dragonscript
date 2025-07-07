@@ -116,7 +116,7 @@
     <ClInclude Include="..\..\src\scriptengine\utils\dsuPointerStack.h" />
     <ClInclude Include="..\..\src\scriptengine\utils\dsuStack.h" />
     <ClInclude Include="..\..\src\scriptengine\utils\dsuString.h" />
-    <ClInclude Include="dragonscript_config.h" />
+    <ClInclude Include="..\prepare_build\dragonscript_config.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scriptengine\android\dscript-jni.cpp" />
