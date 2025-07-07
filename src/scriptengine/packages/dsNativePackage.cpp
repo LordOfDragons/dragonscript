@@ -55,11 +55,17 @@ void dsNativePackage::cWrapper::AddNativeClass(dsClass *cls){
 dsNativePackage::dsNativePackage(const char *filename){
 	if(!filename) DSTHROW(dueInvalidParam);
 	pFilename = NULL;
-#ifdef OS_BEOS
+	
+#ifdef HAVE_DLFCN_H
+	pHandle = nullptr;
+#elif defined OS_BEOS
 	pHandle = 0;
-#else
+#elif defined OS_W32
 	pHandle = NULL;
+#else
+	DSTHROW(dueInvalidParam);
 #endif
+	
 	// init
 	try{
 		// store filename
@@ -73,7 +79,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 		#endif
 		pFilename[ size ] = 0;
 		// try loading module located at pFilename
-#if defined HAVE_DLFCN_H
+#ifdef HAVE_DLFCN_H
 		pHandle = dlopen(pFilename, RTLD_NOW);
 		if( ! pHandle ) DSTHROW_INFO( dueInvalidAction, dlerror() );
 #elif defined OS_BEOS
@@ -118,7 +124,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 		}
 #endif
 		// look for the CreatePackage function
-#if defined HAVE_DLFCN_H
+#ifdef HAVE_DLFCN_H
 		if(!dlsym(pHandle, "CreatePackage")) DSTHROW_INFO(dueInvalidAction, "dlsym");
 #elif defined OS_BEOS
 		void *location = NULL;
@@ -127,7 +133,7 @@ dsNativePackage::dsNativePackage(const char *filename){
 		if(!GetProcAddress(pHandle, "CreatePackage")) DSTHROW_INFO(dueInvalidAction, "GetProcAddress");
 #endif
 	}catch( ... ){
-#if defined HAVE_DLFCN_H
+#ifdef HAVE_DLFCN_H
 		if(pHandle) dlclose(pHandle);
 #elif defined OS_BEOS
 		if( pHandle ) unload_add_on( pHandle );
@@ -140,18 +146,23 @@ dsNativePackage::dsNativePackage(const char *filename){
 }
 dsNativePackage::~dsNativePackage(){
 	// close module if a handler exist
+#ifdef HAVE_DLFCN_H
 	if( pHandle ){
-#if defined HAVE_DLFCN_H
 		dlclose(pHandle);
 		pHandle = NULL;
+	}
 #elif defined OS_BEOS
+	if( pHandle ){
 		unload_add_on( pHandle );
 		pHandle = 0;
+	}
 #elif defined OS_W32
+	if( pHandle ){
 		FreeLibrary(pHandle);
 		pHandle = NULL;
-#endif
 	}
+#endif
+	
 	// free other memory
 	if(pFilename){
 		delete [] pFilename;
@@ -165,7 +176,7 @@ void dsNativePackage::LoadIntoPackage(dsEngine *engine, dsPackage *package){
 	FUNC_CREATEPACKAGE pFuncCreatePackage;
 	cWrapper wrapper(package);
 	// look for the CreatePackage function
-#if defined HAVE_DLFCN_H
+#ifdef HAVE_DLFCN_H
 	pFuncCreatePackage = (FUNC_CREATEPACKAGE)dlsym(pHandle, "CreatePackage");
 #elif defined OS_BEOS
 	if( get_image_symbol( pHandle, "CreatePackage", B_SYMBOL_TYPE_TEXT, ( void** )&pFuncCreatePackage ) != B_OK ){

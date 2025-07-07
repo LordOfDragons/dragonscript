@@ -34,7 +34,8 @@ if envLibrary['TARGET_PLATFORM'] in ['linux', 'android', 'macos']:
 		configFileDefines['HAVE_DLFCN_H'] = True
 	else:
 		print('dlfcn.h or libdl could not be found or is not usable.')
-		Exit(1)
+		if not envLibrary['with_internal_packages']:
+			Exit(1)
 
 conf.Finish()
 
