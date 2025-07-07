@@ -23,13 +23,21 @@
 from . import android
 from . import mingw
 from . import gcc
+from . import emscripten
 
 from SCons.Variables import Variables, EnumVariable
 from SCons.Script import ARGUMENTS
 
+crosscompilers = {}
+crosscompilers['android'] = android
+crosscompilers['mingw'] = mingw
+crosscompilers['gcc'] = gcc
+crosscompilers['emscripten'] = emscripten
+
 def generate(env):
 	params = Variables(env['PARAMETER_SOURCE'], ARGUMENTS)
-	params.Add(EnumVariable('crosscompile', 'Enable cross compile', 'no', ['no', 'android', 'mingw', 'gcc']))
+	params.Add(EnumVariable('crosscompile', 'Enable cross compile', 'no',
+		['no', 'android', 'mingw', 'gcc', 'emscripten']))
 	params.Update(env)
 	
 	configGroup = None
@@ -47,18 +55,10 @@ def generate(env):
 	env.SetDefault(CROSSCOMPILE_LIBS = '')
 	env.SetDefault(CROSSCOMPILE_PROGRAM_LIBS = '')
 	
-	if env['crosscompile'] == 'android':
-		android.generate(env, configGroup)
-	elif env['crosscompile'] == 'mingw':
-		mingw.generate(env, configGroup)
-	elif env['crosscompile'] == 'gcc':
-		gcc.generate(env, configGroup)
+	if env['crosscompile'] in crosscompilers:
+		crosscompilers[env['crosscompile']].generate(env, configGroup)
 
 def exists(env):
-	if env['crosscompile'] == 'android':
-		return android.exists(env)
-	elif env['crosscompile'] == 'mingw':
-		return mingw.exists(env)
-	elif env['crosscompile'] == 'gcc':
-		return gcc.exists(env)
+	if env['crosscompile'] in crosscompilers:
+		return crosscompilers[env['crosscompile']].exists(env)
 	return True

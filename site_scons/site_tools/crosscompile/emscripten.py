@@ -36,16 +36,6 @@ def generate(env, configGroup):
 	#env.Append(CPPFLAGS = ['-Wno-nontrivial-memcall'])
 	
 	env.Append(LINKFLAGS = ['-s', 'SIDE_MODULE=1'])
-	
-	env['CROSSCOMPILE_CFLAGS'] = []
-	env['CROSSCOMPILE_CPPFLAGS'] = []
-	env['CROSSCOMPILE_CXXFLAGS'] = []
-	env['CROSSCOMPILE_LINKFLAGS'] = []
-	
-	env.Append(CFLAGS = env['CROSSCOMPILE_CFLAGS'])
-	env.Append(CPPFLAGS = env['CROSSCOMPILE_CPPFLAGS'])
-	env.Append(CXXFLAGS = env['CROSSCOMPILE_CXXFLAGS'])
-	env.Append(LINKFLAGS = env['CROSSCOMPILE_LINKFLAGS'])
 
 def exists(env):
 	return True
