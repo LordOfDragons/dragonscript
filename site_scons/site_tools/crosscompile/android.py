@@ -115,6 +115,16 @@ def generate(env, configGroup):
 	env['RANLIB'] = compiler2 + 'ranlib'
 	env['NASM'] = compiler2 + 'yasm'
 	
+	# newer NDK changed compiler file names. how lovely U_U
+	if env.Detect(os.path.join(pathBin, 'llvm-ar')):
+		pathCompiler2 = os.path.join(pathBin, 'llvm')
+		env['LD'] = '{}-link'.format(pathCompiler2)
+		env['STRIP'] = '{}-strip'.format(pathCompiler2)
+		env['OBJCOPY'] = '{}-objcopy'.format(pathCompiler2)
+		env['AS'] = '{}-as'.format(pathCompiler2)
+		env['AR'] = '{}-ar'.format(pathCompiler2)
+		env['RANLIB'] = '{}-ranlib'.format(pathCompiler2)
+	
 	# libraries to link against required for libraries and binaries to load on android.
 	# additional libraries can be required. android is in general quite picky about
 	# these libraries and the loading order
