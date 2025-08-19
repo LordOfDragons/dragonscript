@@ -45,6 +45,8 @@ rm -rf /sources/dragonscript_*.orig.tar
 rm -rf /sources/dragonscript_*-ppa*
 rm -rf /sources/libdscript*.deb
 rm -rf /sources/libdscript*.ddeb
+rm -rf /sources/dsi*.deb
+rm -rf /sources/dsi*.ddeb
 
 if [ $buildPackage = true ]; then
   gbp buildpackage --git-debian-branch=debian --git-upstream-tree=debian --git-ignore-new --git-force-create || exit 1
