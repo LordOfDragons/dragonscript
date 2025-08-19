@@ -39,7 +39,7 @@ override_dh_auto_install:
 	mv "$(DESTDIR_DS)"/usr/lib/libdscript.so "$(DESTDIR_DS_DEV)"/usr/lib/libdscript.so
 	
 	# delete header file ending up in the wrong place
-	rm -f "$(DESTDIR_DS)"/usr/include/libdscript/dragonscript_config.h
+	rm -rf "$(DESTDIR_DS)"/usr/include/libdscript
 	
 	# 'arch-dependent-file-in-usr-share' does not like how DragonScript stores
 	# loadable packages. we can solve this on debian only using a bit of
