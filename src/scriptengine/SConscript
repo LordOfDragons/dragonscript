@@ -29,7 +29,7 @@ configFileDefines['WITH_OPTIMIZATIONS'] = envLibrary['with_optimizations']
 conf = envLibrary.Configure()
 
 if envLibrary['TARGET_PLATFORM'] in ['linux', 'android', 'macos']:
-	if conf.CheckLibWithHeader('dl', 'dlfcn.h', 'c++', 'dlerror();'):
+	if conf.CheckLibWithHeader('dl', 'dlfcn.h', 'c++', call='dlerror();'):
 		envLibrary.Append(LIBS = ['dl'])
 		configFileDefines['HAVE_DLFCN_H'] = True
 	else:
