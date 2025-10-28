@@ -1,5 +1,8 @@
 name: Release
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
@@ -34,6 +37,8 @@ jobs:
   upload:
     needs: [build_linux, build_windows]
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     
     steps:
       - name: Get Linux Archives
