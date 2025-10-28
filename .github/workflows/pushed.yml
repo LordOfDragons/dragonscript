@@ -1,4 +1,6 @@
 name: Pushed
+permissions:
+  contents: read
 
 on:
   push:
