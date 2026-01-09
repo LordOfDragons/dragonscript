@@ -108,7 +108,7 @@ dsClass::dsClass(const char *Name, int ClassType, int TypeModifiers, int Primiti
 		if(p_Variables) delete p_Variables;
 		if(p_Constants) delete p_Constants;
 		if(p_LocFuncs) delete p_LocFuncs;
-		if(p_BlockFuncs) delete p_LocFuncs;
+		if(p_BlockFuncs) delete p_BlockFuncs;
 		throw;
 	}
 }
