@@ -130,6 +130,14 @@ public:
 	
 	void CreateObjectNaked(dsValue *Value, dsClass *Type);
 	void CreateAndPushObject(dsClass *Type, int ArgCount);
+	
+	/**
+	 * \brief Cast value to another type.
+	 * \param from Source value.
+	 * \param to Target value.
+	 * \param toType Target type.
+	 * \note to is allowed to be the same as from.
+	 */
 	void CastValueTo(dsValue *from, dsValue *to, dsClass *toType);
 	
 	/** \brief Find function to run or \em NULL if not found. */
