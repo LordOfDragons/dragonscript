@@ -34,11 +34,15 @@ class dsClass;
 class DS_DLL_EXPORT dsRealObject{
 friend class dsRunTime;
 friend class dsGarbageCollector;
+friend class dsMemoryManager;
+template<typename T, typename... Args>
+friend T* dsAllocPlacementNew(void *buffer, Args&&... args);
 private:
 	dsClass *p_Type;
 	int p_RefCount;
 	int p_WeakRefCount;
 	dsRealObject *p_Prev, *p_Next;
+	char *pOrgPtr;
 	//char *p_Data;
 	char p_Data[]; // c-trick for free-size structs
 public:
@@ -52,9 +56,8 @@ public:
 	inline dsRealObject *GetNext() const{ return p_Next; }
 private:
 //	dsRealObject(dsClass *Type);
-	dsRealObject();
+	dsRealObject(char *orgPtr);
 	~dsRealObject();
-	void Init(dsClass *Type);
 	void Clear();
 	inline void IncRefCount(){ p_RefCount++; }
 	inline void DecRefCount(){ p_RefCount--; }

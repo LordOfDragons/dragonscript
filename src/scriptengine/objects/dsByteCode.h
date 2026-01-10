@@ -27,171 +27,6 @@
 #include "../dsDefinitions.h"
 
 
-
-// code alignement
-#define DS_BYTECODE_STRIDE(codeStruct) ( (int)( sizeof(codeStruct) \
-	+ ( ( DS_ALIGNMENT - ( sizeof(codeStruct) % DS_ALIGNMENT ) ) % DS_ALIGNMENT ) ) )
-
-
-
-/**
- * \brief Base code structure stride all other structures have to fit.
- * \details Used by all code not using a separate struct below.
- */
-#define DS_BCSTRIDE_CODE			DS_BYTECODE_STRIDE( dsByteCode::sCode )
-
-/**
- * \brief Byte constant code stride.
- * \details Used by ebcCByte.
- */
-#define DS_BCSTRIDE_CBYTE			DS_BYTECODE_STRIDE( dsByteCode::sCodeCByte )
-
-/**
- * \brief Integer constant code stride.
- * \details Used by ebcCInt.
- */
-#define DS_BCSTRIDE_CINT			DS_BYTECODE_STRIDE( dsByteCode::sCodeCInt )
-
-/**
- * \brief Floating point constant code stride.
- * \details Used by ebcCFlt.
- */
-#define DS_BCSTRIDE_CFLOAT			DS_BYTECODE_STRIDE( dsByteCode::sCodeCFloat )
-
-/**
- * \brief String constant code stride.
- * \details Used by ebcCStr.
- */
-#define DS_BCSTRIDE_CSTRING			DS_BYTECODE_STRIDE( dsByteCode::sCodeCString )
-
-/**
- * \brief Null code stride.
- * \details Used by ebcNull.
- */
-#define DS_BCSTRIDE_NULL			DS_BYTECODE_STRIDE( dsByteCode::sCodeNull )
-
-/**
- * \brief Class variable code stride.
- * \details Used by ebcClsVar.
- */
-#define DS_BCSTRIDE_CLASSVAR		DS_BYTECODE_STRIDE( dsByteCode::sCodeClassVar )
-
-/**
- * \brief Function parameter code stride.
- * \details Used by ebcParam.
- */
-#define DS_BCSTRIDE_PARAM			DS_BYTECODE_STRIDE( dsByteCode::sCodeParam )
-
-/**
- * \brief Local variable code stride.
- * \details Used by ebcLocVar, ebcCVar.
- */
-#define DS_BCSTRIDE_LOCVAR			DS_BYTECODE_STRIDE( dsByteCode::sCodeLocalVar )
-
-/**
- * \brief Allocate local variable code stride.
- * \details Used by ebcALV.
- */
-#define DS_BCSTRIDE_ALV				DS_BYTECODE_STRIDE( dsByteCode::sCodeAllocLocalVar )
-
-/**
- * \brief Free local variables code stride.
- * \details Used by ebcFLV.
- */
-#define DS_BCSTRIDE_FLV				DS_BYTECODE_STRIDE( dsByteCode::sCodeFreeLocalVars )
-
-/**
- * \brief Jump short distance code struct.
- * \details Used by ebcJMPB, ebcJEQB, ebcJNEB.
- */
-#define DS_BCSTRIDE_JBYTE		DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpByte )
-
-/**
- * \brief Jump middle distance code stride.
- * \details Used by ebcJMPS, ebcJEQS, ebcJNES.
- */
-#define DS_BCSTRIDE_JSHORT			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpShort )
-
-/**
- * \brief Jump long distance code struct.
- * \details Used by ebcJMPL, ebcJEQL, ebcJNEL.
- */
-#define DS_BCSTRIDE_JLONG			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpLong )
-
-/**
- * \brief Jump case short distance code stride.
- * \details Used by ebcJCEB.
- */
-#define DS_BCSTRIDE_JCBYTE			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseByte )
-
-/**
- * \brief Jump case medium distance code stride.
- * \details Used by ebcJCES.
- */
-#define DS_BCSTRIDE_JCSHORT			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseShort )
-
-/**
- * \brief Jump case long distance code stride.
- * \details Used by ebcJCEL.
- */
-#define DS_BCSTRIDE_JCLONG			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseLong )
-
-/**
- * \brief Jump case static short distance code stride.
- * \details Used by ebcJCESB.
- */
-#define DS_BCSTRIDE_JCSBYTE			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseStaticByte )
-
-/**
- * \brief Jump case static medium distance code stride.
- * \details Used by ebcJCESS.
- */
-#define DS_BCSTRIDE_JCSSHORT		DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseStaticShort )
-
-/**
- * \brief Jump case static long distance code stride.
- * \details Used by ebcJCEL.
- */
-#define DS_BCSTRIDE_JCSLONG			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpCaseStaticLong )
-
-/**
- * \brief Jump exception short distance code stride.
- * \details Used by ebcJOEB.
- */
-#define DS_BCSTRIDE_JEBYTE			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpExcepByte )
-
-/**
- * \brief Jump exception medium distance code stride.
- * \details Used by ebcJOES.
- */
-#define DS_BCSTRIDE_JESHORT			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpExcepShort )
-
-/**
- * \brief Jump exception long distance code stride.
- * \details Used by ebcJOEL.
- */
-#define DS_BCSTRIDE_JELONG			DS_BYTECODE_STRIDE( dsByteCode::sCodeJumpExcepLong )
-
-/**
- * \brief Type casting code stride.
- * \details Used by ebcCast, ebcCaTo, ebcTypO.
- */
-#define DS_BCSTRIDE_CAST			DS_BYTECODE_STRIDE( dsByteCode::sCodeCast )
-
-/**
- * \brief Function call code stride.
- * \details Used by ebcCall.
- */
-#define DS_BCSTRIDE_CALL			DS_BYTECODE_STRIDE( dsByteCode::sCodeCall )
-
-/**
- * \brief Direct, constructor or block function call code stride.
- * \details Used by ebcDCall, ebcCCall, ebcBlock.
- */
-#define DS_BCSTRIDE_DCALL			DS_BYTECODE_STRIDE( dsByteCode::sCodeDirectCall )
-
-
-
 /**
  * Byte code.
  */
@@ -646,5 +481,161 @@ private:
 	void p_AddData( const void *data, int size, int advance );
 };
 
-#endif
+/**
+ * \brief Base code structure stride all other structures have to fit.
+ * \details Used by all code not using a separate struct below.
+ */
+constexpr size_t DS_BCSTRIDE_CODE = dsByteCodeStride<dsByteCode::sCode>();
 
+/**
+ * \brief Byte constant code stride.
+ * \details Used by ebcCByte.
+ */
+constexpr size_t DS_BCSTRIDE_CBYTE = dsByteCodeStride<dsByteCode::sCodeCByte>();
+
+/**
+ * \brief Integer constant code stride.
+ * \details Used by ebcCInt.
+ */
+constexpr size_t DS_BCSTRIDE_CINT = dsByteCodeStride<dsByteCode::sCodeCInt>();
+
+/**
+ * \brief Floating point constant code stride.
+ * \details Used by ebcCFlt.
+ */
+constexpr size_t DS_BCSTRIDE_CFLOAT = dsByteCodeStride<dsByteCode::sCodeCFloat>();
+
+/**
+ * \brief String constant code stride.
+ * \details Used by ebcCStr.
+ */
+constexpr size_t DS_BCSTRIDE_CSTRING = dsByteCodeStride<dsByteCode::sCodeCString>();
+
+/**
+ * \brief Null code stride.
+ * \details Used by ebcNull.
+ */
+constexpr size_t DS_BCSTRIDE_NULL = dsByteCodeStride<dsByteCode::sCodeNull>();
+
+/**
+ * \brief Class variable code stride.
+ * \details Used by ebcClsVar.
+ */
+constexpr size_t DS_BCSTRIDE_CLASSVAR = dsByteCodeStride<dsByteCode::sCodeClassVar>();
+
+/**
+ * \brief Function parameter code stride.
+ * \details Used by ebcParam.
+ */
+constexpr size_t DS_BCSTRIDE_PARAM = dsByteCodeStride<dsByteCode::sCodeParam>();
+
+/**
+ * \brief Local variable code stride.
+ * \details Used by ebcLocVar, ebcCVar.
+ */
+constexpr size_t DS_BCSTRIDE_LOCVAR = dsByteCodeStride<dsByteCode::sCodeLocalVar>();
+
+/**
+ * \brief Allocate local variable code stride.
+ * \details Used by ebcALV.
+ */
+constexpr size_t DS_BCSTRIDE_ALV = dsByteCodeStride<dsByteCode::sCodeAllocLocalVar>();
+
+/**
+ * \brief Free local variables code stride.
+ * \details Used by ebcFLV.
+ */
+constexpr size_t DS_BCSTRIDE_FLV = dsByteCodeStride<dsByteCode::sCodeFreeLocalVars>();
+
+/**
+ * \brief Jump short distance code struct.
+ * \details Used by ebcJMPB, ebcJEQB, ebcJNEB.
+ */
+constexpr size_t DS_BCSTRIDE_JBYTE = dsByteCodeStride<dsByteCode::sCodeJumpByte>();
+
+/**
+ * \brief Jump middle distance code stride.
+ * \details Used by ebcJMPS, ebcJEQS, ebcJNES.
+ */
+constexpr size_t DS_BCSTRIDE_JSHORT = dsByteCodeStride<dsByteCode::sCodeJumpShort>();
+
+/**
+ * \brief Jump long distance code struct.
+ * \details Used by ebcJMPL, ebcJEQL, ebcJNEL.
+ */
+constexpr size_t DS_BCSTRIDE_JLONG = dsByteCodeStride<dsByteCode::sCodeJumpLong>();
+
+/**
+ * \brief Jump case short distance code stride.
+ * \details Used by ebcJCEB.
+ */
+constexpr size_t DS_BCSTRIDE_JCBYTE = dsByteCodeStride<dsByteCode::sCodeJumpCaseByte>();
+
+/**
+ * \brief Jump case medium distance code stride.
+ * \details Used by ebcJCES.
+ */
+constexpr size_t DS_BCSTRIDE_JCSHORT = dsByteCodeStride<dsByteCode::sCodeJumpCaseShort>();
+
+/**
+ * \brief Jump case long distance code stride.
+ * \details Used by ebcJCEL.
+ */
+constexpr size_t DS_BCSTRIDE_JCLONG = dsByteCodeStride<dsByteCode::sCodeJumpCaseLong>();
+
+/**
+ * \brief Jump case static short distance code stride.
+ * \details Used by ebcJCESB.
+ */
+constexpr size_t DS_BCSTRIDE_JCSBYTE = dsByteCodeStride<dsByteCode::sCodeJumpCaseStaticByte>();
+
+/**
+ * \brief Jump case static medium distance code stride.
+ * \details Used by ebcJCESS.
+ */
+constexpr size_t DS_BCSTRIDE_JCSSHORT = dsByteCodeStride<dsByteCode::sCodeJumpCaseStaticShort>();
+
+/**
+ * \brief Jump case static long distance code stride.
+ * \details Used by ebcJCEL.
+ */
+constexpr size_t DS_BCSTRIDE_JCSLONG = dsByteCodeStride<dsByteCode::sCodeJumpCaseStaticLong>();
+
+/**
+ * \brief Jump exception short distance code stride.
+ * \details Used by ebcJOEB.
+ */
+constexpr size_t DS_BCSTRIDE_JEBYTE = dsByteCodeStride<dsByteCode::sCodeJumpExcepByte>();
+
+/**
+ * \brief Jump exception medium distance code stride.
+ * \details Used by ebcJOES.
+ */
+constexpr size_t DS_BCSTRIDE_JESHORT = dsByteCodeStride<dsByteCode::sCodeJumpExcepShort>();
+
+/**
+ * \brief Jump exception long distance code stride.
+ * \details Used by ebcJOEL.
+ */
+constexpr size_t DS_BCSTRIDE_JELONG = dsByteCodeStride<dsByteCode::sCodeJumpExcepLong>();
+
+/**
+ * \brief Type casting code stride.
+ * \details Used by ebcCast, ebcCaTo, ebcTypO.
+ */
+constexpr size_t DS_BCSTRIDE_CAST = dsByteCodeStride<dsByteCode::sCodeCast>();
+
+/**
+ * \brief Function call code stride.
+ * \details Used by ebcCall.
+ */
+constexpr size_t DS_BCSTRIDE_CALL = dsByteCodeStride<dsByteCode::sCodeCall>();
+
+/**
+ * \brief Direct, constructor or block function call code stride.
+ * \details Used by ebcDCall, ebcCCall, ebcBlock.
+ */
+constexpr size_t DS_BCSTRIDE_DCALL = dsByteCodeStride<dsByteCode::sCodeDirectCall>();
+
+
+#endif

@@ -55,7 +55,6 @@ public:
 	void InitVariable(void *ParentData);
 	void FreeVariable(dsRunTime *RT, void *ParentData);
 	void SetOffset(int Offset);
-	int SizeOf() const;
 	dsValue *GetValue(void *ParentData);
 	inline int GetTypeModifiers() const{ return p_TypeModifiers; }
 	// static content

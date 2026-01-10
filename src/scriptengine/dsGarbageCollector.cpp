@@ -78,9 +78,9 @@ dsGarbageCollector::~dsGarbageCollector(){
 dsRealObject *dsGarbageCollector::CreateObject(dsClass *type){
 	if(!type) DSTHROW(dueInvalidParam);
 	// create real object
-	int size = sizeof(dsRealObject) + type->SizeOf();
+	const int size = (int)dsAllocSize<dsRealObject>() + type->SizeOf();
 	dsRealObject *newObj = pMemMgr->AllocateObject(size);
-	newObj->Init(type);
+	newObj->p_Type = type;
 	if(pTailObj){
 		pTailObj->SetNext( newObj );
 		newObj->SetPrevious( pTailObj );

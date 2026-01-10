@@ -53,7 +53,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsBoolean ); // value
 }
 void dsClassObjectBoolean::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	nd.value = rt->GetValue( 0 )->GetBool();
 }
 
@@ -65,7 +65,7 @@ dsFunction( init.clsObjBoolean, "value", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsBoolean ){
 }
 void dsClassObjectBoolean::nfValue::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	const sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	rt->PushBool( nd.value );
 }
 
@@ -77,14 +77,9 @@ dsFunction( init.clsObjBoolean, "toString", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassObjectBoolean::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	const sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	
-	if( nd.value ){
-		rt->PushString( "True" );
-		
-	}else{
-		rt->PushString( "False" );
-	}
+	rt->PushString(nd.value ? "True" : "False");
 }
 
 // public func int hashCode()
@@ -93,14 +88,9 @@ dsFunction( init.clsObjBoolean, "hashCode", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassObjectBoolean::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	const sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	
-	if( nd.value ){
-		rt->PushInt( 1 );
-		
-	}else{
-		rt->PushInt( 0 );
-	}
+	rt->PushInt(nd.value ? 1 : 0);
 }
 
 // public func bool equals( Object object )
@@ -110,12 +100,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBoolean ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectBoolean::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	const sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjBoolean = ( dsClassObjectBoolean* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( object, clsObjBoolean ) ){
-		const sObjBoolNatData &other = *( ( sObjBoolNatData* )p_GetNativeData( object ) );
+		const sObjBoolNatData &other = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(object));
 		rt->PushBool( nd.value == other.value );
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -133,14 +123,14 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectBoolean::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjBoolNatData &nd = *( ( sObjBoolNatData* )p_GetNativeData( myself ) );
+	const sObjBoolNatData &nd = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjBoolean = ( dsClassObjectBoolean* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
 	bool boolOther;
 	
 	if( p_IsObjOfType( object, clsObjBoolean ) ){
-		const sObjBoolNatData &other = *( ( sObjBoolNatData* )p_GetNativeData( object ) );
+		const sObjBoolNatData &other = dsNativeDataGet<sObjBoolNatData>(p_GetNativeData(object));
 		boolOther = other.value;
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -172,7 +162,7 @@ void dsClassObjectBoolean::nfCompare::RunFunction( dsRunTime *rt, dsValue *mysel
 dsClassObjectBoolean::dsClassObjectBoolean() : dsClass( "Boolean", DSCT_CLASS,
 DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sObjBoolNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sObjBoolNatData>());
 }
 
 dsClassObjectBoolean::~dsClassObjectBoolean(){

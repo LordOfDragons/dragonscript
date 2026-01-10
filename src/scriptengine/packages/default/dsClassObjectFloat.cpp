@@ -53,7 +53,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsFloat ); // value
 }
 void dsClassObjectFloat::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	nd.value = rt->GetValue( 0 )->GetFloat();
 }
 
@@ -65,7 +65,7 @@ dsFunction( init.clsObjFloat, "value", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsFloat ){
 }
 void dsClassObjectFloat::nfValue::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	const sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	rt->PushFloat( nd.value );
 }
 
@@ -77,7 +77,7 @@ dsFunction( init.clsObjFloat, "toString", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassObjectFloat::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	const sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	char buffer[ 20 ];
 	
 	snprintf( buffer, sizeof( buffer ), "%g", nd.value );
@@ -90,7 +90,7 @@ dsFunction( init.clsObjFloat, "hashCode", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassObjectFloat::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	const sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	const int * const intValue = ( int* )&nd.value;
 	rt->PushInt( *intValue >> 10 ); // cut off 10 bits for a bit of uncertainty to be allowed
 }
@@ -102,12 +102,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBoolean ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectFloat::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	const sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjFloat = ( dsClassObjectFloat* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( object, clsObjFloat ) ){
-		const sObjFloatNatData &other = *( ( sObjFloatNatData* )p_GetNativeData( object ) );
+		const sObjFloatNatData &other = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(object));
 		rt->PushBool( nd.value == other.value );
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -139,7 +139,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectFloat::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjFloatNatData &nd = *( ( sObjFloatNatData* )p_GetNativeData( myself ) );
+	const sObjFloatNatData &nd = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjFloat = ( dsClassObjectFloat* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
@@ -147,7 +147,7 @@ void dsClassObjectFloat::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself 
 	float float2 = float1;
 	
 	if( p_IsObjOfType( object, clsObjFloat ) ){
-		const sObjFloatNatData &other = *( ( sObjFloatNatData* )p_GetNativeData( object ) );
+		const sObjFloatNatData &other = dsNativeDataGet<sObjFloatNatData>(p_GetNativeData(object));
 		float2 = other.value;
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -187,7 +187,7 @@ void dsClassObjectFloat::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself 
 dsClassObjectFloat::dsClassObjectFloat() : dsClass( "Float", DSCT_CLASS,
 DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sObjFloatNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sObjFloatNatData>());
 }
 
 dsClassObjectFloat::~dsClassObjectFloat(){

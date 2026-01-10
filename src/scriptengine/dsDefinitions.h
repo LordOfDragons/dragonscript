@@ -19,11 +19,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
 // include only once
 #ifndef _DSDEFINITIONS_H_
 #define _DSDEFINITIONS_H_
+
+#include <new>       // For std::launder and placement new
+#include <cstddef>   // For std::max_align_t
+#include <cstdint>   // For uintptr_t
+#include <utility>   // for std::forward
 
 #include "dragonscript_config.h"
 #include "dragonscript_export.h"
@@ -72,9 +75,104 @@ inline bool dsiIsValidClassType(int ct){ return ct>=DSCT_CLASS && ct<=DSCT_NAMES
 inline bool dsiIsValidFuncType(int ft){ return ft>=DSFT_FUNCTION && ft<=DSFT_OPERATOR; }
 inline bool dsiIsValidPrimType(int pt){ return pt>=DSPT_VOID && pt<=DSPT_OBJECT; }
 
-// alignement
-#define DS_ALIGNMENT sizeof( void* )
 
-// end of include only once
+/** Align to at least 16 bytes on Windows to prevent SIMD crashes. */
+template<typename T>
+consteval size_t dsAllocAlignment(){
+	// std::max_align_t is often 16 on modern Windows/Linux to support x64 SIMD.
+	return (alignof(T) > alignof(std::max_align_t)) ? alignof(T) : alignof(std::max_align_t);
+}
+
+
+/** Calculate the required data size to store data. */
+template<typename T>
+consteval size_t dsAllocSize(){
+	return sizeof(T) + (dsAllocAlignment<T>() - 1);
+}
+
+
+/** Heap allocation placement new. */
+template<typename T, typename... Args>
+inline T* dsAllocPlacementNew(void *buffer, Args&&... args){
+	const uintptr_t addr = reinterpret_cast<uintptr_t>(buffer);
+	constexpr size_t align = dsAllocAlignment<T>();
+	const uintptr_t alignedAddr = (addr + (align - 1)) & ~(align - 1);
+
+	return new (reinterpret_cast<T*>(alignedAddr)) T(std::forward<Args>(args)...);
+}
+
+
+/** Class data aligned offset. */
+template<typename T>
+inline size_t dsClassDataAlignOffset(size_t offset){
+	constexpr size_t minAlign = sizeof(void*);
+	constexpr size_t align = (alignof(T) > minAlign) ? alignof(T) : minAlign;
+	return (offset + (align - 1)) & ~(align - 1);
+}
+
+
+/** Aligned offset. */
+template<typename T>
+inline size_t dsClassDataNatDatAlignOffset(size_t offset){
+	constexpr size_t align = dsAllocAlignment<T>();
+	return (offset + (align - 1)) & ~(align - 1);
+}
+
+
+/** Byte code stride. */
+template<typename T>
+consteval size_t dsByteCodeStride(){
+	constexpr size_t minAlign = sizeof(void*);
+	constexpr size_t align = (alignof(T) > minAlign) ? alignof(T) : minAlign;
+	return (sizeof(T) + align - 1) & ~(align - 1);
+}
+
+
+/**
+ * Native class data size. Use this in native script classes when calling p_SetNativeDataSize.
+ */
+template<typename T>
+consteval int dsNativeDataSize(){
+	// return (int)(sizeof(T) + (dsAllocAlignment<T>() - 1));
+	return (int)sizeof(T);
+}
+
+
+/**
+ * Placement new of native class data. Use this in native script classes on newly created,
+ * naked dsValue instances to obtain the native data.
+ */
+template<typename T, typename... Args>
+inline T& dsNativeDataNew(void *buffer, Args&&... args){
+	/*
+	const uintptr_t addr = reinterpret_cast<uintptr_t>(buffer);
+	constexpr size_t align = dsAllocAlignment<T>();
+	const uintptr_t alignedAddr = (addr + (align - 1)) & ~(align - 1);
+
+	return *(new (reinterpret_cast<T*>(alignedAddr)) T(std::forward<Args>(args)...));
+	*/
+	return *(new (reinterpret_cast<T*>(buffer)) T(std::forward<Args>(args)...));
+}
+
+
+/**
+ * Get native class data. Use this in native script classes to access the native data
+ * previously initialized with dsNativeDataNew.
+ */
+template<typename T>
+inline T& dsNativeDataGet(void *buffer){
+	/*
+	const uintptr_t addr = reinterpret_cast<uintptr_t>(buffer);
+	constexpr size_t align = dsAllocAlignment<T>();
+	const uintptr_t aligned_addr = (addr + (align - 1)) & ~(align - 1);
+	
+	// std::launder is mandatory to prevent MSVC from caching old pointer values in registers
+	// during optimization. prevents strange heap corruption bugs.
+	return *std::launder(reinterpret_cast<T*>(aligned_addr));
+	*/
+	return *std::launder(reinterpret_cast<T*>(buffer));
+}
+
+
 #endif
 

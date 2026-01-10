@@ -60,6 +60,7 @@ public:
 	const char *GetString() const;
 	dsClass *GetRealType() const;
 private: // for dsRunTime
+	dsValue();
 	dsValue(dsClass *Type);
 	dsValue(dsClass *Type, dsRealObject *obj);
 	dsValue(dsValue *value);

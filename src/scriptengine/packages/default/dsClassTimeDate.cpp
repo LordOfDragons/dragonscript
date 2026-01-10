@@ -126,7 +126,7 @@ void dsClassTimeDate::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW( dueInvalidParam );
 	}
 	
-	dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	nd.year = convTime.tm_year + 1900;
 	nd.month = convTime.tm_mon;
 	nd.day = convTime.tm_mday;
@@ -180,7 +180,7 @@ void dsClassTimeDate::nfNew2::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW( dueInvalidParam );
 	}
 	
-	dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	nd.year = convTime.tm_year + 1900;
 	nd.month = convTime.tm_mon;
 	nd.day = convTime.tm_mday;
@@ -261,7 +261,7 @@ void dsClassTimeDate::nfNew3::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW( dueInvalidParam );
 	}
 	
-	dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	nd.year = convTime.tm_year + 1900;
 	nd.month = convTime.tm_mon;
 	nd.day = convTime.tm_mday;
@@ -288,7 +288,7 @@ dsFunction( init.clsTimeDate, "getYear", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetYear::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.year );
 }
 
@@ -298,7 +298,7 @@ dsFunction( init.clsTimeDate, "getMonth", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetMonth::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.month );
 }
 
@@ -308,7 +308,7 @@ dsFunction( init.clsTimeDate, "getDay", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetDay::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.day );
 }
 
@@ -318,7 +318,7 @@ dsFunction( init.clsTimeDate, "getDayOfWeek", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetDayOfWeek::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.dayOfWeek );
 }
 
@@ -328,7 +328,7 @@ dsFunction( init.clsTimeDate, "getDayOfYear", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetDayOfYear::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.dayOfYear );
 }
 
@@ -338,7 +338,7 @@ dsFunction( init.clsTimeDate, "getHour", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetHour::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.hour );
 }
 
@@ -348,7 +348,7 @@ dsFunction( init.clsTimeDate, "getMinute", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetMinute::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.minute );
 }
 
@@ -358,7 +358,7 @@ dsFunction( init.clsTimeDate, "getSecond", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfGetSecond::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	rt->PushInt( nd.second );
 }
 
@@ -369,7 +369,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 	p_AddParameter( init.clsString ); // format
 }
 void dsClassTimeDate::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	const char * const format = rt->GetValue( 0 )->GetString();
 	
 	struct tm convTime;
@@ -396,7 +396,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsTimeDate ){
 	p_AddParameter( init.clsInteger ); // seconds
 }
 void dsClassTimeDate::nfAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	const int days = rt->GetValue( 0 )->GetInt();
 	const int hours = rt->GetValue( 1 )->GetInt();
 	const int minutes = rt->GetValue( 2 )->GetInt();
@@ -442,7 +442,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfSecondsSince::RunFunction( dsRunTime *rt, dsValue *myself ){
 	const dsClassTimeDate &clsTimeDate = *( ( dsClassTimeDate* )GetOwnerClass() );
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	const dsClassTimeDate::sTimeDate other( clsTimeDate.GetTimeDate( rt->GetValue( 0 )->GetRealObject() ) );
 	
 	struct tm convTime;
@@ -481,7 +481,7 @@ dsFunction(init.clsTimeDate, "hashCode", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassTimeDate::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	
 	struct tm convTime;
 	memset( &convTime, 0, sizeof( convTime ) );
@@ -506,12 +506,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBoolean ){
 	p_AddParameter( init.clsObject ); // obj
 }
 void dsClassTimeDate::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	dsClass * const clsTimeDate = ( dsClassTimeDate* )GetOwnerClass();
 	dsValue * const obj = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( obj, clsTimeDate ) ){
-		const dsClassTimeDate::sTimeDate &nd2 = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( obj ) );
+		const dsClassTimeDate::sTimeDate &nd2 = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(obj));
 		rt->PushBool( nd.year == nd2.year
 			&& nd.month == nd2.month
 			&& nd.day == nd2.day
@@ -530,7 +530,7 @@ dsFunction( init.clsTimeDate, "toString", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassTimeDate::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const dsClassTimeDate::sTimeDate &nd = *( ( dsClassTimeDate::sTimeDate* )p_GetNativeData( myself ) );
+	const dsClassTimeDate::sTimeDate &nd = dsNativeDataGet<dsClassTimeDate::sTimeDate>(p_GetNativeData(myself));
 	
 	struct tm convTime;
 	memset( &convTime, 0, sizeof( convTime ) );
@@ -557,7 +557,7 @@ void dsClassTimeDate::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
 dsClassTimeDate::dsClassTimeDate() :
 dsClass( "TimeDate", DSCT_CLASS, DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( dsClassTimeDate::sTimeDate ) );
+	p_SetNativeDataSize(dsNativeDataSize<dsClassTimeDate::sTimeDate>());
 }
 
 dsClassTimeDate::~dsClassTimeDate(){
@@ -604,7 +604,7 @@ dsClassTimeDate::sTimeDate dsClassTimeDate::GetTimeDate( dsRealObject *myself ) 
 	if( ! myself ){
 		DSTHROW( dueInvalidParam );
 	}
-	return *( ( sTimeDate* )p_GetNativeData( myself->GetBuffer() ) );
+	return dsNativeDataGet<sTimeDate>(p_GetNativeData(myself->GetBuffer()));
 }
 
 void dsClassTimeDate::PushTimeDate( dsRunTime *rt, const sTimeDate &timeDate ){
@@ -613,5 +613,5 @@ void dsClassTimeDate::PushTimeDate( dsRunTime *rt, const sTimeDate &timeDate ){
 	}
 	
 	rt->CreateObjectNakedOnStack( this );
-	*( ( sTimeDate* )p_GetNativeData( rt->GetValue( 0 )->GetRealObject()->GetBuffer() ) ) = timeDate;
+	dsNativeDataGet<sTimeDate>(p_GetNativeData(rt->GetValue(0)->GetRealObject()->GetBuffer())) = timeDate;
 }

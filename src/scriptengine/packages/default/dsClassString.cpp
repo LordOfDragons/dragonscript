@@ -52,7 +52,7 @@ dsClassString::nfCreate::nfCreate( const sInitData &init ) : dsFunction( init.cl
 DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassString::nfCreate::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sStrNatData &nd = *( ( sStrNatData* )p_GetNativeData( myself ) );
+	sStrNatData &nd = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself));
 	
 	nd.str = NULL;
 	
@@ -71,7 +71,7 @@ dsClassString::nfCreateFilled::nfCreateFilled( const sInitData &init ) : dsFunct
 	p_AddParameter( init.clsInt ); // count
 }
 void dsClassString::nfCreateFilled::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sStrNatData &nd = *( ( sStrNatData* )p_GetNativeData( myself ) );
+	sStrNatData &nd = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself));
 	
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int count = rt->GetValue( 1 )->GetInt();
@@ -94,7 +94,7 @@ dsClassString::nfDestructor::nfDestructor( const sInitData &init ) : dsFunction(
 "destructor", DSFT_DESTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassString::nfDestructor::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sStrNatData &nd = *( ( sStrNatData* )p_GetNativeData( myself ) );
+	sStrNatData &nd = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself));
 	
 	if( nd.str ){
 		delete [] nd.str;
@@ -109,7 +109,7 @@ dsClassString::nfEmpty::nfEmpty( const sInitData &init ) : dsFunction( init.clsS
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 }
 void dsClassString::nfEmpty::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	
 	rt->PushBool( str[ 0 ] == '\0' );
 }
@@ -119,7 +119,7 @@ dsClassString::nfGetLength::nfGetLength( const sInitData &init ) : dsFunction( i
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
 }
 void dsClassString::nfGetLength::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	
 	rt->PushInt( ( int )strlen( str ) );
 }
@@ -130,7 +130,7 @@ dsClassString::nfGetAt::nfGetAt( const sInitData &init ) : dsFunction( init.clsS
 	p_AddParameter( init.clsInt ); // index
 }
 void dsClassString::nfGetAt::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	int index = rt->GetValue( 0 )->GetInt();
 	const int len = ( int )strlen( str );
 	
@@ -190,7 +190,7 @@ dsClassString::nfSubString::nfSubString( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfSubString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int start = rt->GetValue( 0 )->GetInt();
 	const char * const newstr = substring( str, start, ( int )strlen( str ) );
 	
@@ -212,7 +212,7 @@ dsClassString::nfSubString2::nfSubString2( const sInitData &init ) : dsFunction(
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfSubString2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int start = rt->GetValue( 0 )->GetInt();
 	const int end = rt->GetValue( 1 )->GetInt();
 	const char * const newstr = substring( str, start, end );
@@ -241,7 +241,7 @@ void dsClassString::nfFormat::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const int funcIndexToString = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexToString();
-	char *format = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	char *format = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const dsClassArray &clsArray = *( ( dsClassArray* )rt->GetEngine()->GetClassArray() );
 	const int paramCount = clsArray.GetObjectCount( rt, parameters );
 	size_t stringLen = 0;
@@ -613,7 +613,7 @@ dsClassString::nfFind::nfFind( const sInitData &init ) : dsFunction( init.clsStr
 	p_AddParameter( init.clsByte ); // character
 }
 void dsClassString::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	rt->PushInt( findInString( str, character, 0, ( int )strlen( str ) ) );
 }
@@ -625,7 +625,7 @@ dsClassString::nfFind2::nfFind2( const sInitData &init ) : dsFunction( init.clsS
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFind2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findInString( str, character, start, ( int )strlen( str ) ) );
@@ -639,7 +639,7 @@ dsClassString::nfFind3::nfFind3( const sInitData &init ) : dsFunction( init.clsS
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFind3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 2 )->GetInt();
@@ -668,7 +668,7 @@ dsClassString::nfFindAny::nfFindAny( const sInitData &init ) : dsFunction( init.
 	p_AddParameter( init.clsStr ); // characters
 }
 void dsClassString::nfFindAny::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	rt->PushInt( findAnyInString( str, characters, 0, ( int )strlen( str ) ) );
 }
@@ -680,7 +680,7 @@ dsClassString::nfFindAny2::nfFindAny2( const sInitData &init ) : dsFunction( ini
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFindAny2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findAnyInString( str, characters, start, ( int )strlen( str ) ) );
@@ -694,7 +694,7 @@ dsClassString::nfFindAny3::nfFindAny3( const sInitData &init ) : dsFunction( ini
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFindAny3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 2 )->GetInt();
@@ -740,7 +740,7 @@ dsClassString::nfFindString::nfFindString( const sInitData &init ) : dsFunction(
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfFindString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	rt->PushInt( findStringInString( str, findstr, 0, ( int )strlen( str ) ) );
 }
@@ -752,7 +752,7 @@ dsClassString::nfFindString2::nfFindString2( const sInitData &init ) : dsFunctio
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFindString2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findStringInString( str, findstr, start, ( int )strlen( str ) ) );
@@ -766,7 +766,7 @@ dsClassString::nfFindString3::nfFindString3( const sInitData &init ) : dsFunctio
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFindString3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 2 )->GetInt();
@@ -807,7 +807,7 @@ dsClassString::nfFindReverse::nfFindReverse( const sInitData &init ) : dsFunctio
 	p_AddParameter( init.clsByte ); // character
 }
 void dsClassString::nfFindReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	rt->PushInt( findInStringReverse( str, character, 0, ( int )strlen( str ) ) );
 }
@@ -819,7 +819,7 @@ dsClassString::nfFindReverse2::nfFindReverse2( const sInitData &init ) : dsFunct
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFindReverse2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findInStringReverse( str, character, start, ( int )strlen( str ) ) );
@@ -833,7 +833,7 @@ dsClassString::nfFindReverse3::nfFindReverse3( const sInitData &init ) : dsFunct
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFindReverse3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 1 )->GetInt();
@@ -862,7 +862,7 @@ dsClassString::nfFindAnyReverse::nfFindAnyReverse( const sInitData &init ) : dsF
 	p_AddParameter( init.clsStr ); // characters
 }
 void dsClassString::nfFindAnyReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	rt->PushInt( findAnyInStringReverse( str, characters, 0, ( int )strlen( str ) ) );
 }
@@ -874,7 +874,7 @@ dsClassString::nfFindAnyReverse2::nfFindAnyReverse2( const sInitData &init ) : d
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFindAnyReverse2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findAnyInStringReverse( str, characters, start, ( int )strlen( str ) ) );
@@ -888,7 +888,7 @@ dsClassString::nfFindAnyReverse3::nfFindAnyReverse3( const sInitData &init ) : d
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFindAnyReverse3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 2 )->GetInt();
@@ -934,7 +934,7 @@ dsClassString::nfFindStringReverse::nfFindStringReverse( const sInitData &init )
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfFindStringReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	rt->PushInt( findStringInStringReverse( str, findstr, 0, ( int )strlen( str ) ) );
 }
@@ -946,7 +946,7 @@ dsClassString::nfFindStringReverse2::nfFindStringReverse2( const sInitData &init
 	p_AddParameter( init.clsInt ); // start
 }
 void dsClassString::nfFindStringReverse2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	rt->PushInt( findStringInStringReverse( str, findstr, start, ( int )strlen( str ) ) );
@@ -960,7 +960,7 @@ dsClassString::nfFindStringReverse3::nfFindStringReverse3( const sInitData &init
 	p_AddParameter( init.clsInt ); // end
 }
 void dsClassString::nfFindStringReverse3::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
 	const int end = rt->GetValue( 1 )->GetInt();
@@ -974,7 +974,7 @@ dsClassString::nfReverse::nfReverse( const sInitData &init ) : dsFunction( init.
 "reverse", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfReverse::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen( str );
 	
 	char * const newstr = new char[ len + 1 ];
@@ -1007,7 +1007,7 @@ dsClassString::nfSplit::nfSplit( const sInitData &init ) : dsFunction( init.clsS
 void dsClassString::nfSplit::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int len = ( int )strlen( str );
 	const char *splitstr = NULL;
@@ -1077,7 +1077,7 @@ dsClassString::nfSplit2::nfSplit2( const sInitData &init ) : dsFunction( init.cl
 void dsClassString::nfSplit2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int clen = ( int )strlen( characters );
 	const int len = ( int )strlen( str );
@@ -1156,7 +1156,7 @@ dsClassString::nfSplitExact::nfSplitExact( const sInitData &init ) : dsFunction(
 void dsClassString::nfSplitExact::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int len = ( int )strlen( str );
 	const char *splitstr = NULL;
@@ -1217,7 +1217,7 @@ dsClassString::nfSplitExact2::nfSplitExact2( const sInitData &init ) : dsFunctio
 void dsClassString::nfSplitExact2::RunFunction( dsRunTime *rt, dsValue *myself ){
 	dsClassString * const clsString = ( dsClassString* )GetOwnerClass();
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const characters = rt->GetValue( 0 )->GetString();
 	const int clen = ( int )strlen( characters );
 	const int len = ( int )strlen( str );
@@ -1281,7 +1281,7 @@ dsClassString::nfReplace::nfReplace( const sInitData &init ) : dsFunction( init.
 	p_AddParameter( init.clsByte ); // with
 }
 void dsClassString::nfReplace::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte replace = rt->GetValue( 0 )->GetByte();
 	const byte with = rt->GetValue( 1 )->GetByte();
 	const int len = ( int )strlen( str );
@@ -1320,7 +1320,7 @@ dsClassString::nfReplace2::nfReplace2( const sInitData &init ) : dsFunction( ini
 	p_AddParameter( init.clsByte ); // with
 }
 void dsClassString::nfReplace2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const replace = rt->GetValue( 0 )->GetString();
 	const byte with = rt->GetValue( 1 )->GetByte();
 	const int rlen = ( int )strlen( replace );
@@ -1366,7 +1366,7 @@ dsClassString::nfReplaceString::nfReplaceString( const sInitData &init ) : dsFun
 	p_AddParameter( init.clsStr ); // with
 }
 void dsClassString::nfReplaceString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const replace = rt->GetValue( 0 )->GetString();
 	const char * const with = rt->GetValue( 1 )->GetString();
 	const int reallen = ( int )strlen( str );
@@ -1433,7 +1433,7 @@ dsClassString::nfTrimLeft::nfTrimLeft( const sInitData &init ) : dsFunction( ini
 "trimLeft", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfTrimLeft::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen( str );
 	int i;
 	
@@ -1472,7 +1472,7 @@ dsClassString::nfTrimRight::nfTrimRight( const sInitData &init ) : dsFunction( i
 "trimRight", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfTrimRight::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen( str );
 	int i;
 	
@@ -1511,7 +1511,7 @@ dsClassString::nfTrimBoth::nfTrimBoth( const sInitData &init ) : dsFunction( ini
 "trimBoth", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfTrimBoth::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen( str );
 	int i, j;
 	
@@ -1556,7 +1556,7 @@ dsClassString::nfToLower::nfToLower( const sInitData &init ) : dsFunction( init.
 "toLower", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfToLower::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen(str);
 	int i;
 	
@@ -1584,7 +1584,7 @@ dsClassString::nfToUpper::nfToUpper( const sInitData &init ) : dsFunction( init.
 "toUpper", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassString::nfToUpper::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int len = ( int )strlen( str );
 	int i;
 	
@@ -1612,7 +1612,7 @@ dsClassString::nfToInt::nfToInt( const sInitData &init ) : dsFunction( init.clsS
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
 }
 void dsClassString::nfToInt::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	rt->PushInt( ( int )strtol( str, NULL, 10 ) );
 }
 
@@ -1621,7 +1621,7 @@ dsClassString::nfToFloat::nfToFloat( const sInitData &init ) : dsFunction( init.
 "toFloat", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsFlt ){
 }
 void dsClassString::nfToFloat::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	rt->PushFloat( strtof( str, NULL ) );
 }
 
@@ -1633,7 +1633,7 @@ dsClassString::nfCompare::nfCompare( const sInitData &init ) : dsFunction( init.
 	p_AddParameter( init.clsObj ); // other
 }
 void dsClassString::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsClass * const clsStr = ( dsClassString* )GetOwnerClass();
 	dsValue * const valother = rt->GetValue( 0 );
 	
@@ -1656,14 +1656,14 @@ dsClassString::nfCompareNoCase::nfCompareNoCase( const sInitData &init ) : dsFun
 	p_AddParameter( init.clsStr ); // other
 }
 void dsClassString::nfCompareNoCase::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const valother = rt->GetValue( 0 );
 	
 	if( ! valother->GetRealObject() ){
 		DSTHROW( dueNullPointer );
 	}
 	
-	char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	char * const otherstr = dsNativeDataGet<sStrNatData>(p_GetNativeData(valother)).str;
 	const int len = ( int )strlen( str );
 	int i;
 	
@@ -1686,12 +1686,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfStartsWith::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const valother = rt->GetValue( 0 );
 	if( ! valother->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "string" );
 	}
-	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	const char * const otherstr = dsNativeDataGet<sStrNatData>(p_GetNativeData(valother)).str;
 	
 	const size_t lenOther = strlen( otherstr );
 	rt->PushBool( lenOther <= strlen( str ) && strncmp( str, otherstr, lenOther ) == 0 );
@@ -1704,12 +1704,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfStartsWithNoCase::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const valother = rt->GetValue( 0 );
 	if( ! valother->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "string" );
 	}
-	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	const char * const otherstr = dsNativeDataGet<sStrNatData>(p_GetNativeData(valother)).str;
 	
 	const size_t lenOther = strlen( otherstr );
 	if( lenOther > strlen( str ) ){
@@ -1734,12 +1734,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfEndsWith::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const valother = rt->GetValue( 0 );
 	if( ! valother->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "string" );
 	}
-	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	const char * const otherstr = dsNativeDataGet<sStrNatData>(p_GetNativeData(valother)).str;
 	
 	const size_t lenOther = strlen( otherstr );
 	const size_t lenStr = strlen( str );
@@ -1753,12 +1753,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsStr ); // string
 }
 void dsClassString::nfEndsWithNoCase::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char *str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char *str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const valother = rt->GetValue( 0 );
 	if( ! valother->GetRealObject() ){
 		DSTHROW_INFO( dueNullPointer, "string" );
 	}
-	const char * const otherstr = ( ( sStrNatData* )p_GetNativeData( valother ) )->str;
+	const char * const otherstr = dsNativeDataGet<sStrNatData>(p_GetNativeData(valother)).str;
 	
 	const size_t lenOther = strlen( otherstr );
 	const size_t lenStr = strlen( str );
@@ -1786,7 +1786,7 @@ dsFunction(init.clsStr, "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, in
 }
 
 void dsClassString::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char *str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char *str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	
 	// SDBM hash algorithm
 	unsigned long hash = 0;
@@ -1807,7 +1807,7 @@ dsFunction(init.clsStr, "equals", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init
 	p_AddParameter( init.clsObj ); // obj
 }
 void dsClassString::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsClass * const clsStr = ( dsClassString* )GetOwnerClass();
 	dsValue * const obj = rt->GetValue( 0 );
 	
@@ -1816,7 +1816,7 @@ void dsClassString::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 		rt->PushBool( false );
 		
 	}else{
-		const char * const otherStr = ( ( sStrNatData* )p_GetNativeData( obj ) )->str;
+		const char * const otherStr = dsNativeDataGet<sStrNatData>(p_GetNativeData(obj)).str;
 		rt->PushBool( strcmp( str, otherStr ) == 0 );
 	}
 }
@@ -1837,13 +1837,13 @@ DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 	p_AddParameter( init.clsStr ); // str
 }
 void dsClassString::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const obj = rt->GetValue( 0 );
 	const char *otherStr = "(null)";
 	char *newStr = NULL;
 	
 	if( obj->GetRealObject() ){
-		otherStr = ( ( sStrNatData* )p_GetNativeData( obj ) )->str;
+		otherStr = dsNativeDataGet<sStrNatData>(p_GetNativeData(obj)).str;
 	}
 	
 	const int size1 = ( int )strlen( str );
@@ -1877,7 +1877,7 @@ dsClassString::nfOpAddByte::nfOpAddByte( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsByte ); // Byte
 }
 void dsClassString::nfOpAddByte::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int len = ( int )strlen( str );
 	
@@ -1907,7 +1907,7 @@ dsClassString::nfOpAddBool::nfOpAddBool( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsBool ); // value
 }
 void dsClassString::nfOpAddBool::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const bool value = rt->GetValue( 0 )->GetBool();
 	
 	const int size1 = ( int )strlen( str );
@@ -1940,7 +1940,7 @@ dsClassString::nfOpAddInt::nfOpAddInt( const sInitData &init ) : dsFunction( ini
 	p_AddParameter( init.clsInt ); // value
 }
 void dsClassString::nfOpAddInt::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const int value = rt->GetValue( 0 )->GetInt();
 	
 	const int size = ( int )strlen( str ) + 12;
@@ -1966,7 +1966,7 @@ dsClassString::nfOpAddFloat::nfOpAddFloat( const sInitData &init ) : dsFunction(
 	p_AddParameter( init.clsFlt ); // value
 }
 void dsClassString::nfOpAddFloat::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const float value = rt->GetValue( 0 )->GetFloat();
 	
 	const int size = ( int )strlen( str ) + 20;
@@ -1992,7 +1992,7 @@ DSFT_OPERATOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 	p_AddParameter( init.clsObj ); // obj
 }
 void dsClassString::nfOpAddObject::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const char * const str = ( ( sStrNatData* )p_GetNativeData( myself ) )->str;
+	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	dsValue * const object = rt->GetValue( 0 );
 	
 	// get string by calling toString on the object if the object is not null
@@ -2040,7 +2040,7 @@ void dsClassString::nfOpAddObject::RunFunction( dsRunTime *rt, dsValue *myself )
 dsClassString::dsClassString() : dsClass( "String", DSCT_CLASS,
 DSTM_PUBLIC | DSTM_NATIVE | DSTM_FIXED ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sStrNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sStrNatData>());
 }
 
 dsClassString::~dsClassString(){
@@ -2140,7 +2140,7 @@ const char *dsClassString::GetRealObjectString( dsRealObject *myself ) const{
 	if( ! myself ){
 		DSTHROW( dueInvalidParam );
 	}
-	return ( const char* )( ( sStrNatData* )p_GetNativeData( myself->GetBuffer() ) )->str;
+	return ( const char* )dsNativeDataGet<sStrNatData>(p_GetNativeData(myself->GetBuffer())).str;
 }
 
 void dsClassString::SetRealObjectString( dsRealObject* object, const char* string ){
@@ -2150,7 +2150,7 @@ void dsClassString::SetRealObjectString( dsRealObject* object, const char* strin
 		DSTHROW( dueInvalidParam );
 	}
 	
-	sStrNatData &nd = *( ( sStrNatData* )p_GetNativeData( object->GetBuffer() ) );
+	sStrNatData &nd = dsNativeDataGet<sStrNatData>(p_GetNativeData(object->GetBuffer()));
 	
 	const int size = ( int )strlen( string );
 	nd.str = new char[ size + 1 ];

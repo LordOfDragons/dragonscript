@@ -97,9 +97,6 @@ void dsVariable::SetOffset(int Offset){
 	if(Offset < 0) DSTHROW(dueInvalidParam);
 	p_Offset = Offset;
 }
-int dsVariable::SizeOf() const{
-	return sizeof(dsValue);
-}
 dsValue *dsVariable::GetValue(void *ParentData){
 	if(p_TypeModifiers & DSTM_STATIC) return p_StaVal;
 	if(!ParentData) DSTHROW(dueInvalidParam);

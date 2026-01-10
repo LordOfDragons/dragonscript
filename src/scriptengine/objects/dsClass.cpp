@@ -527,32 +527,39 @@ bool dsClass::CastableTo( dsClass *toType ){
 }
 
 void dsClass::CalcMemberOffsets(){
-	int vSizeVar;
-	dsVariable *vVariable;
 	// calculate base class member offsets
 	p_BaseSize = 0;
 	if(p_BaseClass){
 		p_BaseClass->CalcMemberOffsets();
 		p_BaseSize = p_BaseClass->SizeOf();
-		if(p_BaseSize % DS_ALIGNMENT) p_BaseSize += DS_ALIGNMENT - (p_BaseSize % DS_ALIGNMENT);
 	}
+	
 	// recalculate element offsets
 	p_Size = p_BaseSize;
+	
 	// native class additional data
 	if(p_NativeSize > 0){
-		p_Size += p_NativeSize;
-		if(p_Size % DS_ALIGNMENT) p_Size += DS_ALIGNMENT - (p_Size % DS_ALIGNMENT);
+		// p_BaseSize is used as start for native data. for this reason it is aligned
+		p_BaseSize = dsClassDataNatDatAlignOffset<dsValue>(p_BaseSize);
+		
+		p_Size = p_BaseSize + p_NativeSize;
 	}
+	
 	// variables
-	for(int i=0; i<p_Variables->Length(); i++){
-		vVariable = (dsVariable*)p_Variables->GetObject(i);
-		if(vVariable->GetTypeModifiers() & DSTM_STATIC) continue;
-		vSizeVar = vVariable->SizeOf();
-		if((p_Size % DS_ALIGNMENT) + vSizeVar > DS_ALIGNMENT) p_Size += DS_ALIGNMENT - (p_Size % DS_ALIGNMENT);
-		vVariable->SetOffset(p_Size);
-		p_Size += vSizeVar;
+	const int count = p_Variables->Length();
+	int i;
+	for(i=0; i<count; i++){
+		dsVariable &variable = *static_cast<dsVariable*>(p_Variables->GetObject(i));
+		if(variable.GetTypeModifiers() & DSTM_STATIC){
+			continue;
+		}
+		
+		p_Size = dsClassDataAlignOffset<dsValue>(p_Size);
+		variable.SetOffset(p_Size);
+		p_Size += sizeof(dsValue);
 	}
 }
+
 int dsClass::GetSubClassLevel(dsClass *Class) const{
 	if(IsEqualTo(Class)) return 0;
 	int vLevel;

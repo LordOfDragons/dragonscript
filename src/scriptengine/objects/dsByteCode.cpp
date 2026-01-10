@@ -707,6 +707,7 @@ void dsByteCode::DebugPrint(){
 			}break;
 			
 		default:
+			printf(">>> INVALID BYTE CODE (%d): %d\n", cpc, code.code);
 			DSTHROW( dueInvalidParam );
 		}
 	}

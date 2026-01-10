@@ -44,20 +44,8 @@ class dsValue;
 class DS_DLL_EXPORT dsMemoryManager{
 friend class dsGarbageCollector;
 private:
-	struct sHole{
-		int at, len;
-	};
-private:
 	dsEngine *pEngine;
 	dsClass *pClsObj;
-	// value strips
-	dsValue *pValStrips;
-	int pValStrSize;
-	sHole *pValStrHoles;
-	int pValStrHoleCount;
-	// single values
-	dsValue *pValues;
-	int pValueSize;
 public:
 	// constructor, destructor
 	dsMemoryManager(dsEngine *Engine);

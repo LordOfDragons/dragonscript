@@ -19,9 +19,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-
-// includes
+#include <new>
 #include <stdio.h>
 #include <stdlib.h>
 #include "dragonscript_config.h"
@@ -41,30 +39,8 @@ dsMemoryManager::dsMemoryManager(dsEngine *engine){
 	if(!engine) DSTHROW(dueInvalidParam);
 	pEngine = engine;
 	pClsObj = engine->GetClassObject();
-	// value strips
-	pValStrips = NULL;
-	pValStrSize = 0;
-	pValStrHoles = NULL;
-	pValStrHoleCount = 0;
-	// single values
-	pValues = NULL;
-	pValueSize = 0;
-	// create all
-	try{
-		// value strips array
-		pValStrips = (dsValue*)malloc(sizeof(dsValue) * DSMM_DEFSIZE);
-		if(!pValStrips) DSTHROW(dueInvalidParam);
-		for(pValStrSize=0; pValStrSize<DSMM_DEFSIZE; pValStrSize++){
-			pValStrips[pValStrSize].SetNull(pClsObj);
-		}
-	}catch( ... ){
-		if(pValStrips) free(pValStrips);
-		throw;
-	}
 }
 dsMemoryManager::~dsMemoryManager(){
-	if(pValStrips) free(pValStrips);
-	if(pValues) free(pValues);
 }
 
 // management
@@ -72,45 +48,48 @@ dsMemoryManager::~dsMemoryManager(){
 // value strip memory management
 dsValue *dsMemoryManager::AllocateValueStrip(int count){
 	if(count < 1) DSTHROW(dueInvalidParam);
-	// dummy. just a simple malloc for the time beeing
-	dsValue *newStrip = (dsValue*)malloc( sizeof(dsValue)*count );
-	if(!newStrip) DSTHROW(dueOutOfMemory);
+	// dummy. just a simple new for the time beeing
+	dsValue *newStrip = new dsValue[count];
 	// finished
 	return newStrip;
 }
 void dsMemoryManager::FreeValueStrip(dsValue *valueStrip){
 	if(!valueStrip) DSTHROW(dueInvalidParam);
-	// dummy free.
-	free(valueStrip);
+	// dummy delete.
+	delete [] valueStrip;
 }
 
 // single value memory management
 dsValue *dsMemoryManager::AllocateValue(){
-	// dummy. just a simple malloc for the time beeing
-	dsValue *newValue = (dsValue*)malloc( sizeof(dsValue) );
-	if(!newValue) DSTHROW(dueOutOfMemory);
+	// dummy. just a simple new for the time beeing
+	dsValue * const newValue = new dsValue;
 	// finished
 	return newValue;
 }
 void dsMemoryManager::FreeValue(dsValue *value){
 	if(!value) DSTHROW(dueInvalidParam);
-	// dummy free.
-	free(value);
+	// dummy delete.
+	delete value;
 }
 
 // object memory management
 dsRealObject *dsMemoryManager::AllocateObject(int size){
 	if(size < 1) DSTHROW(dueInvalidParam);
 	// dummy. just a simple malloc for the time beeing
-	dsRealObject *newObj = (dsRealObject*)malloc(size);
-	if(!newObj) DSTHROW(dueOutOfMemory);
+	char * const orgPtr = new char[size];
+	if(!orgPtr) DSTHROW(dueOutOfMemory);
+	
+	dsRealObject * const newObj = dsAllocPlacementNew<dsRealObject>(orgPtr, orgPtr);
+	
 	// finished
 	return newObj;
 }
 void dsMemoryManager::FreeObject(dsRealObject *obj){
 	if(!obj) DSTHROW(dueInvalidParam);
 	// dummy free.
-	free(obj);
+	char * const orgPtr = obj->pOrgPtr;
+	obj->~dsRealObject();
+	delete [] orgPtr;
 }
 
 // private functions

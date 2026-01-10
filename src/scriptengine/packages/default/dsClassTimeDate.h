@@ -36,14 +36,14 @@ class dsValue;
 class DS_DLL_EXPORT dsClassTimeDate : public dsClass {
 public:
 	struct sTimeDate{
-		int year;
-		int month;
-		int day;
-		int dayOfWeek;
-		int dayOfYear;
-		int hour;
-		int minute;
-		int second;
+		int year = 0;
+		int month = 0;
+		int day = 0;
+		int dayOfWeek = 0;
+		int dayOfYear = 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
 	};
 	
 	
