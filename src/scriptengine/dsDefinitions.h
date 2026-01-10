@@ -133,8 +133,7 @@ consteval size_t dsByteCodeStride(){
  */
 template<typename T>
 consteval int dsNativeDataSize(){
-	// return (int)(sizeof(T) + (dsAllocAlignment<T>() - 1));
-	return (int)sizeof(T);
+	return (int)(sizeof(T) + (dsAllocAlignment<T>() - 1));
 }
 
 
