@@ -836,7 +836,7 @@ void dsClassString::nfFindReverse3::RunFunction( dsRunTime *rt, dsValue *myself 
 	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const byte character = rt->GetValue( 0 )->GetByte();
 	const int start = rt->GetValue( 1 )->GetInt();
-	const int end = rt->GetValue( 1 )->GetInt();
+	const int end = rt->GetValue( 2 )->GetInt();
 	rt->PushInt( findInStringReverse( str, character, start, end ) );
 }
 
@@ -963,7 +963,7 @@ void dsClassString::nfFindStringReverse3::RunFunction( dsRunTime *rt, dsValue *m
 	const char * const str = dsNativeDataGet<sStrNatData>(p_GetNativeData(myself)).str;
 	const char * const findstr = rt->GetValue( 0 )->GetString();
 	const int start = rt->GetValue( 1 )->GetInt();
-	const int end = rt->GetValue( 1 )->GetInt();
+	const int end = rt->GetValue( 2 )->GetInt();
 	rt->PushInt( findStringInStringReverse( str, findstr, start, end ) );
 }
 
