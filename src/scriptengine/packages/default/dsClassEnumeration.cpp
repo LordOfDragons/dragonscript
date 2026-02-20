@@ -41,9 +41,9 @@
 //////////////////////////
 
 struct sEnumNatData{
-	dsuString *name;
-	dsuString *toString;
-	int order;
+	dsuString *name = nullptr;
+	dsuString *toString = nullptr;
+	int order = 0;
 };
 
 
@@ -72,7 +72,7 @@ dsFunction( init.clsEnumeration, "destructor", DSFT_DESTRUCTOR,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassEnumeration::nfDestructor::RunFunction( dsRunTime*, dsValue *myself ){
-	sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	
 	if( nd.name ){
 		delete nd.name;
@@ -92,7 +92,7 @@ dsFunction( init.clsEnumeration, "name", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassEnumeration::nfName::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	rt->PushString( nd.name->Pointer() );
 }
 
@@ -102,7 +102,7 @@ dsFunction( init.clsEnumeration, "order", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassEnumeration::nfOrder::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	rt->PushInt( nd.order );
 }
 
@@ -165,7 +165,7 @@ dsFunction( init.clsEnumeration, "toString", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassEnumeration::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	rt->PushString( nd.toString->Pointer() );
 }
 
@@ -175,7 +175,7 @@ dsFunction( init.clsEnumeration, "hashCode", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassEnumeration::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	rt->PushInt( nd.order );
 }
 
@@ -186,11 +186,11 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassEnumeration::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself));
 	dsValue * const object = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( object, myself->GetRealObject()->GetType() ) ){
-		const sEnumNatData &other = *( ( sEnumNatData* )p_GetNativeData( object ) );
+		const sEnumNatData &other = dsNativeDataGet<sEnumNatData>(p_GetNativeData(object));
 		rt->PushInt( nd.order - other.order );
 		
 	}else{
@@ -387,7 +387,7 @@ void dsClassEnumeration::nfOpGreaterEqual::RunFunction( dsRunTime *rt, dsValue *
 dsClassEnumeration::dsClassEnumeration() : dsClass( "Enumeration", DSCT_CLASS,
 DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sEnumNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sEnumNatData>());
 }
 
 dsClassEnumeration::~dsClassEnumeration(){
@@ -424,7 +424,7 @@ void dsClassEnumeration::CreateClassMembers( dsEngine *engine ){
 }
 
 const dsuString &dsClassEnumeration::GetConstantName( dsRealObject &object ) const{
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( object.GetBuffer() ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(object.GetBuffer()));
 	if( ! nd.name ){
 		DSTHROW( dueInvalidParam );
 	}
@@ -432,7 +432,7 @@ const dsuString &dsClassEnumeration::GetConstantName( dsRealObject &object ) con
 }
 
 int dsClassEnumeration::GetConstantOrder( dsRealObject &object ) const{
-	const sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( object.GetBuffer() ) );
+	const sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(object.GetBuffer()));
 	return nd.order;
 }
 
@@ -498,10 +498,7 @@ void dsClassEnumeration::GenerateMethods( const dsEngine &engine, dsClass &subCl
 
 void dsClassEnumeration::SubClassInitConstant( dsClass &subClass, dsRealObject &myself,
 const char *name, int order ) const{
-	sEnumNatData &nd = *( ( sEnumNatData* )p_GetNativeData( myself.GetBuffer() ) );
-	nd.name = NULL;
-	nd.toString = NULL;
-	nd.order = 0;
+	sEnumNatData &nd = dsNativeDataGet<sEnumNatData>(p_GetNativeData(myself.GetBuffer()));
 	
 	const int lenClassName = ( int )strlen( subClass.GetName() );
 	const int lenName = ( int )strlen( name );

@@ -20,10 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\SConstruct" />
+    <None Include="..\..\src\packages\introspection\src\TypeModifier.ds" />
     <None Include="..\..\src\scriptengine\SConscript" />
     <None Include="post_build.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassClass.h" />
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassDS.h" />
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassFunction.h" />
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassPackage.h" />
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassVariable.h" />
+    <ClInclude Include="..\..\src\packages\introspection\src\introspection.h" />
+    <ClInclude Include="..\..\src\packages\math\src\dsClassMath.h" />
     <ClInclude Include="..\..\src\scriptengine\dragonscript_export.h" />
     <ClInclude Include="..\..\src\scriptengine\dsBaseEngineManager.h" />
     <ClInclude Include="..\..\src\scriptengine\dsDefaultEngineManager.h" />
@@ -116,9 +124,16 @@
     <ClInclude Include="..\..\src\scriptengine\utils\dsuPointerStack.h" />
     <ClInclude Include="..\..\src\scriptengine\utils\dsuStack.h" />
     <ClInclude Include="..\..\src\scriptengine\utils\dsuString.h" />
-    <ClInclude Include="dragonscript_config.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassClass.cpp" />
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassDS.cpp" />
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassFunction.cpp" />
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassPackage.cpp" />
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassVariable.cpp" />
+    <ClCompile Include="..\..\src\packages\introspection\src\ispecEntryPoint.cpp" />
+    <ClCompile Include="..\..\src\packages\math\src\dsClassMath.cpp" />
+    <ClCompile Include="..\..\src\packages\math\src\mathEntryPoint.cpp" />
     <ClCompile Include="..\..\src\scriptengine\android\dscript-jni.cpp" />
     <ClCompile Include="..\..\src\scriptengine\dsBaseEngineManager.cpp" />
     <ClCompile Include="..\..\src\scriptengine\dsDefaultEngineManager.cpp" />
@@ -313,7 +328,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;DS_PAK_PATH="C:\\Program Files\\DragonScript";DS_COMPILE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;DS_PAK_PATH="C:\\Program Files\\DragonScript";WITH_INTERNAL_PACKAGES;DS_STATIC_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -341,7 +356,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DRAGONSCRIPT_EXPORTS;_WINDOWS;_USRDLL;DS_PAK_PATH="C:\\Program Files\\DragonScript";DS_COMPILE_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;DS_PAK_PATH="C:\\Program Files\\DragonScript";WITH_INTERNAL_PACKAGES;DS_STATIC_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

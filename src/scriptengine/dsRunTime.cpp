@@ -1258,7 +1258,7 @@ void dsRunTime::p_ExecFunc(dsRealObject *myself, dsClass *Class, dsFunction *Fun
 		}*/
 		
 		try{
-//			p_Engine->PrintMessage( "[CheckPoint %s(%i)] bytecode:%i", __FILE__, __LINE__, *cp );
+			// p_Engine->PrintMessageFormat("[CheckPoint %s(%i)] cpc:%d bytecode:%d", __FILE__, __LINE__, (int)(cp - topCP), *cp);
 			const dsByteCode::sCode &code = *( ( const dsByteCode::sCode* )cp );
 			
 			switch( code.code ){
@@ -2284,10 +2284,15 @@ void dsRunTime::p_ExecFunc(dsRealObject *myself, dsClass *Class, dsFunction *Fun
 				
 				}break;
 				
-			default:
-				p_Engine->PrintMessageFormat( "Internal Error: Invalid Code %i at %i", code.code, (int)(cp - topCP) );
+			default:{
+				char fqcn[256];
+				const int cpc = (int)(cp - topCP);
+				Class->GetFullName(fqcn, 255);
+				p_Engine->PrintMessageFormat("Internal Error: Invalid Code %d at %d in function %s.%s[%d]",
+					code.code, cpc, fqcn, Function->GetName(), vFuncBC->GetDebugLine(cpc));
 				vFuncBC->DebugPrint();
 				DSTHROW( dueInvalidParam );
+				}
 			}
 			
 		}catch( const duException &e ){

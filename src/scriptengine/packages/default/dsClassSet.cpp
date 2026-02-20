@@ -52,10 +52,10 @@ public:
 };
 
 struct sSetNatData{
-	dsValue **values;
-	int count;
-	int size;
-	int lockModify;
+	dsValue **values = nullptr;
+	int count = 0;
+	int size = 0;
+	int lockModify = 0;
 	
 	// helper functions
 	void SetSize(int newSize, dsRunTime *rt, dsClass *clsObject){
@@ -213,11 +213,11 @@ dsClassSet::nfNew::nfNew(const sInitData &init) : dsFunction(init.clsSet,
 "new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 }
 void dsClassSet::nfNew::RunFunction( dsRunTime*, dsValue *myself ){
-	sSetNatData *nd = (sSetNatData*)p_GetNativeData(myself);
-	nd->values = NULL;
-	nd->count = 0;
-	nd->size = 0;
-	nd->lockModify = 0;
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
+	nd.values = NULL;
+	nd.count = 0;
+	nd.size = 0;
+	nd.lockModify = 0;
 }
 
 // constructor Copy(Set set)
@@ -226,25 +226,25 @@ dsClassSet::nfCopy::nfCopy(const sInitData &init) : dsFunction(init.clsSet,
 	p_AddParameter(init.clsSet); // arr
 }
 void dsClassSet::nfCopy::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = (sSetNatData*)p_GetNativeData(myself);
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClass *clsObject = ((dsClassSet*)GetOwnerClass())->GetClassObject();
-	nd->values = NULL;
-	nd->count = 0;
-	nd->size = 0;
-	nd->lockModify = 0;
+	nd.values = NULL;
+	nd.count = 0;
+	nd.size = 0;
+	nd.lockModify = 0;
 	dsValue *vObj = rt->GetValue(0);
-	sSetNatData *nd2 = (sSetNatData*)p_GetNativeData(vObj);
-	int i, vSize = nd2->count;
+	sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(vObj));
+	int i, vSize = nd2.count;
 	if(vSize > 0){
-		nd->values = new dsValue*[vSize];
-		if(!nd->values) DSTHROW(dueOutOfMemory);
+		nd.values = new dsValue*[vSize];
+		if(!nd.values) DSTHROW(dueOutOfMemory);
 		for(i=0; i<vSize; i++){
-			nd->values[i] = rt->CreateValue(clsObject);
-			if(!nd->values[i]) DSTHROW(dueOutOfMemory);
-			nd->size++;
-			rt->CopyValue(nd2->values[i], nd->values[i]);
+			nd.values[i] = rt->CreateValue(clsObject);
+			if(!nd.values[i]) DSTHROW(dueOutOfMemory);
+			nd.size++;
+			rt->CopyValue(nd2.values[i], nd.values[i]);
 		}
-		nd->count = nd->size;
+		nd.count = nd.size;
 	}
 }
 
@@ -253,7 +253,7 @@ dsClassSet::nfDestructor::nfDestructor(const sInitData &init) : dsFunction(init.
 "destructor", DSFT_DESTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 }
 void dsClassSet::nfDestructor::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( ! nd.values ){
 		return;
 	}
@@ -526,19 +526,18 @@ void dsClassSet::nfNewFromArray::RunFunction( dsRunTime *rt, dsValue* ){
 	dsRealObject * const objArray = rt->GetValue( 0 )->GetRealObject();
 	const int count = clsArray->GetObjectCount( rt, objArray );
 	dsValue *newSet = NULL;
-	sSetNatData *nd = NULL;
 	
 	try{
 		newSet = clsSet->CreateSet( rt );
-		nd = ( sSetNatData* )p_GetNativeData( newSet );
+		sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(newSet));
 		
-		nd->SetSize( count, rt, clsObject );
+		nd.SetSize( count, rt, clsObject );
 		
 		for( int i=0; i<count; i++ ){
 			dsValue &value = *clsArray->GetObjectAt( rt, objArray, i );
-			if( ! nd->Has( *rt, value ) ){
-				rt->CopyValue( &value, nd->values[ nd->count ] );
-				nd->count++;
+			if( ! nd.Has( *rt, value ) ){
+				rt->CopyValue( &value, nd.values[ nd.count ] );
+				nd.count++;
 			}
 		}
 		
@@ -560,7 +559,7 @@ dsClassSet::nfGetCount::nfGetCount(const sInitData &init) : dsFunction(init.clsS
 DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger){
 }
 void dsClassSet::nfGetCount::RunFunction( dsRunTime *rt, dsValue *myself ){
-	rt->PushInt( ((sSetNatData*)p_GetNativeData(myself))->count );
+	rt->PushInt(dsNativeDataGet<sSetNatData>(p_GetNativeData(myself)).count);
 }
 
 // function void add(Object Obj)
@@ -569,21 +568,21 @@ DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 	p_AddParameter(init.clsObject); // Obj
 }
 void dsClassSet::nfAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = (sSetNatData*)p_GetNativeData(myself);
-	if( nd->lockModify != 0 ){
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
+	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
 	
-	if( nd->Has( *rt, *rt->GetValue(0) ) ){
+	if( nd.Has( *rt, *rt->GetValue(0) ) ){
 		return;
 	}
 	
 	dsClass *clsObject = ((dsClassSet*)GetOwnerClass())->GetClassObject();
-	if(nd->count == nd->size){
-		nd->SetSize(nd->size * 3 / 2 + 1, rt, clsObject);
+	if(nd.count == nd.size){
+		nd.SetSize(nd.size * 3 / 2 + 1, rt, clsObject);
 	}
-	rt->CopyValue(rt->GetValue(0), nd->values[nd->count]);
-	nd->count++;
+	rt->CopyValue(rt->GetValue(0), nd.values[nd.count]);
+	nd.count++;
 }
 
 // function void addAll( Set set )
@@ -593,7 +592,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfAddAll::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -607,7 +606,7 @@ void dsClassSet::nfAddAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 		return;
 	}
 	
-	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( set ) );
+	const sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(set));
 	if( nd2.count == 0 ){
 		return;
 	}
@@ -632,7 +631,7 @@ DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsObject ); // obj
 }
 void dsClassSet::nfHas::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	rt->PushBool( nd.Has( *rt, *rt->GetValue( 0 ) ) );
 }
 
@@ -642,7 +641,7 @@ DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 	p_AddParameter(init.clsObject); // object
 }
 void dsClassSet::nfRemove::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -667,16 +666,16 @@ dsClassSet::nfRemoveAll::nfRemoveAll(const sInitData &init) : dsFunction(init.cl
 "removeAll", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid){
 }
 void dsClassSet::nfRemoveAll::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = (sSetNatData*)p_GetNativeData(myself);
-	if( nd->lockModify != 0 ){
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
+	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
 	
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
-	for(int i=0; i<nd->count; i++){
-		rt->ClearValue(nd->values[i]);
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
+	for(int i=0; i<nd.count; i++){
+		rt->ClearValue(nd.values[i]);
 	}
-	nd->count = 0;
+	nd.count = 0;
 }
 
 // function void removeAll( Set set )
@@ -686,7 +685,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfRemoveAll2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -699,7 +698,7 @@ void dsClassSet::nfRemoveAll2::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueNullPointer, "set == this" );
 	}
 	
-	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( set ) );
+	const sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(set));
 	if( nd2.count == 0 ){
 		return;
 	}
@@ -733,7 +732,7 @@ dsClassSet::nfForEach::nfForEach( const sInitData &init ) : dsFunction( init.cls
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -742,9 +741,9 @@ void dsClassSet::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1();
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
-	for( i=0; i<nd->count; i++ ){
-		rt->PushValue( nd->values[ i ] );
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
+	for( i=0; i<nd.count; i++ ){
+		rt->PushValue( nd.values[ i ] );
 		rt->RunFunctionFast( block, funcIndexRun );
 	}
 }
@@ -755,7 +754,7 @@ dsClassSet::nfForEachCastable::nfForEachCastable( const sInitData &init ) : dsFu
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfForEachCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const block = rt->GetValue( 0 );
 	if( ! block->GetRealObject() ){
@@ -778,7 +777,7 @@ dsClassSet::nfForEachWhile::nfForEachWhile( const sInitData &init ) : dsFunction
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfForEachWhile::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
 	int i;
 	
@@ -788,9 +787,9 @@ void dsClassSet::nfForEachWhile::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1();
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
-	for( i=0; i<nd->count; i++ ){
-		rt->PushValue( nd->values[ i ] );
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
+	for( i=0; i<nd.count; i++ ){
+		rt->PushValue( nd.values[ i ] );
 		rt->RunFunctionFast( block, funcIndexRun );
 		
 		if( rt->GetReturnValue()->GetType() != clsBool ){
@@ -808,7 +807,7 @@ dsClassSet::nfForEachWhileCastable::nfForEachWhileCastable( const sInitData &ini
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfForEachWhileCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const block = rt->GetValue( 0 );
 	if( ! block->GetRealObject() ){
@@ -831,11 +830,10 @@ dsClassSet::nfMap::nfMap( const sInitData &init ) : dsFunction( init.clsSet,
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClassSet *clsSet = ( dsClassSet* )GetOwnerClass();
 	dsClass *clsObject = rt->GetEngine()->GetClassObject();
 	dsValue *newSet = NULL;
-	sSetNatData *ndnew;
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -844,25 +842,21 @@ void dsClassSet::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1();
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
 	try{
 		// create the new set of the same capacity as this set
 		newSet = rt->CreateValue( clsSet );
 		rt->CreateObjectNaked( newSet, clsSet );
-		ndnew = ( sSetNatData* )p_GetNativeData( newSet );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+		sSetNatData &ndnew = dsNativeDataNew<sSetNatData>(p_GetNativeData(newSet));
 		
-		ndnew->SetSize( nd->count, rt, clsObject );
+		ndnew.SetSize( nd.count, rt, clsObject );
 		
 		// do the mapping
-		for( i=0; i<nd->count; i++ ){
-			rt->PushValue( nd->values[ i ] );
+		for( i=0; i<nd.count; i++ ){
+			rt->PushValue( nd.values[ i ] );
 			rt->RunFunctionFast( block, funcIndexRun );
-			rt->CopyValue( rt->GetReturnValue(), ndnew->values[ i ] );
-			ndnew->count++;
+			rt->CopyValue( rt->GetReturnValue(), ndnew.values[ i ] );
+			ndnew.count++;
 		}
 		
 		// push the result and clean up
@@ -881,12 +875,11 @@ dsClassSet::nfCollect::nfCollect( const sInitData &init ) : dsFunction( init.cls
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClassSet *clsSet = ( dsClassSet* )GetOwnerClass();
 	dsClass *clsObject = rt->GetEngine()->GetClassObject();
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
 	dsValue *newSet = NULL;
-	sSetNatData *ndnew;
 	int i;
 	
 	dsValue *block = rt->GetValue( 0 );
@@ -895,21 +888,17 @@ void dsClassSet::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1();
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
 	
 	try{
 		// create the new set
 		newSet = rt->CreateValue( clsSet );
 		rt->CreateObjectNaked( newSet, clsSet );
-		ndnew = ( sSetNatData* )p_GetNativeData( newSet );
-		ndnew->values = NULL;
-		ndnew->count = 0;
-		ndnew->size = 0;
-		ndnew->lockModify = 0;
+		sSetNatData &ndnew = dsNativeDataNew<sSetNatData>(p_GetNativeData(newSet));
 		
 		// do the mapping
-		for( i=0; i<nd->count; i++ ){
-			rt->PushValue( nd->values[ i ] );
+		for( i=0; i<nd.count; i++ ){
+			rt->PushValue( nd.values[ i ] );
 			rt->RunFunctionFast( block, funcIndexRun );
 			
 			if( rt->GetReturnValue()->GetType() != clsBool ){
@@ -919,11 +908,11 @@ void dsClassSet::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
 				continue;
 			}
 			
-			if( ndnew->count == ndnew->size ){
-				ndnew->SetSize( ndnew->size * 3 / 2 + 1, rt, clsObject );
+			if( ndnew.count == ndnew.size ){
+				ndnew.SetSize( ndnew.size * 3 / 2 + 1, rt, clsObject );
 			}
-			rt->CopyValue( nd->values[ i ], ndnew->values[ ndnew->count ] );
-			ndnew->count++;
+			rt->CopyValue( nd.values[ i ], ndnew.values[ ndnew.count ] );
+			ndnew.count++;
 		}
 		
 		// push the result and clean up
@@ -942,7 +931,7 @@ dsClassSet::nfCollectCastable::nfCollectCastable( const sInitData &init ) : dsFu
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const block = rt->GetValue( 0 );
 	if( ! block->GetRealObject() ){
@@ -954,7 +943,7 @@ void dsClassSet::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself 
 	int i;
 	
 	const dsClassSet_NewFinally set( *rt, *GetOwnerClass() );
-	sSetNatData &ndnew = *( ( sSetNatData* )p_GetNativeData( set.Value() ) );
+	sSetNatData &ndnew = dsNativeDataGet<sSetNatData>(p_GetNativeData(set.Value()));
 	dsClass * const clsObject = rt->GetEngine()->GetClassObject();
 	
 	for( i=0; i<nd.count; i++ ){
@@ -972,7 +961,7 @@ dsClassSet::nfFold::nfFold( const sInitData &init ) : dsFunction( init.clsSet,
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfFold::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClass *clsObject = rt->GetEngine()->GetClassObject();
 	int i;
 	
@@ -981,20 +970,20 @@ void dsClassSet::nfFold::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueNullPointer, "ablock" );
 	}
 	
-	if( nd->count == 0 ){
+	if( nd.count == 0 ){
 		rt->PushObject( NULL, clsObject );
 		
-	}else if( nd->count == 1 ){
-		rt->PushValue( nd->values[ 0 ] );
+	}else if( nd.count == 1 ){
+		rt->PushValue( nd.values[ 0 ] );
 		
 	}else{
 		const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun2();
-		cSetNatDatLockModifyGuard lock( nd->lockModify );
-		for( i=1; i<nd->count; i++ ){
-			rt->PushValue( nd->values[ i ] );
+		cSetNatDatLockModifyGuard lock( nd.lockModify );
+		for( i=1; i<nd.count; i++ ){
+			rt->PushValue( nd.values[ i ] );
 			
 			if( i == 1 ){
-				rt->PushValue( nd->values[ 0 ] );
+				rt->PushValue( nd.values[ 0 ] );
 				
 			}else{
 				rt->PushReturnValue();
@@ -1014,7 +1003,7 @@ dsClassSet::nfInject::nfInject( const sInitData &init ) : dsFunction( init.clsSe
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfInject::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const injectValue = rt->GetValue( 0 );
 	dsValue * const block = rt->GetValue( 1 );
@@ -1053,7 +1042,7 @@ dsClassSet::nfFind::nfFind( const sInitData &init ) : dsFunction( init.clsSet,
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData *nd = ( sSetNatData* )p_GetNativeData( myself );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClass *clsObject = rt->GetEngine()->GetClassObject();
 	dsClass *clsBool = rt->GetEngine()->GetClassBool();
 	int i;
@@ -1065,9 +1054,9 @@ void dsClassSet::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	const int funcIndexRun = ( ( dsClassBlock* )rt->GetEngine()->GetClassBlock() )->GetFuncIndexRun1();
 	
-	cSetNatDatLockModifyGuard lock( nd->lockModify );
-	for( i=0; i<nd->count; i++ ){
-		rt->PushValue( nd->values[ i ] );
+	cSetNatDatLockModifyGuard lock( nd.lockModify );
+	for( i=0; i<nd.count; i++ ){
+		rt->PushValue( nd.values[ i ] );
 		rt->RunFunctionFast( block, funcIndexRun );
 		
 		if( rt->GetReturnValue()->GetType() != clsBool ){
@@ -1077,10 +1066,10 @@ void dsClassSet::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
 			continue;
 		}
 		
-		if( i >= nd->count ){
+		if( i >= nd.count ){
 			DSTHROW( dueInvalidAction );
 		}
-		rt->PushValue( nd->values[ i ] );
+		rt->PushValue( nd.values[ i ] );
 		return;
 	}
 	
@@ -1093,7 +1082,7 @@ dsClassSet::nfFindCastable::nfFindCastable( const sInitData &init ) : dsFunction
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfFindCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const block = rt->GetValue( 0 );
 	if( ! block->GetRealObject() ){
@@ -1120,7 +1109,7 @@ dsClassSet::nfRemoveIf::nfRemoveIf( const sInitData &init ) : dsFunction( init.c
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1166,7 +1155,7 @@ dsClassSet::nfRemoveIfCastable::nfRemoveIfCastable( const sInitData &init ) : ds
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfRemoveIfCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1204,7 +1193,7 @@ dsClassSet::nfCount::nfCount( const sInitData &init ) : dsFunction( init.clsSet,
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfCount::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1241,7 +1230,7 @@ dsClassSet::nfCountCastable::nfCountCastable( const sInitData &init ) : dsFuncti
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassSet::nfCountCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1273,7 +1262,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassSet::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClass * const clsSet = ( dsClassSet* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
@@ -1283,7 +1272,7 @@ void dsClassSet::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 		return;
 	}
 	
-	sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( object ) );
+	sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(object));
 	if( nd2.count != nd.count ){
 		rt->PushBool( false );
 		return;
@@ -1306,7 +1295,7 @@ dsClassSet::nfRandom::nfRandom( const sInitData &init ) : dsFunction( init.clsSe
 "random", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObject ){
 }
 void dsClassSet::nfRandom::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	const sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	if( nd.count == 0 ){
 		DSTHROW_INFO( dueInvalidParam, "count == 0" );
@@ -1327,7 +1316,7 @@ dsClassSet::nfToArray::nfToArray( const sInitData &init ) : dsFunction( init.cls
 "toArray", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArray ){
 }
 void dsClassSet::nfToArray::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	const sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	dsClassArray * const clsArray = ( dsClassArray* )rt->GetEngine()->GetClassArray();
 	
 	dsValue * const array = clsArray->CreateArray( rt );
@@ -1349,7 +1338,7 @@ dsClassSet::nfToString::nfToString( const sInitData &init ) : dsFunction( init.c
 "toString", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassSet::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	char *buffer = NULL;
 	int maxLen = 5000;
 	int curLen = 0;
@@ -1424,7 +1413,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsSet ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfOperatorPlus::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const object = rt->GetValue( 0 );
 	if( ! object ){
@@ -1432,13 +1421,13 @@ void dsClassSet::nfOperatorPlus::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	dsClassObject * clsObject = ( dsClassObject* )rt->GetEngine()->GetClassObject();
-	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( object ) );
+	const sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(object));
 	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
 	int i;
 	
 	dsValue * const newSet = clsSet->CreateSet( rt );
 	
-	sSetNatData &ndNew = *( ( sSetNatData* )p_GetNativeData( newSet ) );
+	sSetNatData &ndNew = dsNativeDataGet<sSetNatData>(p_GetNativeData(newSet));
 	ndNew.SetSize( nd.count + nd2.count, rt, clsObject );
 	
 	for( i=0; i<nd.count; i++ ){
@@ -1469,7 +1458,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsSet ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfOperatorMinus::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	
 	dsValue * const object = rt->GetValue( 0 );
 	if( ! object ){
@@ -1477,13 +1466,13 @@ void dsClassSet::nfOperatorMinus::RunFunction( dsRunTime *rt, dsValue *myself ){
 	}
 	
 	dsClassObject * clsObject = ( dsClassObject* )rt->GetEngine()->GetClassObject();
-	sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( object ) );
+	sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(object));
 	dsClassSet * const clsSet = ( dsClassSet* )GetOwnerClass();
 	int i;
 	
 	dsValue * const newSet = clsSet->CreateSet( rt );
 	
-	sSetNatData &ndNew = *( ( sSetNatData* )p_GetNativeData( newSet ) );
+	sSetNatData &ndNew = dsNativeDataGet<sSetNatData>(p_GetNativeData(newSet));
 	ndNew.SetSize( nd.count, rt, clsObject );
 	
 	try{
@@ -1509,7 +1498,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsSet ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfOperatorPlusAssign::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1520,7 +1509,7 @@ void dsClassSet::nfOperatorPlusAssign::RunFunction( dsRunTime *rt, dsValue *myse
 	}
 	
 	dsClassObject * clsObject = ( dsClassObject* )rt->GetEngine()->GetClassObject();
-	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( object ) );
+	const sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(object));
 	int i;
 	
 	nd.SetSize( nd.count + nd2.count, rt, clsObject );
@@ -1541,7 +1530,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsSet ){
 	p_AddParameter( init.clsSet ); // set
 }
 void dsClassSet::nfOperatorMinusAssign::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1551,7 +1540,7 @@ void dsClassSet::nfOperatorMinusAssign::RunFunction( dsRunTime *rt, dsValue *mys
 		DSTHROW_INFO( dueNullPointer, "set" );
 	}
 	
-	const sSetNatData &nd2 = *( ( sSetNatData* )p_GetNativeData( object ) );
+	const sSetNatData &nd2 = dsNativeDataGet<sSetNatData>(p_GetNativeData(object));
 	int i;
 	
 	for( i=0; i<nd2.count; i++ ){
@@ -1582,7 +1571,7 @@ void dsClassSet::nfOperatorMinusAssign::RunFunction( dsRunTime *rt, dsValue *mys
 
 dsClassSet::dsClassSet() : dsClass( "Set", DSCT_CLASS, DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sSetNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sSetNatData>());
 }
 
 dsClassSet::~dsClassSet(){
@@ -1663,16 +1652,11 @@ void dsClassSet::CreateClassMembers( dsEngine *engine ){
 
 dsValue *dsClassSet::CreateSet( dsRunTime *rt ){
 	dsValue *newSet = NULL;
-	sSetNatData *nd;
 	
 	try{
 		newSet = rt->CreateValue( this );
 		rt->CreateObjectNaked( newSet, this );
-		nd = ( sSetNatData* )p_GetNativeData( newSet->GetRealObject()->GetBuffer() );
-		nd->values = NULL;
-		nd->count = 0;
-		nd->size = 0;
-		nd->lockModify = 0;
+		dsNativeDataNew<sSetNatData>(p_GetNativeData(newSet->GetRealObject()->GetBuffer()));
 		
 	}catch( ... ){
 		if( newSet ){
@@ -1694,7 +1678,7 @@ dsValue *dsClassSet::CreateSet( dsRunTime *rt, int argumentCount ){
 	
 	try{
 		newSet = CreateSet( rt );
-		sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( newSet->GetRealObject()->GetBuffer() ) );
+		sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(newSet->GetRealObject()->GetBuffer()));
 		
 		nd.SetSize( argumentCount, rt, p_ClsObj );
 		for( i=0; i<argumentCount; i++ ){
@@ -1719,7 +1703,7 @@ void dsClassSet::AddObject( dsRunTime *rt, dsRealObject *myself, dsValue *value 
 		DSTHROW( dueNullPointer );
 	}
 	
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself->GetBuffer()));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1743,7 +1727,7 @@ void dsClassSet::RemoveObject( dsRunTime* rt, dsRealObject* myself, int index ) 
 		DSTHROW( dueNullPointer );
 	}
 	
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself->GetBuffer()));
 	
 	if( index < 0 || index >= nd.count ){
 		DSTHROW( dueInvalidParam );
@@ -1766,7 +1750,7 @@ int dsClassSet::GetObjectCount( dsRunTime *rt, dsRealObject *myself ) const{
 		DSTHROW( dueNullPointer );
 	}
 	
-	const sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	const sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself->GetBuffer()));
 	return nd.count;
 }
 
@@ -1775,7 +1759,7 @@ dsValue *dsClassSet::GetObjectAt( dsRunTime *rt, dsRealObject *myself, int index
 		DSTHROW( dueNullPointer );
 	}
 	
-	const sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	const sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself->GetBuffer()));
 	if( index < 0 || index >= nd.count ){
 		DSTHROW( dueInvalidParam );
 	}
@@ -1788,6 +1772,6 @@ bool dsClassSet::HasObject( dsRunTime *rt, dsRealObject *myself, dsValue *value 
 		DSTHROW( dueNullPointer );
 	}
 	
-	sSetNatData &nd = *( ( sSetNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sSetNatData &nd = dsNativeDataGet<sSetNatData>(p_GetNativeData(myself->GetBuffer()));
 	return nd.Has( *rt, *value );
 }

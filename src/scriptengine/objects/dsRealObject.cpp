@@ -47,20 +47,18 @@ dsRealObject::dsRealObject(dsClass *Type){
 	}
 }
 */
-dsRealObject::dsRealObject(){
+dsRealObject::dsRealObject(char *orgPtr) :
+p_Type(nullptr),
+p_RefCount(0),
+p_WeakRefCount(0),
+p_Prev(nullptr),
+p_Next(nullptr),
+pOrgPtr(orgPtr){
 }
 dsRealObject::~dsRealObject(){
 	Clear();
 }
 // management
-void dsRealObject::Init(dsClass *Type){
-	p_Type = Type;
-	p_RefCount = 0;
-	p_WeakRefCount = 0;
-//	p_Data = NULL;
-	p_Prev = NULL;
-	p_Next = NULL;
-}
 void dsRealObject::Clear(){
 //	if(p_Data){
 //		delete [] p_Data;

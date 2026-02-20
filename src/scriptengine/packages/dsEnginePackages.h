@@ -44,6 +44,8 @@ public:
 	dsEnginePackages(dsEngine *Engine);
 	~dsEnginePackages();
 	
+	inline dsEngine *GetEngine() const{ return pEngine; }
+	
 	// package management
 	inline int GetPackageCount() const{ return pPkgCount; }
 	dsBaseEnginePackage *GetPackage(int index) const;

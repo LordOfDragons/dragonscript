@@ -199,12 +199,9 @@ const char *dsEnginePackageSource::p_FindPackage(const char *name){
 				DSTHROW( dueInvalidParam );
 			}
 			
-			WIN32_FILE_ATTRIBUTE_DATA fa;
-			if( ! GetFileAttributesExW( widePath, GetFileExInfoStandard, &fa ) ){
-				DSTHROW( dueInvalidParam );
-			}
-			
-			found = ( fa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY;
+			WIN32_FILE_ATTRIBUTE_DATA fa{};
+			found = GetFileAttributesExW(widePath, GetFileExInfoStandard, &fa)
+				&& (fa.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY;
 			
 			delete [] widePath;
 			widePath = NULL;

@@ -47,7 +47,7 @@ dsFunction( init.clsObjRef, DSFUNC_CONSTRUCTOR, DSFT_CONSTRUCTOR,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassObjectRef::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	nd.obj = NULL;
 	
 	nd.obj = rt->CreateValue();
@@ -60,7 +60,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsObj ); // obj
 }
 void dsClassObjectRef::nfNew2::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	nd.obj = NULL;
 	
 	nd.obj = rt->CreateValue();
@@ -73,7 +73,7 @@ dsFunction( init.clsObjRef, DSFUNC_DESTRUCTOR, DSFT_DESTRUCTOR,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassObjectRef::nfDestructor::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	if( ! nd.obj ){
 		return;
 	}
@@ -89,7 +89,7 @@ dsClassObjectRef::nfGet::nfGet( const sInitData &init ) : dsFunction(init.clsObj
 "get", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsObj){
 }
 void dsClassObjectRef::nfGet::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	rt->PushValue( nd.obj );
 }
 
@@ -99,7 +99,7 @@ dsClassObjectRef::nfSet::nfSet( const sInitData &init ) : dsFunction(init.clsObj
 	p_AddParameter( init.clsObj ); // obj
 }
 void dsClassObjectRef::nfSet::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	rt->CopyValue( rt->GetValue( 0 ), nd.obj );
 }
 
@@ -108,7 +108,7 @@ dsClassObjectRef::nfHashCode::nfHashCode( const sInitData &init ) : dsFunction(i
 "hashCode", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt){
 }
 void dsClassObjectRef::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
 	
 	switch( nd.obj->GetType()->GetPrimitiveType() ){
 	case DSPT_NULL:
@@ -144,8 +144,8 @@ void dsClassObjectRef::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 		return;
 	}
 	
-	sObjectRefNatData &nd = *( ( sObjectRefNatData* )p_GetNativeData( myself ) );
-	sObjectRefNatData &ndOther = *( (sObjectRefNatData* )p_GetNativeData( obj ) );
+	sObjectRefNatData &nd = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(myself));
+	sObjectRefNatData &ndOther = dsNativeDataGet<sObjectRefNatData>(p_GetNativeData(obj));
 	
 	const bool isNull = nd.obj->GetType()->GetPrimitiveType() == DSPT_NULL
 		|| ( nd.obj->GetType()->GetPrimitiveType() == DSPT_OBJECT && ! nd.obj->GetRealObject() );
@@ -175,7 +175,7 @@ void dsClassObjectRef::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 dsClassObjectRef::dsClassObjectRef() : dsClass( "ObjectReference",
 DSCT_CLASS, DSTM_PUBLIC | DSTM_NATIVE) {
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sObjectRefNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sObjectRefNatData>());
 }
 
 dsClassObjectRef::~dsClassObjectRef(){

@@ -53,7 +53,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 	p_AddParameter( init.clsByte ); // value
 }
 void dsClassObjectByte::nfNew::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	nd.value = rt->GetValue( 0 )->GetByte();
 }
 
@@ -65,7 +65,7 @@ dsFunction( init.clsObjByte, "value", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsByte ){
 }
 void dsClassObjectByte::nfValue::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	const sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	rt->PushByte( nd.value );
 }
 
@@ -77,7 +77,7 @@ dsFunction( init.clsObjByte, "toString", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsString ){
 }
 void dsClassObjectByte::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	const sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	char buffer[ 2 ];
 	
 	snprintf( buffer, sizeof( buffer ), "%c", nd.value );
@@ -90,7 +90,7 @@ dsFunction( init.clsObjByte, "hashCode", DSFT_FUNCTION,
 DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 }
 void dsClassObjectByte::nfHashCode::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	const sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	rt->PushInt( nd.value );
 }
 
@@ -101,12 +101,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBoolean ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectByte::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	const sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjByte = ( dsClassObjectByte* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( object, clsObjByte ) ){
-		const sObjByteNatData &other = *( ( sObjByteNatData* )p_GetNativeData( object ) );
+		const sObjByteNatData &other = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(object));
 		rt->PushBool( nd.value == other.value );
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -138,12 +138,12 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsInteger ){
 	p_AddParameter( init.clsObject ); // object
 }
 void dsClassObjectByte::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sObjByteNatData &nd = *( ( sObjByteNatData* )p_GetNativeData( myself ) );
+	const sObjByteNatData &nd = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(myself));
 	dsClass * const clsObjByte = ( dsClassObjectByte* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
 	if( p_IsObjOfType( object, clsObjByte ) ){
-		const sObjByteNatData &other = *( ( sObjByteNatData* )p_GetNativeData( object ) );
+		const sObjByteNatData &other = dsNativeDataGet<sObjByteNatData>(p_GetNativeData(object));
 		rt->PushInt( ( int )nd.value - ( int )other.value );
 		
 	}else if( object->GetType()->GetPrimitiveType() == DSPT_BOOL ){
@@ -179,7 +179,7 @@ void dsClassObjectByte::nfCompare::RunFunction( dsRunTime *rt, dsValue *myself )
 dsClassObjectByte::dsClassObjectByte() : dsClass( "Byte", DSCT_CLASS,
 DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sObjByteNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sObjByteNatData>());
 }
 
 dsClassObjectByte::~dsClassObjectByte(){

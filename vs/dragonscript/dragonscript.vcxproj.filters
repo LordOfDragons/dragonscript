@@ -295,9 +295,11 @@
     <ClInclude Include="..\..\src\scriptengine\dsPackage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="dragonscript_config.h" />
     <ClInclude Include="..\..\src\scriptengine\dragonscript_export.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\prepare_build\dragonscript_config.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,88 +13,61 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Packages">
+      <UniqueIdentifier>{259194ae-dba5-4f22-a991-9e8e4ca4e2da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packages\Introspection">
+      <UniqueIdentifier>{05ef5685-c176-4411-83b0-1858c435147f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packages\Math">
+      <UniqueIdentifier>{3cd75706-529c-4687-ad51-bc039c5804f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\SConstruct" />
+    <None Include="post_build.ps1" />
+    <None Include="..\..\src\packages\introspection\src\TypeModifier.ds">
+      <Filter>Packages\Introspection</Filter>
+    </None>
     <None Include="..\..\src\scriptengine\SConscript">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="post_build.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\scriptengine\dsPackageSource.h">
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassClass.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassDS.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassFunction.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassPackage.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\introspection\src\dsClassVariable.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\introspection\src\introspection.h">
+      <Filter>Packages\Introspection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\packages\math\src\dsClassMath.h">
+      <Filter>Packages\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dragonscript_export.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsPackageWrapper.h">
+    <ClInclude Include="..\..\src\scriptengine\dsBaseEngineManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsRunTime.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsScriptSource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\exceptions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\libdscript.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\exceptions\duException.h">
+    <ClInclude Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\objects\dsByteCode.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\objects\dsClass.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsClassParserInfo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsConstant.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsFuncList.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsFunction.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsImplClass.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsLocalVariable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsRealObject.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsSignature.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsValue.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsValueData.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\dsVariable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassArray.h">
@@ -145,10 +118,16 @@
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassObjectRef.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsClassParserInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassSet.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassString.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\packages\utils\dsClassStringBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassTimeDate.h">
@@ -160,22 +139,76 @@
     <ClInclude Include="..\..\src\scriptengine\packages\default\dsClassWeakRef.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\packages\default\package_default.h">
+    <ClInclude Include="..\..\src\scriptengine\objects\dsConstant.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.h">
+    <ClInclude Include="..\..\src\scriptengine\dsDefaultEngineManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsDefinitions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsEngine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\dsEnginePackages.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsExceptionTrace.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsExceptionTracePoint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsFile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsFuncList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsFunction.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsGarbageCollector.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsImplClass.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsLocalVariable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsMemoryManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\packages\dsNativePackage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\packages\utils\dsClassStringBuffer.h">
+    <ClInclude Include="..\..\src\scriptengine\dsPackage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.h">
+    <ClInclude Include="..\..\src\scriptengine\dsPackageSource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsPackageWrapper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\parser\dspNodes.h">
@@ -241,6 +274,18 @@
     <ClInclude Include="..\..\src\scriptengine\parser\dspTypeModifiers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsRealObject.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsRunTime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\dsScriptSource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scriptengine\objects\dsSignature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\scriptengine\utils\dsuArray.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -265,106 +310,63 @@
     <ClInclude Include="..\..\src\scriptengine\utils\dsuString.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsBaseEngineManager.h">
+    <ClInclude Include="..\..\src\scriptengine\objects\dsValue.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsDefaultEngineManager.h">
+    <ClInclude Include="..\..\src\scriptengine\objects\dsValueData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsDefinitions.h">
+    <ClInclude Include="..\..\src\scriptengine\objects\dsVariable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsEngine.h">
+    <ClInclude Include="..\..\src\scriptengine\exceptions\duException.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsExceptionTrace.h">
+    <ClInclude Include="..\..\src\scriptengine\exceptions.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsExceptionTracePoint.h">
+    <ClInclude Include="..\..\src\scriptengine\libdscript.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsFile.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsGarbageCollector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsMemoryManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\scriptengine\dsPackage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dragonscript_config.h" />
-    <ClInclude Include="..\..\src\scriptengine\dragonscript_export.h">
+    <ClInclude Include="..\..\src\scriptengine\packages\default\package_default.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\scriptengine\dsPackageWrapper.cpp">
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassClass.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassDS.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassFunction.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassPackage.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\introspection\src\dsClassVariable.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\introspection\src\ispecEntryPoint.cpp">
+      <Filter>Packages\Introspection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\math\src\dsClassMath.cpp">
+      <Filter>Packages\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\packages\math\src\mathEntryPoint.cpp">
+      <Filter>Packages\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsBaseEngineManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsRunTime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\android\dscript-jni.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\exceptions\duException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\exceptions\exceptions.cpp">
+    <ClCompile Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\objects\dsByteCode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\objects\dsClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsClassParserInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsConstant.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsFuncList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsFunction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsImplClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsLocalVariable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsRealObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsValue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\dsVariable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassArray.cpp">
@@ -415,6 +417,9 @@
     <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassObjectRef.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsClassParserInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -430,16 +435,73 @@
     <ClCompile Include="..\..\src\scriptengine\packages\default\dsClassWeakRef.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\packages\dsBaseEnginePackage.cpp">
+    <ClCompile Include="..\..\src\scriptengine\objects\dsConstant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\android\dscript-jni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsDefaultEngineManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\packages\dsEnginePackages.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsExceptionTrace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsExceptionTracePoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOEmpty.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetClassVarStatic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFOGetParameter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsFuncList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\optimized\dsFunctionOptimized.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsGarbageCollector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsImplClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsLocalVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsMemoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\packages\dsNativePackage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\paksources\dsEnginePackageSource.cpp">
+    <ClCompile Include="..\..\src\scriptengine\dsPackage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsPackageWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\parser\dspNodesBasics.cpp">
@@ -502,6 +564,15 @@
     <ClCompile Include="..\..\src\scriptengine\parser\dspTypeModifiers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsRealObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\dsRunTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scriptengine\objects\dsSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\scriptengine\utils\dsuArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -526,31 +597,16 @@
     <ClCompile Include="..\..\src\scriptengine\utils\dsuString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsBaseEngineManager.cpp">
+    <ClCompile Include="..\..\src\scriptengine\objects\dsValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsDefaultEngineManager.cpp">
+    <ClCompile Include="..\..\src\scriptengine\objects\dsVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsEngine.cpp">
+    <ClCompile Include="..\..\src\scriptengine\exceptions\duException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsExceptionTrace.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsExceptionTracePoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsGarbageCollector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsMemoryManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scriptengine\dsPackage.cpp">
+    <ClCompile Include="..\..\src\scriptengine\exceptions\exceptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

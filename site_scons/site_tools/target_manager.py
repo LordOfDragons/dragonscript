@@ -29,12 +29,15 @@ from SCons.Util import NodeList
 def generate(env):
 	## Generic target.
 	class _Target(object):
-		def __init__(self, description, target=[]):
+		def __init__(self, description, target=None):
 			self.description = description
-			if isinstance(target, (list, tuple)):
-				self.target = target
+			if target:
+				if isinstance(target, (list, tuple)):
+					self.target = target
+				else:
+					self.target = [target]
 			else:
-				self.target = [target]
+				self.target = []
 		
 		## Create alias for all targets stored so far
 		def alias(self, env, name):
@@ -54,10 +57,13 @@ def generate(env):
 	class _TargetLibrary(_Target):
 		def __init__(self, description, target=None, **args):
 			super(_TargetLibrary, self).__init__(description)
-			if isinstance(target, (list, tuple)):
-				self.build = target
+			if target:
+				if isinstance(target, (list, tuple)):
+					self.build = target
+				else:
+					self.build = [target]
 			else:
-				self.build = [target]
+				self.build = []
 			self.install = []
 			self.archive = {}
 			self.params = {}

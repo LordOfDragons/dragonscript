@@ -29,12 +29,16 @@
 	#ifdef DS_COMPILE_DLL
 		#define DS_DLL_EXPORT __declspec(dllexport)
 		#define DS_FUNC_EXPORT_DECL __declspec(dllexport)
+		#define DS_FUNC_EXPORT_IMPL __declspec(dllexport)
+	#elif defined DS_STATIC_LIBRARY
+		#define DS_DLL_EXPORT
+		#define DS_FUNC_EXPORT_DECL
+		#define DS_FUNC_EXPORT_IMPL
 	#else
 		#define DS_DLL_EXPORT __declspec(dllimport)
 		#define DS_FUNC_EXPORT_DECL __declspec(dllexport)
+		#define DS_FUNC_EXPORT_IMPL __declspec(dllexport)
 	#endif
-	
-	#define DS_FUNC_EXPORT_IMPL __declspec(dllexport)
 	
 	// for use by package entry points
 	#define PACKAGE_ENTRY_POINT_ATTR __declspec(dllexport)

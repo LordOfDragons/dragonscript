@@ -72,6 +72,19 @@ struct sDictNatData{
 	int entryCount;
 	int lockModify;
 	
+	sDictNatData(int abucketCount = 8) :
+	buckets(nullptr),
+	bucketCount(abucketCount),
+	entryCount(0),
+	lockModify(0)
+	{
+		buckets = new sDictEntry*[bucketCount];
+		int i;
+		for(i=0; i<bucketCount; i++){
+			buckets[i] = nullptr;
+		}
+	}
+	
 	sDictEntry *SetAt( dsRunTime &rt, int index, sDictEntry *lastEntry, unsigned int hash, dsValue *key, dsValue *value ){
 		sDictEntry * const newEntry = new sDictEntry;
 		try{
@@ -244,7 +257,7 @@ dsClassDictionary::nfCreate::nfCreate( const sInitData &init ) : dsFunction( ini
 "new", DSFT_CONSTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassDictionary::nfCreate::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	int i;
 	
 	nd.buckets = NULL;
@@ -264,7 +277,7 @@ dsClassDictionary::nfCopy::nfCopy( const sInitData &init ) : dsFunction( init.cl
 	p_AddParameter( init.clsDict ); // dict
 }
 void dsClassDictionary::nfCopy::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	
 	nd.buckets = NULL;
 	nd.bucketCount = 0;
@@ -276,7 +289,7 @@ void dsClassDictionary::nfCopy::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueNullPointer, "dict" );
 	}
 	
-	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( object ) );
+	const sDictNatData &nd2 = dsNativeDataGet<sDictNatData>(p_GetNativeData(object));
 	sDictEntry *iterEntry;
 	sDictEntry *lastEntry;
 	sDictEntry *newEntry;
@@ -343,7 +356,7 @@ dsClassDictionary::nfDestructor::nfDestructor( const sInitData &init ) : dsFunct
 "destructor", DSFT_DESTRUCTOR, DSTM_PUBLIC | DSTM_NATIVE, init.clsVoid ){
 }
 void dsClassDictionary::nfDestructor::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	
 	if( nd.buckets ){
 		sDictEntry *iterEntry;
@@ -387,7 +400,7 @@ dsClassDictionary::nfGetCount::nfGetCount( const sInitData &init ) : dsFunction(
 "getCount", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsInt ){
 }
 void dsClassDictionary::nfGetCount::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	const sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	rt->PushInt( nd.entryCount );
 }
 
@@ -464,7 +477,7 @@ void dsClassDictionary::nfSetAll::RunFunction( dsRunTime *rt, dsValue *myself ){
 		return;
 	}
 	
-	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( dict ) );
+	const sDictNatData &nd2 = dsNativeDataGet<sDictNatData>(p_GetNativeData(dict));
 	sDictEntry *entry;
 	int i;
 	for( i=0; i<nd2.bucketCount; i++ ){
@@ -517,7 +530,7 @@ dsClassDictionary::nfGetKeys::nfGetKeys( const sInitData &init ) : dsFunction( i
 "getKeys", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
 }
 void dsClassDictionary::nfGetKeys::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	const sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassArray &clsArray = *( ( dsClassArray* )rt->GetEngine()->GetClassArray() );
 	dsValue *array = NULL;
 	sDictEntry *iterEntry;
@@ -550,7 +563,7 @@ dsClassDictionary::nfGetValues::nfGetValues( const sInitData &init ) : dsFunctio
 "getValues", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsArr ){
 }
 void dsClassDictionary::nfGetValues::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	const sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassArray &clsArray = *( ( dsClassArray* )rt->GetEngine()->GetClassArray() );
 	dsValue *array = NULL;
 	sDictEntry *iterEntry;
@@ -586,7 +599,7 @@ dsClassDictionary::nfForEach::nfForEach( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEach::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -619,7 +632,7 @@ dsClassDictionary::nfForEachCastable::nfForEachCastable( const sInitData &init )
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEachCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -651,7 +664,7 @@ dsClassDictionary::nfForEachKey::nfForEachKey( const sInitData &init ) : dsFunct
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEachKey::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -683,7 +696,7 @@ dsClassDictionary::nfForEachKeyCastable::nfForEachKeyCastable( const sInitData &
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEachKeyCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -714,7 +727,7 @@ dsClassDictionary::nfForEachValue::nfForEachValue( const sInitData &init ) : dsF
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEachValue::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -746,7 +759,7 @@ dsClassDictionary::nfForEachValueCastable::nfForEachValueCastable( const sInitDa
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfForEachValueCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		return;
 	}
@@ -777,7 +790,7 @@ dsClassDictionary::nfFind::nfFind( const sInitData &init ) : dsFunction( init.cl
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfFind::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushObject( NULL );
 		return;
@@ -819,7 +832,7 @@ dsClassDictionary::nfFindCastable::nfFindCastable( const sInitData &init ) : dsF
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfFindCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushObject( NULL );
 		return;
@@ -855,7 +868,7 @@ dsClassDictionary::nfFindKey::nfFindKey( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfFindKey::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushObject( NULL );
 		return;
@@ -897,7 +910,7 @@ dsClassDictionary::nfFindKeyCastable::nfFindKeyCastable( const sInitData &init )
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfFindKeyCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushObject( NULL );
 		return;
@@ -933,13 +946,12 @@ dsClassDictionary::nfMap::nfMap( const sInitData &init ) : dsFunction( init.clsD
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassDictionary * const clsDict = ( dsClassDictionary* )GetOwnerClass();
 	sDictEntry *newEntry = NULL;
 	sDictEntry *iterEntry;
 	sDictEntry *lastEntry;
 	dsValue *dict = NULL;
-	sDictNatData *ndnew;
 	int i;
 	
 	dsValue * const block = rt->GetValue( 0 );
@@ -951,17 +963,13 @@ void dsClassDictionary::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
 	
 	cDictNatDatLockModifyGuard lock( nd.lockModify );
 	try{
-		dict = rt->CreateValue( clsDict );
-		rt->CreateObjectNaked( dict, clsDict );
-		ndnew = ( sDictNatData* )p_GetNativeData( dict );
-		ndnew->buckets = NULL;
-		ndnew->bucketCount = nd.bucketCount;
-		ndnew->entryCount = nd.entryCount;
-		ndnew->lockModify = 0;
-		
-		ndnew->buckets = new sDictEntry*[ nd.bucketCount ];
+		dict = rt->CreateValue(clsDict);
+		rt->CreateObjectNaked(dict, clsDict);
+		sDictNatData &ndnew = dsNativeDataNew<sDictNatData>(p_GetNativeData(dict), nd.bucketCount);
+		ndnew.entryCount = nd.entryCount;
+		ndnew.buckets = new sDictEntry*[ nd.bucketCount ];
 		for( i=0; i<nd.bucketCount; i++ ){
-			ndnew->buckets[ i ] = NULL;
+			ndnew.buckets[ i ] = NULL;
 		}
 		
 		for( i=0; i<nd.bucketCount; i++ ){
@@ -991,7 +999,7 @@ void dsClassDictionary::nfMap::RunFunction( dsRunTime *rt, dsValue *myself ){
 					lastEntry->next = newEntry;
 					
 				}else{
-					ndnew->buckets[ i ] = newEntry;
+					ndnew.buckets[ i ] = newEntry;
 				}
 				lastEntry = newEntry;
 				newEntry = NULL;
@@ -1028,13 +1036,12 @@ dsClassDictionary::nfCollect::nfCollect( const sInitData &init ) : dsFunction( i
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassDictionary * const clsDict = ( dsClassDictionary* )GetOwnerClass();
 	sDictEntry *newEntry = NULL;
 	sDictEntry *iterEntry;
 	sDictEntry *lastEntry;
 	dsValue *dict = NULL;
-	sDictNatData *ndnew;
 	int i;
 	
 	dsValue * const block = rt->GetValue( 0 );
@@ -1048,15 +1055,11 @@ void dsClassDictionary::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself )
 	try{
 		dict = rt->CreateValue( clsDict );
 		rt->CreateObjectNaked( dict, clsDict );
-		ndnew = ( sDictNatData* )p_GetNativeData( dict );
-		ndnew->buckets = NULL;
-		ndnew->bucketCount = nd.bucketCount;
-		ndnew->entryCount = 0;
-		ndnew->lockModify = 0;
+		sDictNatData &ndnew = dsNativeDataNew<sDictNatData>(p_GetNativeData(dict), nd.bucketCount);
 		
-		ndnew->buckets = new sDictEntry*[ nd.bucketCount ];
+		ndnew.buckets = new sDictEntry*[ nd.bucketCount ];
 		for( i=0; i<nd.bucketCount; i++ ){
-			ndnew->buckets[ i ] = NULL;
+			ndnew.buckets[ i ] = NULL;
 		}
 		
 		for( i=0; i<nd.bucketCount; i++ ){
@@ -1087,12 +1090,12 @@ void dsClassDictionary::nfCollect::RunFunction( dsRunTime *rt, dsValue *myself )
 						lastEntry->next = newEntry;
 						
 					}else{
-						ndnew->buckets[ i ] = newEntry;
+						ndnew.buckets[ i ] = newEntry;
 					}
 					lastEntry = newEntry;
 					newEntry = NULL;
 					
-					ndnew->entryCount++;
+					ndnew.entryCount++;
 				}
 				
 				iterEntry = iterEntry->next;
@@ -1127,7 +1130,7 @@ dsClassDictionary::nfCollectCastable::nfCollectCastable( const sInitData &init )
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	
 	dsValue * const block = rt->GetValue( 0 );
 	if( ! block->GetRealObject() ){
@@ -1139,7 +1142,7 @@ void dsClassDictionary::nfCollectCastable::RunFunction( dsRunTime *rt, dsValue *
 	dsClass * const castTypeValue = blockRunner.castType2();
 	
 	const dsClassDictionary_NewFinally dict( *rt, *GetOwnerClass() );
-	sDictNatData &ndnew = *( ( sDictNatData* )p_GetNativeData( dict.Value() ) );
+	sDictNatData &ndnew = dsNativeDataGet<sDictNatData>(p_GetNativeData(dict.Value()));
 	int i;
 	
 	for( i=0; i<nd.bucketCount; i++ ){
@@ -1162,7 +1165,7 @@ dsClassDictionary::nfCount::nfCount( const sInitData &init ) : dsFunction( init.
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfCount::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushInt( 0 );
 		return;
@@ -1205,7 +1208,7 @@ dsClassDictionary::nfCountCastable::nfCountCastable( const sInitData &init ) : d
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfCountCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.entryCount == 0 ){
 		rt->PushInt( 0 );
 		return;
@@ -1240,7 +1243,7 @@ dsClassDictionary::nfRemoveIf::nfRemoveIf( const sInitData &init ) : dsFunction(
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfRemoveIf::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1306,7 +1309,7 @@ dsClassDictionary::nfRemoveIfCastable::nfRemoveIfCastable( const sInitData &init
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfRemoveIfCastable::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1352,7 +1355,7 @@ dsClassDictionary::nfInject::nfInject( const sInitData &init ) : dsFunction( ini
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfInject::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsValue * const injectValue = rt->GetValue( 0 );
 	
 	if( nd.entryCount == 0 ){
@@ -1400,7 +1403,7 @@ dsClassDictionary::nfInjectKey::nfInjectKey( const sInitData &init ) : dsFunctio
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfInjectKey::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsValue * const injectValue = rt->GetValue( 0 );
 	
 	if( nd.entryCount == 0 ){
@@ -1447,7 +1450,7 @@ dsClassDictionary::nfInjectValue::nfInjectValue( const sInitData &init ) : dsFun
 	p_AddParameter( init.clsBlock ); // ablock
 }
 void dsClassDictionary::nfInjectValue::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsValue * const injectValue = rt->GetValue( 0 );
 	
 	if( nd.entryCount == 0 ){
@@ -1496,7 +1499,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsDict ){
 	p_AddParameter( init.clsDict ); // array
 }
 void dsClassDictionary::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
-	const sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	const sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassDictionary &clsDict = *( ( dsClassDictionary* )GetOwnerClass() );
 	
 	dsValue * const dict = rt->GetValue( 0 );
@@ -1504,7 +1507,7 @@ void dsClassDictionary::nfOpAdd::RunFunction( dsRunTime *rt, dsValue *myself ){
 		DSTHROW_INFO( dueNullPointer, "dictionary" );
 	}
 	
-	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( dict ) );
+	const sDictNatData &nd2 = dsNativeDataGet<sDictNatData>(p_GetNativeData(dict));
 	
 	dsValue * const newDictionary = clsDict.CreateDictionary( rt );
 	sDictEntry *entry;
@@ -1545,7 +1548,7 @@ DSTM_PUBLIC | DSTM_NATIVE, init.clsBool ){
 	p_AddParameter( init.clsObj ); // object
 }
 void dsClassDictionary::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	dsClassDictionary * const clsDict = ( dsClassDictionary* )GetOwnerClass();
 	dsValue * const object = rt->GetValue( 0 );
 	
@@ -1555,7 +1558,7 @@ void dsClassDictionary::nfEquals::RunFunction( dsRunTime *rt, dsValue *myself ){
 		return;
 	}
 	
-	const sDictNatData &nd2 = *( ( sDictNatData* )p_GetNativeData( object ) );
+	const sDictNatData &nd2 = dsNativeDataGet<sDictNatData>(p_GetNativeData(object));
 	if( nd2.entryCount != nd.entryCount ){
 		rt->PushBool( false );
 		return;
@@ -1596,7 +1599,7 @@ dsClassDictionary::nfToString::nfToString( const sInitData &init ) : dsFunction(
 "toString", DSFT_FUNCTION, DSTM_PUBLIC | DSTM_NATIVE, init.clsStr ){
 }
 void dsClassDictionary::nfToString::RunFunction( dsRunTime *rt, dsValue *myself ){
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself));
 	sDictEntry *iterEntry;
 	char *buffer = NULL;
 	bool first = true;
@@ -1719,7 +1722,7 @@ void dsClassDictionary::nfToString::RunFunction( dsRunTime *rt, dsValue *myself 
 
 dsClassDictionary::dsClassDictionary() : dsClass( "Dictionary", DSCT_CLASS, DSTM_PUBLIC | DSTM_NATIVE ){
 	GetParserInfo()->SetBase( "Object" );
-	p_SetNativeDataSize( sizeof( sDictNatData ) );
+	p_SetNativeDataSize(dsNativeDataSize<sDictNatData>());
 }
 
 dsClassDictionary::~dsClassDictionary(){
@@ -1790,27 +1793,16 @@ void dsClassDictionary::CreateClassMembers( dsEngine *engine ){
 
 
 dsValue *dsClassDictionary::CreateDictionary( dsRunTime *rt ){
-	dsValue *newDict = NULL;
-	sDictNatData *nd;
-	int i;
+	dsValue *newDict = nullptr;
 	
 	try{
-		newDict = rt->CreateValue( this );
-		rt->CreateObjectNaked( newDict, this );
-		nd = ( sDictNatData* )p_GetNativeData( newDict->GetRealObject()->GetBuffer() );
-		nd->buckets = NULL;
-		nd->bucketCount = 8;
-		nd->entryCount = 0;
-		nd->lockModify = 0;
+		newDict = rt->CreateValue(this);
+		rt->CreateObjectNaked(newDict, this);
+		dsNativeDataNew<sDictNatData>(p_GetNativeData(newDict->GetRealObject()->GetBuffer()));
 		
-		nd->buckets = new sDictEntry*[ nd->bucketCount ];
-		for( i=0; i<nd->bucketCount; i++ ){
-			nd->buckets[ i ] = NULL;
-		}
-		
-	}catch( ... ){
-		if( newDict ){
-			rt->FreeValue( newDict );
+	}catch(...){
+		if(newDict){
+			rt->FreeValue(newDict);
 		}
 		throw;
 	}
@@ -1826,7 +1818,7 @@ bool dsClassDictionary::GetValue( dsRunTime *rt, dsRealObject *myself, dsValue *
 		DSTHROW( dueNullPointer );
 	}
 	
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself->GetBuffer()));
 	
 	const int funcIndexHashCode = ( ( dsClassObject* )rt->GetEngine()->GetClassObject() )->GetFuncIndexHashCode();
 	rt->RunFunctionFast( key, funcIndexHashCode ); // int hashCode()
@@ -1861,7 +1853,7 @@ void dsClassDictionary::SetValue( dsRunTime *rt, dsRealObject *myself, dsValue *
 		DSTHROW( dueNullPointer );
 	}
 	
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself->GetBuffer()));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1939,7 +1931,7 @@ bool dsClassDictionary::RemoveKey( dsRunTime *rt, dsRealObject *myself, dsValue 
 		DSTHROW( dueNullPointer );
 	}
 	
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself->GetBuffer()));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -1993,7 +1985,7 @@ void dsClassDictionary::RemoveAllKeys( dsRunTime *rt, dsRealObject *myself ) con
 		DSTHROW( dueNullPointer );
 	}
 	
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself->GetBuffer()));
 	if( nd.lockModify != 0 ){
 		DSTHROW_INFO( dueInvalidAction, errorModifyWhileLocked );
 	}
@@ -2035,7 +2027,7 @@ void dsClassDictionary::CheckLoad( dsRunTime *rt, dsRealObject *myself ) const{
 		DSTHROW( dueNullPointer );
 	}
 	
-	sDictNatData &nd = *( ( sDictNatData* )p_GetNativeData( myself->GetBuffer() ) );
+	sDictNatData &nd = dsNativeDataGet<sDictNatData>(p_GetNativeData(myself->GetBuffer()));
 	
 	if( ( float )nd.entryCount / ( float )nd.bucketCount > 0.7 ){
 		const int newBucketCount = nd.bucketCount + ( nd.bucketCount >> 1 ); // +50%

@@ -34,6 +34,10 @@
 // class dsValue
 //////////////////
 // constructor
+
+dsValue::dsValue() : p_Type(nullptr){
+}
+
 dsValue::dsValue(dsClass *Type){
 	if(!Type) DSTHROW(dueInvalidParam);
 	p_Type = Type;

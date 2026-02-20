@@ -47,7 +47,7 @@ private:
 	int p_FuncBase; // for objects only
 public:
 	// constructor
-	inline dsValueData(){ p_FuncBase=0; }
+	inline dsValueData(){ p_FuncBase=0; p_Object=nullptr; }
 	// data retrieval
 	inline byte GetByte() const{ return p_Byte; }
 	inline bool GetBool() const{ return p_Bool; }

@@ -170,6 +170,10 @@ if globalEnv['with_debug'] and globalEnv['with_sanitize']:
 	if globalEnv['TARGET_PLATFORM'] in ['android']:
 		globalEnv.Replace(SANITIZE_FLAGS = ['-fsanitize=address'])
 
+# enable c++20
+globalEnv.Append(CPPFLAGS = ['-std=c++20'])
+
+
 # define the targets array and reports dictionary to be filled
 configGroup = 'DragonScript'
 globalEnv.configReport.add('Treat warnings as errors (dev-builds)', 'with_warnerrors', configGroup)
