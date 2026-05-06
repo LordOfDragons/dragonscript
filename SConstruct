@@ -30,7 +30,7 @@ globalEnv.configReport.add('Target platform', 'target_platform')
 
 targetPlatform = globalEnv['target_platform']
 if targetPlatform == 'auto':
-	if sys.platform == 'haiku1':
+	if sys.platform in ['haiku1', 'haiku']:
 		targetPlatform = 'beos'
 	elif os.name == 'win32' or sys.platform == 'win32':
 		targetPlatform = 'windows'
@@ -49,7 +49,7 @@ if targetPlatform == 'windows':
 
 # Haiku: The PATH found by SCons are wrong in many ways causing binaries to be not found.
 #        Replace them with sane values. This is not a 'good' solution but should work.
-if sys.platform == 'haiku1':
+if sys.platform in ['haiku1', 'haiku']:
 	import os
 	globalEnv['ENV']['PATH'] = os.environ['PATH']
 
