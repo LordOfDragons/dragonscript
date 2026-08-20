@@ -428,6 +428,9 @@ void dsClassArray::nfCopy::RunFunction( dsRunTime *rt, dsValue *myself ){
 	nd.size = 0;
 	nd.lockModify = 0;
 	dsValue *vObj = rt->GetValue(0);
+	if(!vObj->GetRealObject()){
+		DSTHROW_INFO(dueNullPointer, "arr");
+	}
 	sArrNatData &nd2 = dsNativeDataGet<sArrNatData>(p_GetNativeData(vObj));
 	int i, vSize = nd2.count;
 	if(vSize > 0){
